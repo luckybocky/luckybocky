@@ -21,6 +21,6 @@ public class BaseEntity {
     @Column(updatable = false)
     private LocalDateTime modifiedAt;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "is_deleted")
     private boolean isDeleted = false;
 }
