@@ -35,10 +35,10 @@ public class User extends BaseEntity {
     private boolean fortuneVisibility;
 
     @OneToMany(mappedBy = "user")
-    private List<Article> articles = new ArrayList<>();
+    List<Article> articles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")   // cascade 설정 X
-    private List<Pocket> pockets = new ArrayList<>();
+    List<Pocket> pockets = new ArrayList<>();
 
     @Override
     public String toString() {
