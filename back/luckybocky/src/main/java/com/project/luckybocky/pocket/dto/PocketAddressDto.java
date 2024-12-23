@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NewPocketDto {
-
+public class PocketAddressDto {
+    private Integer pocketSeq;
+    private String address;
 }
