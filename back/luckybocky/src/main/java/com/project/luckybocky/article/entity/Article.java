@@ -17,7 +17,7 @@ public class Article extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_seq", nullable = false) // 외래키 설정
-    private User userSeq;
+    private User user;
 
     @Column(nullable = false)
     private String userNickname;
