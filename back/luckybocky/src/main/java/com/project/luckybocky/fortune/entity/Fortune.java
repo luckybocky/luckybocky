@@ -1,5 +1,6 @@
 package com.project.luckybocky.fortune.entity;
 
+import com.project.luckybocky.article.entity.Article;
 import com.project.luckybocky.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,4 +1,5 @@
-package com.project.luckybocky.push.dto;
+package com.project.luckybocky.common;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
