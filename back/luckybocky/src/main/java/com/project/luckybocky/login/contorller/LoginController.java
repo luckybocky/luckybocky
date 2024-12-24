@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.project.luckybocky.common.Message;
 import com.project.luckybocky.login.service.LoginService;
 import com.project.luckybocky.user.dto.UserDto;
 
@@ -30,7 +31,7 @@ public class LoginController {
 	}
 
 	@GetMapping("/callback")
-	public ResponseEntity<Map<String, String>> kakaoLogin(@RequestParam("code") String code, HttpSession session)
+	public ResponseEntity<Message> kakaoLogin(@RequestParam("code") String code, HttpSession session)
 		throws JsonProcessingException {
 		UserDto userDto = loginService.kakaoLogin(code);
 
@@ -42,8 +43,13 @@ public class LoginController {
 			session.setAttribute("nickname", nickname);
 			response.put("user", user);
 			response.put("nickname", nickname);
-			return ResponseEntity.status(HttpStatus.OK).body(response);
+
+			return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new Message(HttpStatus.OK, "로그인 성공", response));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		return ResponseEntity
+			.status(HttpStatus.NOT_FOUND)
+			.body(new Message(HttpStatus.NOT_FOUND, "로그인 실패", null));
 	}
 }
