@@ -1,12 +1,11 @@
 package com.project.luckybocky.push.controller;
 
 
-
-import com.project.luckybocky.push.dto.MessageDto;
+import com.project.luckybocky.common.MessageDto;
 import com.project.luckybocky.push.dto.PushDto;
 import com.project.luckybocky.push.service.PushService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 //없으면 반환값을 이름으로하는 뷰를 찾으려고 시도
 @RestController
 @Slf4j
+@RequiredArgsConstructor
+
 public class PushController {
 
-    @Autowired
-    private PushService pushService;
+    private final PushService pushService;
 
     @PostMapping("/comment")
     public ResponseEntity<MessageDto> pushComment(@RequestBody PushDto pushDto) {
@@ -44,7 +44,6 @@ public class PushController {
 
             );
         }
-
     }
 
 }
