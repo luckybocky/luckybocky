@@ -1,0 +1,169 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  IoSettingsOutline,
+  IoMailOutline,
+  IoChatbubblesOutline,
+} from "react-icons/io5";
+import { AiOutlineAlert } from "react-icons/ai";
+import PocketIcon from "../image/pocketIcon.svg";
+
+const Menu = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
+
+  const closeModals = () => {
+    setFeedbackModalOpen(false);
+    setReportModalOpen(false);
+  };
+
+  return (
+    <div>
+      {/* 오버레이 */}
+      {menuOpen && (
+        <div
+          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-10"
+          onClick={toggleMenu}
+        ></div>
+      )}
+
+      {/* 메뉴 버튼 */}
+      <button
+        className="absolute top-4 right-4 text-2xl z-20"
+        onClick={toggleMenu}
+      >
+        ☰
+      </button>
+
+      {/* 메뉴 바 */}
+      <div
+        className={`text-lg absolute top-0 left-28 h-full bg-[#333] text-white shadow-lg transition-transform duration-300 ease-in-out z-20 ${
+          menuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+        style={{ width: "275px" }}
+      >
+        <ul className="py-3 px-6 space-y-4">
+          <button
+            onClick={() => navigate("/account")}
+            className="flex hover:underline items-center gap-2"
+          >
+            <IoSettingsOutline />
+            <span className="mb-1">계정 설정</span>
+          </button>
+          <button
+            onClick={() => {
+              navigate("/main");
+              toggleMenu();
+            }}
+            className="flex hover:underline items-center gap-2"
+          >
+            <img
+              src={PocketIcon}
+              alt="pocketIcon"
+              width="18"
+              className="mb-1"
+            ></img>
+            <span className="mb-1">내 복주머니 보러가기</span>
+          </button>
+          <button
+            className="flex hover:underline items-center gap-2"
+            onClick={() => {
+              navigate("/send-message");
+              toggleMenu();
+            }}
+          >
+            <IoMailOutline />
+            <span className="mb-1">내가 보낸 메시지</span>
+          </button>
+          <button
+            className="flex hover:underline items-center gap-2"
+            onClick={() => setFeedbackModalOpen(true)}
+          >
+            <IoChatbubblesOutline />
+            <span className="mb-1">피드백하기</span>
+          </button>
+          <button
+            className="flex hover:underline items-center gap-2"
+            onClick={() => setReportModalOpen(true)}
+          >
+            <AiOutlineAlert className="mb-1" />
+            <span className="mb-1">신고하기</span>
+          </button>
+        </ul>
+        <footer className="border-t border-gray-600 p-4 text-center text-sm">
+          Lucky Bocky!
+        </footer>
+      </div>
+      {/* 피드백 모달 */}
+      {feedbackModalOpen && (
+        <div
+          className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-60"
+          onClick={closeModals}
+        >
+          <div
+            className="bg-white text-[#0d1a26] p-5 rounded-lg w-80"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-lg font-bold mb-4">피드백하기</h2>
+            <textarea
+              className="w-full h-60 p-2 border border-gray-300 rounded-md mb-2 resize-none"
+              placeholder="피드백 내용을 입력하세요."
+            ></textarea>
+            <div className="flex justify-end gap-4">
+              <button
+                className="bg-gray-300 text-black py-2 px-4 rounded-lg"
+                onClick={closeModals}
+              >
+                취소
+              </button>
+              <button className="bg-[#0d1a26] text-white py-2 px-4 rounded-lg">
+                보내기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 신고 모달 */}
+      {reportModalOpen && (
+        <div
+          className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-60"
+          onClick={closeModals}
+        >
+          <div
+            className="bg-white text-[#0d1a26] p-5 rounded-lg w-80"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-lg font-bold mb-4">신고하기</h2>
+            <input
+              className="w-full p-2 border border-gray-300 rounded-md mb-4"
+              placeholder="제목을 입력하세요."
+            />
+            <textarea
+              className="w-full h-48 p-2 border border-gray-300 rounded-md mb-2 resize-none"
+              placeholder="신고 내용을 입력하세요."
+            ></textarea>
+            <div className="flex justify-end gap-4">
+              <button
+                className="bg-gray-300 text-black py-2 px-4 rounded-lg"
+                onClick={closeModals}
+              >
+                취소
+              </button>
+              <button className="bg-[#0d1a26] text-white py-2 px-4 rounded-lg">
+                보내기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Menu;
