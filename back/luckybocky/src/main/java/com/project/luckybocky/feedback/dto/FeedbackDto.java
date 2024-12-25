@@ -16,7 +16,7 @@ import lombok.ToString;
 public class FeedbackDto {
 	private Integer userSeq;
 	private String feedbackContent;
-	private Integer feedbackRate;
+	private Byte feedbackRate;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 	private boolean isDeleted;

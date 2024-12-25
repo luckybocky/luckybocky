@@ -7,5 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class FeedbackReqDto {
 	private String feedbackContent;
-	private Integer feedbackRate;
+	private Byte feedbackRate;
 }
