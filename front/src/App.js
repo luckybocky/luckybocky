@@ -1,17 +1,14 @@
 import React from "react";
-import "./App.css";
 import { RouterProvider } from "react-router-dom";
 import router from "./router";
 import Footer from "./components/Footer";
 
 const App = () => {
   return (
-    <div className="app">
-      {/* <div className="language-selector">
-        <button className="language-button">🌐</button>
-      </div> */}
+    <div className="flex flex-col items-center justify-center bg-[#0d1a26] text-white min-h-screen">
+      {/* 라우터 적용 */}
       <RouterProvider router={router} />
-      <Footer></Footer>
+      <Footer />
     </div>
   );
 };
