@@ -1,4 +1,4 @@
-package com.project.luckybocky.user.dto;
+package com.project.luckybocky.article.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

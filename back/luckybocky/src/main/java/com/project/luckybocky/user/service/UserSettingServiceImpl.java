@@ -1,8 +1,6 @@
 package com.project.luckybocky.user.service;
 
-import com.project.luckybocky.article.entity.Article;
-import com.project.luckybocky.user.dto.MyArticleDto;
-import com.project.luckybocky.user.dto.MyArticlesDto;
+import com.project.luckybocky.user.dto.UserDto;
 import com.project.luckybocky.user.dto.UserInfoDto;
 import com.project.luckybocky.user.entity.User;
 import com.project.luckybocky.user.repository.UserSettingRepository;
@@ -12,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -75,21 +71,7 @@ public class UserSettingServiceImpl implements UserSettingService{
     }
 
     @Override
-    public MyArticlesDto findMyArticles(String userKey) {
-        List<Article> articleByUserKey = userSettingRepository.findArticleByUserKey(userKey);
-        List<MyArticleDto> myArticles = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        for(Article article : articleByUserKey){
-            String articleOwner = article.getUserNickname();
-            String content = article.getArticleContent();
-            String fortuneName = article.getFortune().getFortuneName();
-            String fortuneImg = article.getFortune().getFortuneImg();
-            String createdAt =  article.getCreatedAt().format(formatter);
-
-            myArticles.add(new MyArticleDto(articleOwner,content,fortuneName,fortuneImg,createdAt));
-        }
-
-        return new MyArticlesDto(myArticles);
+    public User join(User user) {
+        return userSettingRepository.save(user);
     }
 }

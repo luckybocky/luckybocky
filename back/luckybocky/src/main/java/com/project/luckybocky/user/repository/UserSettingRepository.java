@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional
 @RequiredArgsConstructor//final이 붙은 변수에 생성자주입
 public class UserSettingRepository {
 
@@ -33,11 +32,5 @@ public class UserSettingRepository {
                 .getResultList().stream().findAny();
     }
 
-    //컨트롤러만들기
-    public List<Article> findArticleByUserKey(String userKey){
-        return em.createQuery("select a from Article a where a.user.userKey=:userKey", Article.class)
-                .setParameter("userKey", userKey)
-                .getResultList();
-    }
 
 }
