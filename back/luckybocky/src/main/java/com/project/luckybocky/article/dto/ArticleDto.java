@@ -21,7 +21,7 @@ public class ArticleDto {
         this.nickname = article.getUserNickname();
         this.content = article.getArticleContent();
         this.comment = article.getArticleComment();
-        this.fortune = article.getFortunes().getFortuneName();  // getFortune -> getFortunes
-        this.imgUrl = article.getFortunes().getFortuneImg();
+        this.fortune = article.getFortune().getFortuneName();  // getFortune -> getFortunes
+        this.imgUrl = article.getFortune().getFortuneImg();
     }
 }

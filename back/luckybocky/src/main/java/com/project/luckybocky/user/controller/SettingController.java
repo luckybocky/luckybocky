@@ -4,6 +4,7 @@ package com.project.luckybocky.user.controller;
 import com.project.luckybocky.common.MessageDto;
 import com.project.luckybocky.user.dto.SettingDto;
 import com.project.luckybocky.user.dto.UserInfoDto;
+import com.project.luckybocky.user.entity.User;
 import com.project.luckybocky.user.service.UserSettingService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +20,12 @@ import org.springframework.web.bind.annotation.*;
 public class SettingController {
     private final UserSettingService userSettingService;
 
-//    @PostMapping
-//    public ResponseEntity<User> userSave(@RequestBody User user){
-//        User saveUser = userSettingRepository.save(user);
-//        log.info("{}", user.toString());
-//        return ResponseEntity.status(HttpStatus.OK).body(saveUser);
-//    }
+    @PostMapping
+    public ResponseEntity<User> userSave(@RequestBody User user){
+        User saveUser = userSettingService.join(user);
+        log.info("{}", user.toString());
+        return ResponseEntity.status(HttpStatus.OK).body(saveUser);
+    }
 
     @PutMapping
     public ResponseEntity<MessageDto> updateSetting(@RequestBody SettingDto settingDto, HttpSession session) {
