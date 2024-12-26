@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -15,11 +18,18 @@ public class PocketService {
     private final UserRepository userRepository;
     private final PocketRepository pocketRepository;
 
-    // 입력된 사용자 정보를 바탕으로 복주머니 생성 -> seq만 받아서 생성하게 하고싶은데 뭐임
-//    public void createPocket(UserDto userDto){
-//        User user = UserDto.findByUserSeq(userDto);
-//        Pocket pocket = Pocket.builder().userSeq(user).build();
-//    }
+    public String createPocketAddress(int userSeq){
+        // uuid로 복주머니 링크 생성 후 저장 & 반환
+        UUID uuid = UUID.randomUUID();
+        String address = "http://luckybocky.com/" + uuid.toString();
+
+        User user = userRepository.findByUserSeq(userSeq).get();
+        Pocket pocket = pocketRepository.findPocketByUser(user);    // 아직 년도 고려 X
+        pocket.updateAddress(address);
+        pocketRepository.save(pocket);
+
+        return address;
+    }
 
     public String getPocketAddress(int userSeq){
         User user = userRepository.findByUserSeq(userSeq)

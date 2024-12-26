@@ -30,4 +30,8 @@ public class Pocket extends BaseEntity {
     //12-23 창희 복주머니에 어떤 게시글이 달렷나
     @OneToMany(mappedBy = "pocket")
     private List<Article> articles = new ArrayList<>();
+
+    public void updateAddress(String pocketAddress){
+        this.pocketAddress = pocketAddress;
+    }
 }

@@ -23,17 +23,17 @@ public class Article extends BaseEntity {
     @Column(name = "article_seq") //12-23 창희 JoinColumn시 칼럼매핑을 하지못해서 명시적으로 추가
     private Integer articleSeq;
 
-    @ManyToOne
-    @JoinColumn(name = "user_seq", nullable = false) // 외래키 설정
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_seq") // 외래키 설정
     private User user;
 
     @Column(nullable = false)
     private String userNickname;
 
     //12-23 창희 int -> Fortune으로 변경
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fortune_seq", columnDefinition = "smallint", nullable = false)
-    private Fortune fortunes;
+    private Fortune fortune;
 
     @Column(columnDefinition = "tinyint", nullable = false)
     private int articleVisibility;
