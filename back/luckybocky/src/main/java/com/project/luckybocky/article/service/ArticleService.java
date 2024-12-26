@@ -2,6 +2,7 @@ package com.project.luckybocky.article.service;
 
 import com.google.api.gax.rpc.NotFoundException;
 import com.project.luckybocky.article.dto.ArticleResponseDto;
+import com.project.luckybocky.article.dto.CommentDto;
 import com.project.luckybocky.article.dto.WriteArticleDto;
 import com.project.luckybocky.article.entity.Article;
 import com.project.luckybocky.article.repository.ArticleRepository;
@@ -72,5 +73,17 @@ public class ArticleService {
                 .build();
 
         articleRepository.save(article);
+    }
+
+    public ArticleResponseDto updateComment(CommentDto commentDto){
+        int findArticle = commentDto.getArticleSeq();
+        Article article = articleRepository.findByArticleSeq(findArticle).get();
+        if (!article.getArticleComment().isEmpty()){
+            throw new IllegalArgumentException("Already exist comment");
+        }
+        article.updateComment(commentDto.getComment());
+        articleRepository.save(article);
+
+        return new ArticleResponseDto(article);
     }
 }
