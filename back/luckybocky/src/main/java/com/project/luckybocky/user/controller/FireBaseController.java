@@ -24,8 +24,7 @@ public class FireBaseController {
 
     @PutMapping
     public ResponseEntity<MessageDto> updateFireBaseKey(HttpSession session, @RequestBody FirebaseKeyRequest firebaseKeyRequest) {
-//        String userKey = (String) session.getAttribute("user");
-        String userKey = "changhee9";
+        String userKey = (String) session.getAttribute("user");
 
         String firebaseKey = firebaseKeyRequest.getFirebaseKey();
         log.info("update firebase Key {}", firebaseKeyRequest.getFirebaseKey());

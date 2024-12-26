@@ -50,9 +50,8 @@ public class SettingController {
     }
 
     @GetMapping
-    public ResponseEntity<UserInfoDto> loadUserInfo(HttpSession session, @RequestParam String userKey){
-//        String userKey = (String) session.getAttribute("user");
-
+    public ResponseEntity<UserInfoDto> loadUserInfo(HttpSession session){
+        String userKey = (String) session.getAttribute("user");
         UserInfoDto userInfoDto = userSettingService.findByUserKey(userKey);
         log.info("user found {} {}",userKey, userInfoDto);
         if(userInfoDto == null){
