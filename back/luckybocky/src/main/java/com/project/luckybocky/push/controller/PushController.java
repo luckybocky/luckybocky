@@ -4,6 +4,9 @@ package com.project.luckybocky.push.controller;
 import com.project.luckybocky.common.MessageDto;
 import com.project.luckybocky.push.dto.PushDto;
 import com.project.luckybocky.push.service.PushService;
+import com.project.luckybocky.user.dto.UserDto;
+import com.project.luckybocky.user.entity.User;
+import com.project.luckybocky.user.service.UserSettingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PushController {
 
     private final PushService pushService;
+    private final UserSettingService userSettingService;
 
     @PostMapping("/comment")
     public ResponseEntity<MessageDto> pushComment(@RequestBody PushDto pushDto) {
