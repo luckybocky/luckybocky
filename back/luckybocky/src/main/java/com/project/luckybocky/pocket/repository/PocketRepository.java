@@ -3,14 +3,23 @@ package com.project.luckybocky.pocket.repository;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+
+import com.project.luckybocky.pocket.entity.Pocket;
+import com.project.luckybocky.user.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import org.springframework.stereotype.Repository;
 
-@Repository
-@RequiredArgsConstructor
-public class PocketRepository {
-    private final EntityManager em;
+import java.time.LocalDate;
+import java.util.Optional;
 
-//    public Pocket save(NewPocketDto pocketDto){
-//
-//    }
+@Repository
+public interface PocketRepository extends JpaRepository<Pocket, Integer> {
+    Pocket findPocketByUser(User user);
+
+    @Query("SELECT p FROM Pocket p WHERE p.user.userSeq = :userSeq AND FUNCTION('DATE', p.createdAt) >= :startDate AND FUNCTION('DATE', p.createdAt) < :endDate")
+    Optional<Pocket> findPocketByUserAndDate(@Param("userSeq") int userSeq, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
 }

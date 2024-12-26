@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommonResponseDto {
-    private Integer status;
+public class CommonResponse {
+    private int status;
     private String msg;
 }

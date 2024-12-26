@@ -16,6 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class User extends BaseEntity {
     @Id
     @GeneratedValue
@@ -39,10 +40,10 @@ public class User extends BaseEntity {
     private boolean fortuneVisibility;
 
     @OneToMany(mappedBy = "user")
-    private List<Article> articles = new ArrayList<>();
+    List<Article> articles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")   // cascade 설정 X
-    private List<Pocket> pockets = new ArrayList<>();
+    List<Pocket> pockets = new ArrayList<>();
 
 
     //12-23 창희 피드백, 신고 칼럼 추가 start
