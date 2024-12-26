@@ -18,8 +18,8 @@ public class MyArticleController {
 
     @GetMapping
     public ResponseEntity<MyArticlesDto> myArticle(HttpSession session){
-//        String userKey = (String) session.getAttribute("user");
-        String userKey ="changhee9";
+        String userKey = (String) session.getAttribute("user");
+//        String userKey ="changhee9";
 
         MyArticlesDto myArticles = myArticleService.findMyArticles(userKey);
         return ResponseEntity.status(HttpStatus.OK).body(myArticles);
