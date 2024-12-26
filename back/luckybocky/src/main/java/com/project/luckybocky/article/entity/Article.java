@@ -52,4 +52,8 @@ public class Article extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "pocket_seq")
     private Pocket pocket;
+
+    public void updateComment(String comment){
+        this.articleComment = comment;
+    }
 }
