@@ -33,7 +33,7 @@ public class Article extends BaseEntity {
     //12-23 창희 int -> Fortune으로 변경
     @ManyToOne
     @JoinColumn(name = "fortune_seq", columnDefinition = "smallint", nullable = false)
-    private Fortune fortunes;
+    private Fortune fortune;
 
     @Column(columnDefinition = "tinyint", nullable = false)
     private int articleVisibility;

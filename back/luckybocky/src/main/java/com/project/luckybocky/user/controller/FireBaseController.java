@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/auth/firebase")
+@RequestMapping("api/v1/auth/firebase")
 @RequiredArgsConstructor
 @Slf4j
 public class FireBaseController {
