@@ -1,6 +1,6 @@
 package com.project.luckybocky.article.service;
 
-import com.google.api.gax.rpc.NotFoundException;
+import com.google.api.Http;
 import com.project.luckybocky.article.dto.ArticleResponseDto;
 import com.project.luckybocky.article.dto.CommentDto;
 import com.project.luckybocky.article.dto.WriteArticleDto;
@@ -13,8 +13,10 @@ import com.project.luckybocky.pocket.repository.PocketRepository;
 import com.project.luckybocky.user.entity.User;
 import com.project.luckybocky.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,7 +34,7 @@ public class ArticleService {
 
     public ArticleResponseDto getArticle(int articleSeq){
         Article article = articleRepository.findByArticleSeq(articleSeq)
-                .orElseThrow(() -> new NullPointerException("글이 없습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "글이 없습니다."));
         ArticleResponseDto articleResponseDto = new ArticleResponseDto(article);
 
         return articleResponseDto;
@@ -85,5 +87,16 @@ public class ArticleService {
         articleRepository.save(article);
 
         return new ArticleResponseDto(article);
+    }
+
+    public void deleteArticle(int articleSeq) {
+        Article findArticle = articleRepository.findByArticleSeq(articleSeq).get();
+        articleRepository.delete(findArticle);
+    }
+
+    public int getOwnerByArticle(int articleSeq){
+        Article findArticle = articleRepository.findByArticleSeq(articleSeq).get();
+        Pocket pocket = findArticle.getPocket();
+        return pocket.getUser().getUserSeq();
     }
 }

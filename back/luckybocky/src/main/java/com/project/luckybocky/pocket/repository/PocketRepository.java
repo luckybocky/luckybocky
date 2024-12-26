@@ -19,5 +19,4 @@ public interface PocketRepository extends JpaRepository<Pocket, Integer> {
 
     @Query("SELECT p FROM Pocket p WHERE p.user.userSeq = :userSeq AND FUNCTION('DATE', p.createdAt) >= :startDate AND FUNCTION('DATE', p.createdAt) < :endDate")
     Optional<Pocket> findPocketByUserAndDate(@Param("userSeq") int userSeq, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
-
 }

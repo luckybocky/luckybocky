@@ -35,4 +35,13 @@ public class ArticleController {
         );
     }
 
+    @Description("복주머니에 달린 복을 삭제한다.")
+    @DeleteMapping
+    public ResponseEntity<MessageDto> deleteArticle(@RequestParam int userSeq, @RequestParam int articleSeq){
+        if (articleService.getOwnerByArticle(articleSeq) != userSeq){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageDto("fail", "허가되지 않은 사용자"));
+        }
+        articleService.deleteArticle(articleSeq);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageDto("success", "삭제 성공"));
+    }
 }
