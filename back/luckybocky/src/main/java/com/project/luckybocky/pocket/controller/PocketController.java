@@ -1,7 +1,7 @@
 package com.project.luckybocky.pocket.controller;
 
 import com.project.luckybocky.article.service.ArticleService;
-import com.project.luckybocky.common.CommonResponse;
+import com.project.luckybocky.pocket.dto.PocketAddressDto;
 import com.project.luckybocky.pocket.dto.PocketDto;
 import com.project.luckybocky.pocket.service.PocketService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class PocketController {
 
     @Description("복주머니와 달린 복들을 가져온다.")
     @GetMapping
-    public PocketDto getAllArticlesInPocket(@RequestParam int userSeq){
+    public ResponseEntity<PocketDto> getAllArticlesInPocket(@RequestParam int userSeq){
         // 상반기면 작년 7/1 ~ 지금 사이에 생성된 복주머니를 조회하도록 함.
         LocalDate now = LocalDate.now();
         int year = now.getMonthValue() <= 6 ? now.getYear() - 1 : now.getYear();
@@ -30,26 +30,26 @@ public class PocketController {
         PocketDto pocketDto = new PocketDto();
         pocketDto.setArticles(articleService.getAllArticlesByDate(userSeq, year));
 
-        return pocketDto;
+        return ResponseEntity.status(HttpStatus.OK).body(pocketDto);
     }
 
 
     @Description("사용자 복주머니 주소(url)를 가져온다.")
     @GetMapping("/address")
-    public ResponseEntity<CommonResponse> getPocketAddress(@RequestParam int userSeq){
+    public ResponseEntity<PocketAddressDto> getPocketAddress(@RequestParam int userSeq){
         // ** userSeq는 나중에 세션에서 가져와서 처리
         String address = pocketService.getPocketAddress(userSeq);
+        PocketAddressDto pocketAddressDto = new PocketAddressDto();
 
-        // ** 주소가 없을 경우 예외처리하기
-        // ** 주소를 msg 말고 url에 넣어서 반환하자 (Dto 새로만들기)
-        if (address != null){
-            CommonResponse commonResponse = new CommonResponse(HttpStatus.OK.value(), address);
-            return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (!address.isEmpty()){
+            pocketAddressDto.setAddress(address);
+            return ResponseEntity.status(HttpStatus.OK).body(pocketAddressDto);
+        } else {    // 주소가 없을 경우 (빈값, length = 0)
+            address = pocketService.createPocketAddress(userSeq);
+            pocketAddressDto.setAddress(address);
+            return ResponseEntity.status(HttpStatus.OK).body(pocketAddressDto);
         }
     }
-
 
     
 }
