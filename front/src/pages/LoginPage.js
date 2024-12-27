@@ -1,13 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MainImage from "../image/동백꽃바라.png";
 import kakaoIcon from "../image/kakao-icon.png";
 import { useNavigate } from "react-router-dom";
+import AuthStore from "../store/AuthStore";
 
 const LoginPage = () => {
   const navigate = useNavigate();
 
+  const user = AuthStore((state) => state.user);
+
+  useEffect(() => {
+    console.log("#");
+    if (user.createdAt != null) navigate("/main");
+  }, [user, navigate]);
+
+  // 카카오 소셜 로그인 / 로그아웃
+  const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
+  const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+  const LOGOUT_REDIRECT_URI = process.env.REACT_APP_LOGOUT_REDIRECT_URI;
+  const loginLink = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const LogoutLink = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${LOGOUT_REDIRECT_URI}`;
+
   const handleKakaoLogin = () => {
-    navigate("/main");
+    window.location.href = loginLink;
   };
 
   return (
