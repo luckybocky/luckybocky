@@ -61,7 +61,7 @@ public class LoginService {
 			LoginDto.class);
 
 		if(response.getBody() != null) {
-			return response.getBody().getAccessToken();
+			return response.getBody().getAccess_token();
 		}
 
 		return null;
