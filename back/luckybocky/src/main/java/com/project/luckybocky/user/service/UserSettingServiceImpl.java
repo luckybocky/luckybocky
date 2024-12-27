@@ -22,11 +22,7 @@ public class UserSettingServiceImpl implements UserSettingService{
     private final UserSettingRepository userSettingRepository;
 
     @Override
-    public boolean updateUserSetting(String userKey, SettingDto settingDto){
-        String userNickname = settingDto.getUserNickname();
-        boolean alarmStatus = settingDto.getAlarmStatus();
-        boolean fortuneVisibility = settingDto.getFortuneVisibility();
-
+    public boolean updateUserSetting(String userKey,String userNickname, boolean alarmStatus,boolean fortuneVisibility){
 
         Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
@@ -36,12 +32,11 @@ public class UserSettingServiceImpl implements UserSettingService{
 
         User user = userOptional.get();
         log.info("setting user {}", user);
-        user.updateUserSetting(userNickname, alarmStatus,fortuneVisibility);
-
+        user.updateUserInfo(userNickname,alarmStatus,fortuneVisibility);
         return true;
     }
     @Override
-    public UserInfoDto findByUserKey(String userKey) {
+    public UserInfoDto getUserInfo(String userKey) {
         Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
         if(userOptional.isEmpty()){
@@ -78,5 +73,10 @@ public class UserSettingServiceImpl implements UserSettingService{
     @Override
     public User join(User user) {
         return userSettingRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> findUserFirebaseKey(String userKey) {
+        return userSettingRepository.findByKey(userKey);
     }
 }

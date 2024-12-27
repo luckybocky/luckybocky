@@ -31,8 +31,7 @@ public class SettingController {
     public ResponseEntity<MessageDto> updateSetting(@RequestBody SettingDto settingDto, HttpSession session) {
 //        session.setAttribute("user", "changhee");
         String userKey = (String) session.getAttribute("user");
-        boolean isSuccess = userSettingService.updateUserSetting(userKey, settingDto);
-
+        boolean isSuccess = userSettingService.updateUserSetting(userKey,settingDto.getUserNickname(), settingDto.getAlarmStatus(), settingDto.getFortuneVisibility());
         if (!isSuccess) {
             log.info("setting user {}", "UNAUTHORIZED");
             MessageDto messageDto = MessageDto.builder()
@@ -52,7 +51,7 @@ public class SettingController {
     @GetMapping
     public ResponseEntity<UserInfoDto> loadUserInfo(HttpSession session){
         String userKey = (String) session.getAttribute("user");
-        UserInfoDto userInfoDto = userSettingService.findByUserKey(userKey);
+        UserInfoDto userInfoDto = userSettingService.getUserInfo(userKey);
         log.info("user found {} {}",userKey, userInfoDto);
         if(userInfoDto == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(userInfoDto);

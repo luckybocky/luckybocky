@@ -66,9 +66,10 @@ public class User extends BaseEntity {
                 '}';
     }
 
-    public void updateUserSetting(String userNickname, boolean alarmStatus,boolean fortuneVisibility){
-        this.userNickname = userNickname;
-        this.alarmStatus= alarmStatus;
-        this.fortuneVisibility = fortuneVisibility;
+    public void updateUserInfo(String userNickname, boolean alarmStatus, boolean fortuneVisibility){
+        setUserNickname(userNickname);
+        setAlarmStatus(alarmStatus);
+        setFortuneVisibility(fortuneVisibility);
     }
+
 }
