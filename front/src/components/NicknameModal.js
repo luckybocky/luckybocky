@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
+import AuthStore from "../store/AuthStore";
 
 const NicknameModal = () => {
   const [nickname, setNickname] = useState(""); // 닉네임 상태
-  const [isNicknameModalOpen, setIsNicknameModalOpen] = useState(false); // 닉네임 모달 상태
+  const [isNicknameModalOpen, setIsNicknameModalOpen] = useState(true); // 닉네임 모달 상태
+
+  const userNickname = AuthStore((state) => state.user.userNickname);
 
   // 닉네임 모달 초기화
   useEffect(() => {
-    if (!nickname) {
-      setIsNicknameModalOpen(true);
+    console.log(userNickname);
+    if (userNickname) {
+      setIsNicknameModalOpen(false);
     }
-  }, [nickname]);
+  }, [userNickname]);
 
   const handleNicknameSubmit = () => {
     if (nickname.trim()) {

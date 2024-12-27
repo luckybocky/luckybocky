@@ -5,12 +5,15 @@ import Menu from "../components/Menu";
 import DecorationImage from "../image/heart.png"; // 장식물 이미지
 import Article from "../components/Article";
 import NicknameModal from "../components/NicknameModal";
+import AuthStore from "../store/AuthStore";
 
 const MainPage = () => {
   const navigate = useNavigate();
 
   const [selectArticle, setSelectArticle] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const userNickname = AuthStore((state) => state.user.userNickname);
 
   const decorations = [
     { id: 1, position: "top-[15%] left-[40%]" }, // 상단 중앙
@@ -48,6 +51,10 @@ const MainPage = () => {
       <Menu />
       <NicknameModal />
       {/* 메인 화면 */}
+      <div className="absolute top-4 left-4">
+        <h1 className="text-3xl">{userNickname} 님의 복주머니</h1>
+        <p className="text-lg">{decorations.length}개의 복이 왔어요.</p>
+      </div>
       <h1 className="text-3xl font-bold mb-2">Lucky Bocky!</h1>
       <p className="text-lg mb-6">복 내놔라</p>
 

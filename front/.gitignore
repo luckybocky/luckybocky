@@ -25,7 +25,7 @@ yarn-error.log*
 /public/fire
 
 # .env 파일 제외
-.env
+.env*
 
 # public 하위의 모든 .json 파일 제외
 public/firebase-config.json
