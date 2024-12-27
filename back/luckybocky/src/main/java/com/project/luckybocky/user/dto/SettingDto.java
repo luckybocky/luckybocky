@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Builder
 public class SettingDto {
+    private String userNickname;
     private Boolean alarmStatus;
     private Boolean fortuneVisibility;
 }
