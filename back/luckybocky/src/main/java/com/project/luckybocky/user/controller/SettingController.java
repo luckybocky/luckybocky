@@ -31,7 +31,7 @@ public class SettingController {
     public ResponseEntity<MessageDto> updateSetting(@RequestBody SettingDto settingDto, HttpSession session) {
 
         String userKey = (String) session.getAttribute("user");
-        boolean isSuccess = userSettingService.updateUserSetting(userKey, settingDto.getAlarmStatus(), settingDto.getFortuneVisibility());
+        boolean isSuccess = userSettingService.updateUserSetting(userKey,settingDto.getUserNickname(), settingDto.getAlarmStatus(), settingDto.getFortuneVisibility());
 
         if (!isSuccess) {
             log.info("setting user {}", "UNAUTHORIZED");

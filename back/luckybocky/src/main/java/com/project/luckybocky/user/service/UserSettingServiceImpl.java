@@ -21,7 +21,7 @@ public class UserSettingServiceImpl implements UserSettingService{
     private final UserSettingRepository userSettingRepository;
 
     @Override
-    public boolean updateUserSetting(String userKey, boolean alarmStatus,boolean fortuneVisibility){
+    public boolean updateUserSetting(String userKey,String userNickname, boolean alarmStatus,boolean fortuneVisibility){
         Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
         if(userOptional.isEmpty()){
@@ -30,9 +30,7 @@ public class UserSettingServiceImpl implements UserSettingService{
 
         User user = userOptional.get();
         log.info("setting user {}", user);
-        user.setAlarmStatus(alarmStatus);
-        user.setFortuneVisibility(fortuneVisibility);
-
+        user.updateUserInfo(userNickname,alarmStatus,fortuneVisibility);
         return true;
     }
     @Override

@@ -35,8 +35,7 @@ public class PushController {
     public ResponseEntity<MessageDto> pushComment(HttpSession session, @RequestBody PushDto pushDto) {
 
         String toUserKey = pushDto.getUserKey();
-//        String fromUserKey = (String) session.getAttribute("user");
-        String fromUserKey = "changhee";
+        String fromUserKey = (String) session.getAttribute("user");
         String type = pushDto.getType();
         try {
             pushService.sendPush(toUserKey, fromUserKey, type);
