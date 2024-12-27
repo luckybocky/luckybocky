@@ -1,5 +1,6 @@
 package com.project.luckybocky.user.service;
 
+import com.project.luckybocky.user.dto.SettingDto;
 import com.project.luckybocky.user.dto.UserDto;
 import com.project.luckybocky.user.dto.UserInfoDto;
 import com.project.luckybocky.user.entity.User;
@@ -21,7 +22,12 @@ public class UserSettingServiceImpl implements UserSettingService{
     private final UserSettingRepository userSettingRepository;
 
     @Override
-    public boolean updateUserSetting(String userKey, boolean alarmStatus,boolean fortuneVisibility){
+    public boolean updateUserSetting(String userKey, SettingDto settingDto){
+        String userNickname = settingDto.getUserNickname();
+        boolean alarmStatus = settingDto.getAlarmStatus();
+        boolean fortuneVisibility = settingDto.getFortuneVisibility();
+
+
         Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
         if(userOptional.isEmpty()){
@@ -30,8 +36,7 @@ public class UserSettingServiceImpl implements UserSettingService{
 
         User user = userOptional.get();
         log.info("setting user {}", user);
-        user.setAlarmStatus(alarmStatus);
-        user.setFortuneVisibility(fortuneVisibility);
+        user.updateUserSetting(userNickname, alarmStatus,fortuneVisibility);
 
         return true;
     }
