@@ -1,13 +1,13 @@
 package com.project.luckybocky.article.entity;
 
 import com.project.luckybocky.common.BaseEntity;
-import com.project.luckybocky.feedback.entity.Feedback;
 import com.project.luckybocky.fortune.entity.Fortune;
 import com.project.luckybocky.pocket.entity.Pocket;
 import com.project.luckybocky.report.entity.Report;
 import com.project.luckybocky.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@SQLDelete(sql = "UPDATE article SET is_deleted = true WHERE article_seq = ?")
 public class Article extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,4 +57,5 @@ public class Article extends BaseEntity {
     public void updateComment(String comment){
         this.articleComment = comment;
     }
+
 }
