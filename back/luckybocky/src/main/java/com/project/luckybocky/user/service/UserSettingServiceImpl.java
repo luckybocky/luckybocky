@@ -36,7 +36,7 @@ public class UserSettingServiceImpl implements UserSettingService{
         return true;
     }
     @Override
-    public UserInfoDto findByUserKey(String userKey) {
+    public UserInfoDto getUserInfo(String userKey) {
         Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
         if(userOptional.isEmpty()){
@@ -73,5 +73,10 @@ public class UserSettingServiceImpl implements UserSettingService{
     @Override
     public User join(User user) {
         return userSettingRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> findUserFirebaseKey(String userKey) {
+        return userSettingRepository.findByKey(userKey);
     }
 }

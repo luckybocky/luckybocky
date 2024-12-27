@@ -9,7 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class PushDto {
+	private String type;
 	private String userKey;
-	private String title;
-	private String body;
 }

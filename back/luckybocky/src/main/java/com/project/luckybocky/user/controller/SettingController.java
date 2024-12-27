@@ -52,7 +52,7 @@ public class SettingController {
     @GetMapping
     public ResponseEntity<UserInfoDto> loadUserInfo(HttpSession session){
         String userKey = (String) session.getAttribute("user");
-        UserInfoDto userInfoDto = userSettingService.findByUserKey(userKey);
+        UserInfoDto userInfoDto = userSettingService.getUserInfo(userKey);
         log.info("user found {} {}",userKey, userInfoDto);
         if(userInfoDto == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(userInfoDto);

@@ -5,11 +5,12 @@ import com.project.luckybocky.user.dto.UserDto;
 import com.project.luckybocky.user.dto.UserInfoDto;
 import com.project.luckybocky.user.entity.User;
 
+import java.util.Optional;
+
 public interface UserSettingService {
     boolean updateUserSetting(String userKey,boolean alarmStatus,boolean fortuneVisibility);
-    UserInfoDto findByUserKey(String userKey);
+    UserInfoDto getUserInfo(String userKey);
+    Optional<User> findUserFirebaseKey(String userKey);
     boolean updateFireBaseKey(String userKey, String firebaseKey);
     User join(User user);
-
-
 }
