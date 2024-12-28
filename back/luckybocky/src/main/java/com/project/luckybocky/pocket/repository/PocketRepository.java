@@ -13,10 +13,14 @@ import java.util.Optional;
 
 @Repository
 public interface PocketRepository extends JpaRepository<Pocket, Integer> {
-    Pocket findPocketByUser(User user);
+    Optional<Pocket> findPocketByUser(User user);
 
     Optional<Pocket> findPocketByPocketSeq(int pocketSeq);
 
-    @Query("SELECT p FROM Pocket p WHERE p.user.userSeq = :userSeq AND FUNCTION('DATE', p.createdAt) >= :startDate AND FUNCTION('DATE', p.createdAt) < :endDate")
-    Optional<Pocket> findPocketByUserAndDate(@Param("userSeq") int userSeq, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    @Query("SELECT p FROM Pocket p WHERE p.user.userKey = :userKey AND FUNCTION('DATE', p.createdAt) >= :startDate AND FUNCTION('DATE', p.createdAt) < :endDate")
+    Optional<Pocket> findPocketByUserAndDate(@Param("userKey") String userKey, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    Optional<Pocket> findPocketByPocketAddress(String pocketAddress);
+
+    Optional<Pocket> findFirstByUserOrderByCreatedAtDesc(User user);
 }

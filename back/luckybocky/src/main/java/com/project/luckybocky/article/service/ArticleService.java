@@ -1,6 +1,5 @@
 package com.project.luckybocky.article.service;
 
-import com.google.api.Http;
 import com.project.luckybocky.article.dto.ArticleResponseDto;
 import com.project.luckybocky.article.dto.CommentDto;
 import com.project.luckybocky.article.dto.WriteArticleDto;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,7 +30,7 @@ public class ArticleService {
     private final UserRepository userRepository;
     private final FortuneRepository fortuneRepository;
 
-    public ArticleResponseDto getArticle(int articleSeq){
+    public ArticleResponseDto getArticleDetails(int articleSeq){
         Article article = articleRepository.findByArticleSeq(articleSeq)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "글이 없습니다."));
         ArticleResponseDto articleResponseDto = new ArticleResponseDto(article);
@@ -40,23 +38,23 @@ public class ArticleService {
         return articleResponseDto;
     }
 
-    public List<ArticleResponseDto> getAllArticlesByDate(int userSeq, int year){
-        LocalDate startDate = LocalDate.of(year, 7, 1);
-        Pocket findPocket = pocketRepository.findPocketByUserAndDate(userSeq, startDate, LocalDate.now())
-                .orElseThrow(() -> new NullPointerException("복주머니를 찾지 못했습니다."));
-        List<Article> findArticles = articleRepository.findAllByPocket(findPocket);
-        List<ArticleResponseDto> result = findArticles.stream()
-                .map(a -> new ArticleResponseDto(a))
-                .collect(Collectors.toList());
-        return result;
-    }
+    // 사용자가 보유한 복주머니 가져오기
+//    public List<ArticleResponseDto> getAllArticlesByDate(int userSeq, int year){
+//        LocalDate startDate = LocalDate.of(year, 7, 1);
+//        Pocket findPocket = pocketRepository.findPocketByUserAndDate(userSeq, startDate, LocalDate.now())
+//                .orElseThrow(() -> new NullPointerException("복주머니를 찾지 못했습니다."));
+//        List<ArticleResponseDto> result = findPocket.getArticles().stream()
+//                .map(a -> new ArticleResponseDto(a))
+//                .collect(Collectors.toList());
+//
+//        return result;
+//    }
 
-    public void createArticle(WriteArticleDto writeArticleDto) {
-        int findUserSeq = writeArticleDto.getUserSeq();
-        Optional<User> user = userRepository.findByUserSeq(findUserSeq);
-        if (user.isEmpty()){
-            throw new IllegalArgumentException("Invalid userSeq: " + writeArticleDto.getUserSeq());
-        }
+    public void createArticle(String userKey, WriteArticleDto writeArticleDto) {
+        Optional<User> user = userRepository.findByUserKey(userKey);
+//        if (user.isEmpty()){
+//            throw new IllegalArgumentException("Invalid userKey: " + userKey);
+//        }
 
         Fortune fortune = fortuneRepository.findByFortuneSeq(writeArticleDto.getFortuneSeq())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid fortuneSeq: " + writeArticleDto.getFortuneSeq()));
@@ -69,7 +67,7 @@ public class ArticleService {
                 .userNickname(writeArticleDto.getNickname())
                 .articleContent(writeArticleDto.getContent())
                 .articleComment(null)
-                .articleVisibility(writeArticleDto.getVisibility())
+                .articleVisibility(writeArticleDto.isVisibility() ? 1 : 0)
                 .fortune(fortune)
                 .pocket(pocket)
                 .build();
@@ -80,7 +78,7 @@ public class ArticleService {
     public ArticleResponseDto updateComment(CommentDto commentDto){
         int findArticle = commentDto.getArticleSeq();
         Article article = articleRepository.findByArticleSeq(findArticle).get();
-        if (!article.getArticleComment().isEmpty()){
+        if (article.getArticleComment() != null){
             throw new IllegalArgumentException("Already exist comment");
         }
         article.updateComment(commentDto.getComment());
@@ -98,5 +96,26 @@ public class ArticleService {
         Article findArticle = articleRepository.findByArticleSeq(articleSeq).get();
         Pocket pocket = findArticle.getPocket();
         return pocket.getUser().getUserSeq();
+    }
+
+    // 복주머니 Seq에 맞는 article 가져오기
+    public List<ArticleResponseDto> getArticlesByPocket(int pocketSeq){
+        Pocket pocket = pocketRepository.findPocketByPocketSeq(pocketSeq)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 복주머니입니다."));
+        List<ArticleResponseDto> result = pocket.getArticles().stream()
+                .map(a -> new ArticleResponseDto(a))
+                .collect(Collectors.toList());
+        return result;
+    }
+
+    public List<ArticleResponseDto> getArticlesByUser(String userKey){
+        User user = userRepository.findByUserKey(userKey)
+                .orElseThrow(() -> new IllegalArgumentException("부적절한 사용자입니다."));
+        Pocket pocket = pocketRepository.findFirstByUserOrderByCreatedAtDesc(user)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 복주머니입니다."));
+        List<ArticleResponseDto> result = pocket.getArticles().stream()
+                .map(a -> new ArticleResponseDto(a))
+                .collect(Collectors.toList());
+        return result;
     }
 }

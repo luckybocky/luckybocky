@@ -1,7 +1,5 @@
 package com.project.luckybocky.user.service;
 
-import com.project.luckybocky.user.dto.SettingDto;
-import com.project.luckybocky.user.dto.UserDto;
 import com.project.luckybocky.user.dto.UserInfoDto;
 import com.project.luckybocky.user.entity.User;
 import com.project.luckybocky.user.repository.UserSettingRepository;
