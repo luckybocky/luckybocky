@@ -6,6 +6,7 @@ const AuthStore = create((set) => ({
     alarmStatus: null,
     fortuneVisibility: null,
     createdAt: null,
+    address: null,
   },
   setUser: (user) => set({ user }),
   resetUser: () =>
@@ -15,6 +16,7 @@ const AuthStore = create((set) => ({
         alarmStatus: null,
         fortuneVisibility: null,
         createdAt: null,
+        address: null,
       },
     }),
 }));

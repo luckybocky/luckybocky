@@ -8,6 +8,7 @@ import {
 import { AiOutlineAlert } from "react-icons/ai";
 import PocketIcon from "../image/pocketIcon.svg";
 import { saveFeedback } from "../api/FeedbackApi";
+import AuthStore from "../store/AuthStore";
 
 const Menu = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -17,6 +18,8 @@ const Menu = () => {
   const [rating, setRating] = useState(0);
 
   const navigate = useNavigate();
+
+  const myAddress = AuthStore((state) => state.user.address);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
@@ -73,7 +76,7 @@ const Menu = () => {
           </button>
           <button
             onClick={() => {
-              navigate("/main");
+              navigate(`/${myAddress}`);
               toggleMenu();
             }}
             className="flex hover:underline items-center gap-2"
