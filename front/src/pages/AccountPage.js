@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import AuthStore from "../store/AuthStore";
+import Footer from "../components/Footer";
+import { updateUser } from "../api/AuthApi";
 
 const AccountPage = () => {
   const user = AuthStore((state) => state.user);
@@ -14,13 +16,10 @@ const AccountPage = () => {
 
   useEffect(() => {
     if (nickname == null) setNickname(user.userNickname);
+    if (user.createdAt) updateUser();
   }, [user]);
 
   const navigate = useNavigate();
-
-  const handlePublicChange = (event) => {
-    setIsPublic(event.target.checked);
-  };
 
   const saveNickname = () => {
     setUser({
@@ -43,7 +42,7 @@ const AccountPage = () => {
   };
 
   return (
-    <div className="relative flex flex-col w-full max-w-[375px] min-h-screen bg-[#0d1a26] text-white overflow-hidden text-xl">
+    <div className="relative flex flex-col w-full max-w-[375px] min-h-screen bg-[#0d1a26] text-white overflow-hidden">
       {/* 뒤로 가기 버튼 */}
       <button
         className="absolute top-4 right-4 text-2xl z-20"
@@ -118,6 +117,7 @@ const AccountPage = () => {
       {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 my-16" />
       <div>로그아웃</div>
+      <Footer />
     </div>
   );
 };

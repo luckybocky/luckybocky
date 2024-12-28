@@ -7,19 +7,38 @@ import {
 } from "react-icons/io5";
 import { AiOutlineAlert } from "react-icons/ai";
 import PocketIcon from "../image/pocketIcon.svg";
+import { saveFeedback } from "../api/FeedbackApi";
+import AuthStore from "../store/AuthStore";
 
 const Menu = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const [rating, setRating] = useState(0);
 
   const navigate = useNavigate();
+
+  const myAddress = AuthStore((state) => state.user.address);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   const closeModals = () => {
     setFeedbackModalOpen(false);
     setReportModalOpen(false);
+  };
+
+  const sendFeedback = () => {
+    if (feedback === "") {
+      alert("피드백 내용을 입력해주세요.");
+    } else if (rating === 0) {
+      alert("별점을 선택해주세요.");
+    } else {
+      saveFeedback(feedback, rating);
+      setFeedbackModalOpen(false);
+      setRating(5);
+      setFeedback("");
+    }
   };
 
   return (
@@ -42,7 +61,7 @@ const Menu = () => {
 
       {/* 메뉴 바 */}
       <div
-        className={`text-lg absolute top-0 left-28 h-full bg-[#333] text-white shadow-lg transition-transform duration-300 ease-in-out z-20 ${
+        className={`absolute top-0 left-28 h-full bg-[#333] text-white shadow-lg transition-transform duration-300 ease-in-out z-20 ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{ width: "275px" }}
@@ -57,7 +76,7 @@ const Menu = () => {
           </button>
           <button
             onClick={() => {
-              navigate("/main");
+              navigate(`/${myAddress}`);
               toggleMenu();
             }}
             className="flex hover:underline items-center gap-2"
@@ -73,7 +92,7 @@ const Menu = () => {
           <button
             className="flex hover:underline items-center gap-2"
             onClick={() => {
-              navigate("/send-message");
+              navigate("/my-message");
               toggleMenu();
             }}
           >
@@ -109,19 +128,37 @@ const Menu = () => {
             className="bg-white text-[#0d1a26] p-5 rounded-lg w-80"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-lg font-bold mb-4">피드백하기</h2>
+            <h2 className="text-2xl font-bold mb-4">피드백하기</h2>
             <textarea
               className="w-full h-60 p-2 border border-gray-300 rounded-md mb-2 resize-none"
               placeholder="피드백 내용을 입력하세요."
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
             ></textarea>
-            <div className="flex justify-end gap-4">
+            <div className="flex justify-end gap-3">
+              <div>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    className={`px-1 ${
+                      star <= rating ? "text-yellow-500" : "text-gray-300"
+                    }`}
+                    onClick={() => setRating(star)}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
               <button
                 className="bg-gray-300 text-black py-2 px-4 rounded-lg"
                 onClick={closeModals}
               >
                 취소
               </button>
-              <button className="bg-[#0d1a26] text-white py-2 px-4 rounded-lg">
+              <button
+                className="bg-[#0d1a26] text-white py-2 px-4 rounded-lg"
+                onClick={sendFeedback}
+              >
                 보내기
               </button>
             </div>
@@ -139,7 +176,7 @@ const Menu = () => {
             className="bg-white text-[#0d1a26] p-5 rounded-lg w-80"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-lg font-bold mb-4">신고하기</h2>
+            <h2 className="text-2xl font-bold mb-4">신고하기</h2>
             <input
               className="w-full p-2 border border-gray-300 rounded-md mb-4"
               placeholder="제목을 입력하세요."

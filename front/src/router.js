@@ -2,9 +2,11 @@ import { createBrowserRouter } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import AccountPage from "./pages/AccountPage";
-import MyMessagePage from "./pages/SendMessagePage";
+import MyMessagePage from "./pages/MyArticlePage";
 import SelectDecoPage from "./pages/SelectDecoPage";
 import WritePage from "./pages/WritePage";
+import CallBack from "./pages/CallBack";
+import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter([
   {
@@ -12,7 +14,7 @@ const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
-    path: "/main",
+    path: "/:address",
     element: <MainPage />,
   },
   {
@@ -20,7 +22,7 @@ const router = createBrowserRouter([
     element: <AccountPage />,
   },
   {
-    path: "/send-message",
+    path: "/my-message",
     element: <MyMessagePage />,
   },
   {
@@ -30,6 +32,14 @@ const router = createBrowserRouter([
   {
     path: "/write",
     element: <WritePage />,
+  },
+  {
+    path: "/callback",
+    element: <CallBack />,
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
   },
 ]);
 
