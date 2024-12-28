@@ -67,6 +67,7 @@ public class FeedbackService {
 		if(!feedbacks.isEmpty()) {
 			List<FeedbackDto> feedbackDtoList = feedbacks.stream()
 				.map(feedback -> FeedbackDto.builder()
+					.feedbackSeq(feedback.getFeedbackSeq())
 					.userSeq(feedback.getUser().getUserSeq())
 					.feedbackContent(feedback.getFeedbackContent())
 					.feedbackRate(feedback.getFeedbackRate())
