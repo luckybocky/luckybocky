@@ -11,9 +11,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class WriteArticleDto {
     private int pocketSeq;
-    private int userSeq;    // null 이라면 비회원
+//    private String userKey;    // null 이라면 비회원
     private String nickname;
     private String content;
     private int fortuneSeq;
-    private int visibility;
+    private boolean visibility;
 }

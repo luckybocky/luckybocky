@@ -17,8 +17,7 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<MessageDto> writeComment(@RequestBody CommentDto commentDto){
-        ArticleResponseDto responseDto = articleService.updateComment(commentDto);
-        // 여기에 알림 넣으면 될듯함니다.
+        articleService.updateComment(commentDto);
         return ResponseEntity.status(HttpStatus.OK).body(new MessageDto("success", "답변 작성 성공"));
     }
 
