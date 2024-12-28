@@ -14,6 +14,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class FeedbackDto {
+	private Integer feedbackSeq;
 	private Integer userSeq;
 	private String feedbackContent;
 	private Byte feedbackRate;
