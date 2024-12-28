@@ -19,7 +19,7 @@ import java.util.List;
 @Builder
 public class User extends BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     //12-23 창희 JoinColumn시 칼럼매핑을 하지못해서 명시적으로 추가
     @Column(name ="user_seq")
     private Integer userSeq;

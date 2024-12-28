@@ -1,10 +1,6 @@
 package com.project.luckybocky.feedback.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +19,7 @@ import com.project.luckybocky.user.entity.User;
 public class Feedback extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer feedbackSeq;
 
     @ManyToOne  //many가 연관관계 주인
