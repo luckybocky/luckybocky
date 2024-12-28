@@ -41,3 +41,7 @@ src/main/resources/*.properties
 
 # Ignore the firebase folder
 src/main/resources/firebase/fcm_service_account.json
+
+# Ignore Test files
+src/main/java/com/project/luckybocky/login/contorller/TestController.java
+src/main/java/com/project/luckybocky/login/service/TestService.java
