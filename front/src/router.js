@@ -7,39 +7,50 @@ import SelectDecoPage from "./pages/SelectDecoPage";
 import WritePage from "./pages/WritePage";
 import CallBack from "./pages/CallBack";
 import ErrorPage from "./pages/ErrorPage";
+import JoinPage from "./pages/JoinPage";
+import CheckUser from "./components/CheckUser";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <LoginPage />,
-  },
-  {
-    path: "/:address",
-    element: <MainPage />,
-  },
-  {
-    path: "/account",
-    element: <AccountPage />,
-  },
-  {
-    path: "/my-message",
-    element: <MyMessagePage />,
-  },
-  {
-    path: "/select-deco",
-    element: <SelectDecoPage />,
-  },
-  {
-    path: "/write",
-    element: <WritePage />,
-  },
-  {
-    path: "/callback",
-    element: <CallBack />,
-  },
-  {
-    path: "*",
-    element: <ErrorPage />,
+    element: <CheckUser />,
+    children: [
+      {
+        path: "/",
+        element: <LoginPage />,
+      },
+      {
+        path: "/:address",
+        element: <MainPage />,
+      },
+      {
+        path: "/account",
+        element: <AccountPage />,
+      },
+      {
+        path: "/my-message",
+        element: <MyMessagePage />,
+      },
+      {
+        path: "/select-deco",
+        element: <SelectDecoPage />,
+      },
+      {
+        path: "/write",
+        element: <WritePage />,
+      },
+      {
+        path: "/callback",
+        element: <CallBack />,
+      },
+      {
+        path: "*",
+        element: <ErrorPage />,
+      },
+      {
+        path: "/join",
+        element: <JoinPage />,
+      },
+    ],
   },
 ]);
 

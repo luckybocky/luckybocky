@@ -1,6 +1,6 @@
 import ApiClient from "./ApiClient";
 import AuthStore from "../store/AuthStore";
-import { myPocketAddress } from "./PocketApi";
+import { myPocketAddress, createPocket } from "./PocketApi";
 
 export const checkLogin = async () => {
   console.log("login check");
@@ -9,7 +9,14 @@ export const checkLogin = async () => {
 
     const response = await ApiClient.get("auth/user");
     const data = response.data;
-    const address = await myPocketAddress();
+
+    let address = "";
+
+    try {
+      address = await myPocketAddress();
+    } catch (error) {
+      address = await createPocket();
+    }
 
     setUser({
       userNickname: data.userNickname,
@@ -18,6 +25,13 @@ export const checkLogin = async () => {
       createdAt: data.createdAt,
       address: address,
     });
+
+    //닉네임이 없는 경우(설정 페이지로 이동)
+    if (data.userNickname == null) {
+      return 1;
+    }
+
+    return 2;
   } catch {
     //서버 오류 or 비로그인
   }
@@ -28,11 +42,11 @@ export const callback = async (code) => {
     try {
       const response = await ApiClient.get(`auth/callback?code=${code}`);
 
-      await checkLogin();
-      return true;
+      const result = await checkLogin();
+
+      return result;
     } catch (error) {
       console.error("Error during Kakao login", error);
-      return false;
     }
   }
   return false;

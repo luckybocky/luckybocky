@@ -3,7 +3,6 @@ import MainImage from "../image/pocket.png";
 import { useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
 import Article from "../components/Article";
-import NicknameModal from "../components/NicknameModal";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
@@ -77,7 +76,6 @@ const MainPage = () => {
   return (
     <div className="relative flex flex-col items-center justify-center w-full max-w-[375px] min-h-screen bg-[#0d1a26] text-white overflow-hidden">
       <Menu />
-      <NicknameModal />
       {/* 메인 화면 */}
       <div className="absolute top-4 left-4">
         <h1 className="text-3xl mb-1">{userNickname} 님의 복주머니</h1>
