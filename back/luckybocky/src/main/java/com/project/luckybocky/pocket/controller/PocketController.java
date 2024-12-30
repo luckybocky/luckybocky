@@ -60,18 +60,18 @@ public class PocketController {
     public ResponseEntity<Message> getPocketAddress(HttpSession session){
         String userKey = (String) session.getAttribute("user");
         String address = pocketService.getPocketAddress(userKey);
-        if (address == null){   // 복주머니에 할당된 주소가 없을 경우
-            address = pocketService.createPocketAddress(userKey);
-        }
+//        if (address == null){   // 복주머니에 할당된 주소가 없을 경우
+//            address = pocketService.createPocketAddress(userKey);
+//        }
 
         return ResponseEntity.status(HttpStatus.OK).body(new Message(HttpStatus.OK, "복주머니 주소 조회 성공", address));
     }
 
     @Description("복주머니 생성")
     @PostMapping
-    public ResponseEntity<MessageDto> createPocket(HttpSession session){
+    public ResponseEntity<Message> createPocket(HttpSession session){
         String userKey = (String) session.getAttribute("user");
-        pocketService.createPocket(userKey);
-        return ResponseEntity.status(HttpStatus.OK).body(new MessageDto("success", "복주머니 생성 성공"));
+        String address= pocketService.createPocket(userKey);
+        return ResponseEntity.status(HttpStatus.OK).body(new Message(HttpStatus.OK, "복주머니 생성 성공",address));
     }
 }
