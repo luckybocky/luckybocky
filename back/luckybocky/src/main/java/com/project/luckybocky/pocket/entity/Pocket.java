@@ -21,7 +21,7 @@ public class Pocket extends BaseEntity {
     private Integer pocketSeq;
 
     @ManyToOne
-    @JoinColumn(name = "user_seq", nullable = false, unique = true)
+    @JoinColumn(name = "user_seq", nullable = false)
     private User user;
 
     @Column(length = 255)
@@ -31,7 +31,7 @@ public class Pocket extends BaseEntity {
     @OneToMany(mappedBy = "pocket")
     private List<Article> articles = new ArrayList<>();
 
-//    public void updateAddress(String pocketAddress){
-//        this.pocketAddress = pocketAddress;
-//    }
+    public void updateAddress(String pocketAddress){
+        this.pocketAddress = pocketAddress;
+    }
 }
