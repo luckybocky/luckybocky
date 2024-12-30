@@ -1,57 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { IoArrowBack } from "react-icons/io5";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
 import { updateUser } from "../api/AuthApi";
 
-const AccountPage = () => {
+const JoinPage = () => {
   const user = AuthStore((state) => state.user);
   const setUser = AuthStore((state) => state.setUser);
 
   const [nickname, setNickname] = useState(null);
-  const [changeMode, setChangeMode] = useState(false);
-
-  useEffect(() => {
-    if (nickname == null) setNickname(user.userNickname);
-    if (user.createdAt) updateUser();
-  }, [user]);
+  const [isPublic, setIsPublic] = useState(false); // 공개 여부
+  const [isAlarm, setIsAlarm] = useState(false); // 알람 여부
 
   const navigate = useNavigate();
 
-  const saveNickname = () => {
+  const joinUser = () => {
     setUser({
       ...user,
       userNickname: nickname,
+      alarmStatus: isAlarm,
+      fortuneVisibility: isPublic,
     });
-  };
 
-  const saveAlarmStatus = () => {
-    setUser({
-      ...user,
-      alarmStatus: !user.alarmStatus,
-    });
-  };
-  const saveFortuneVisibility = () => {
-    setUser({
-      ...user,
-      fortuneVisibility: !user.fortuneVisibility,
-    });
+    updateUser();
+
+    navigate(`/${user.address}`);
   };
 
   return (
     <div className="relative flex flex-col w-full max-w-[375px] min-h-screen bg-[#0d1a26] text-white overflow-hidden">
-      {/* 뒤로 가기 버튼 */}
-      <button
-        className="absolute top-4 right-4 text-2xl z-20"
-        onClick={() => navigate(-1)}
-      >
-        <IoArrowBack />
-      </button>
-
       {/* 계정 설정 화면 */}
-      <h1 className="text-5xl font-bold mb-8 mt-5">계정 설정</h1>
-      <h1 className="text-3xl">{user.userNickname} 님</h1>
+      <h1 className="text-5xl font-bold mb-8 mt-5">회원 가입</h1>
+      <h1 className="text-3xl">안녕하세요!!</h1>
 
       {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 mt-3 mb-10" />
@@ -64,17 +44,7 @@ const AccountPage = () => {
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
           className="border p-2 rounded-lg text-black mr-4 w-full"
-          disabled={!changeMode}
         />
-        <button
-          onClick={() => {
-            if (changeMode) saveNickname();
-            setChangeMode((prev) => !prev);
-          }}
-          className="bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 w-[50px]"
-        >
-          {changeMode ? "저장" : "변경"}
-        </button>
       </div>
 
       {/* 구분선 추가 */}
@@ -86,13 +56,11 @@ const AccountPage = () => {
         <div className="flex items-center absolute right-10">
           <input
             type="checkbox"
-            checked={user.alarmStatus}
-            onChange={saveAlarmStatus}
+            checked={isAlarm}
+            onChange={(e) => setIsAlarm(e.target.checked)}
             className="h-5 w-5"
           />
-          <span className="ml-2 w-[30px]">
-            {user.alarmStatus ? "허용" : "거절"}
-          </span>
+          <span className="ml-2 w-[30px]">{isAlarm ? "허용" : "거절"}</span>
         </div>
       </div>
 
@@ -102,24 +70,25 @@ const AccountPage = () => {
         <div className="flex items-center absolute right-10">
           <input
             type="checkbox"
-            checked={user.fortuneVisibility}
-            onChange={saveFortuneVisibility}
+            checked={isPublic}
+            onChange={(e) => setIsPublic(e.target.checked)}
             className="h-5 w-5"
           />
-          <span className="ml-2 w-[30px]">
-            {user.fortuneVisibility ? "공개" : "비밀"}
-          </span>
+          <span className="ml-2 w-[30px]">{isPublic ? "공개" : "비밀"}</span>
         </div>
       </div>
 
       {/* 구분선 추가 */}
-      <hr className="border-t-2 border-gray-600 my-16" />
-      <div>
-        <button>로그아웃</button>
-      </div>
+      <hr className="border-t-2 border-gray-600 mt-16 mb-12" />
+      <button
+        className="bg-white text-[#0d1a26] py-4 rounded-lg text-3xl"
+        onClick={joinUser}
+      >
+        시작하기
+      </button>
       <Footer />
     </div>
   );
 };
 
-export default AccountPage;
+export default JoinPage;

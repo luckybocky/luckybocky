@@ -17,7 +17,8 @@ const CallBack = () => {
       const result = await callback(code);
       console.log(result);
       console.log(redirectPath);
-      if (result) navigate(redirectPath);
+      if (result === 2) navigate(redirectPath);
+      else if (result === 1) navigate("/join");
     };
     init();
   }, []);
