@@ -49,6 +49,7 @@ public class PocketController {
     public ResponseEntity<PocketDto> getPocket(@PathVariable String url){
         PocketDto pocketDto = new PocketDto();
         PocketInfoDto findPocket = pocketService.getPocketInfo(url);
+        pocketDto.setPocketSeq(findPocket.getPocketSeq());
         pocketDto.setOwner(findPocket.getOwnerNickname());
         List<ArticleResponseDto> articles = articleService.getArticlesByPocket(findPocket.getPocketSeq());
         pocketDto.setArticles(articles);
