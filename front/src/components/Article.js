@@ -1,5 +1,6 @@
 import React from "react";
 import Comment from "../components/Comment"
+import { AiOutlineDelete, AiOutlineClose } from "react-icons/ai";
 
 const Article = ({ onClose, content, seq }) => {
   return (
@@ -10,13 +11,13 @@ const Article = ({ onClose, content, seq }) => {
             className="bg-red-500 text-white py-2 px-4 rounded-md"
             onClick={onClose}
           >
-            삭제
+            <AiOutlineDelete />
           </button>
           <button
             className="bg-blue-500 text-white py-2 px-4 rounded-md"
             onClick={onClose}
           >
-            닫기
+            <AiOutlineClose />
           </button>
         </div>
 
