@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Nanum", "sans-serif"], // Nanum 폰트를 추가
+        sans: ["ChosunContennial", "SFHambaknun", "KyunggiThousandYear", "Nanum", "sans-serif"], // Nanum 폰트를 추가
       },
     },
   },
