@@ -18,19 +18,19 @@ public class PocketService {
     private final UserRepository userRepository;
     private final PocketRepository pocketRepository;
 
-    public String createPocketAddress(String userKey){
-        // uuid로 복주머니 링크 생성 후 저장 & 반환
-        UUID uuid = UUID.randomUUID();
-        String address = uuid.toString();
-
-        User user = userRepository.findByUserKey(userKey).get();
-        Pocket pocket = pocketRepository.findPocketByUser(user)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 복주머니입니다."));    // 아직 년도 고려 X
-        pocket.updateAddress(address);
-        pocketRepository.save(pocket);
-
-        return address;
-    }
+//    public String createPocketAddress(String userKey){
+//        // uuid로 복주머니 링크 생성 후 저장 & 반환
+//        UUID uuid = UUID.randomUUID();
+//        String address = uuid.toString();
+//
+//        User user = userRepository.findByUserKey(userKey).get();
+//        Pocket pocket = pocketRepository.findPocketByUser(user)
+//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 복주머니입니다."));    // 아직 년도 고려 X
+//        pocket.updateAddress(address);
+//        pocketRepository.save(pocket);
+//
+//        return address;
+//    }
 
     public String getPocketAddress(String userKey){
         User user = userRepository.findByUserKey(userKey)
@@ -47,11 +47,19 @@ public class PocketService {
         return new PocketInfoDto(pocket);
     }
 
-    public void createPocket(String userKey) {
+    public String createPocket(String userKey) {
         User user = userRepository.findByUserKey(userKey)
                 .orElseThrow(() -> new IllegalArgumentException("부적절한 사용자입니다."));
-        Pocket pocket = Pocket.builder().user(user).build();
+
+        //uuid로 복주머니 링크 생성 후 저장 & 반환
+        UUID uuid = UUID.randomUUID();
+        String address = uuid.toString();
+
+        Pocket pocket = Pocket.builder().user(user).pocketAddress(address).build();
+
         pocketRepository.save(pocket);
+
+        return address;
     }
 
     public PocketInfoDto getPocketInfoByUser(String userKey){
