@@ -144,6 +144,7 @@ const MainPage = () => {
         <Article
           onClose={() => setSelectArticle(null)}
           content={`장식물 ${selectArticle}번의 메시지입니다.`}
+          articleSeq={selectArticle}
         />
       )}
 

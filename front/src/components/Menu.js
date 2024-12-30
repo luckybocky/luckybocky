@@ -8,6 +8,7 @@ import {
 import { AiOutlineAlert } from "react-icons/ai";
 import PocketIcon from "../image/pocketIcon.svg";
 import { saveFeedback } from "../api/FeedbackApi";
+import { saveReport } from "../api/ReportApi"
 import AuthStore from "../store/AuthStore";
 
 const Menu = () => {
@@ -15,6 +16,7 @@ const Menu = () => {
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const [report, setReport] = useState("");
   const [rating, setRating] = useState(0);
 
   const navigate = useNavigate();
@@ -40,6 +42,19 @@ const Menu = () => {
       setFeedback("");
     }
   };
+
+  const sendReport = () => {
+    if (report === ""){
+      alert("신고 내용을 입력해주세요.");
+      return;
+    } else {
+      saveReport(1,0,report);
+      alert("감사합니다. 신고 완료되었습니다.");
+    }
+
+    setReport("");
+    setReportModalOpen(false);
+  }
 
   return (
     <div>
@@ -184,6 +199,8 @@ const Menu = () => {
             <textarea
               className="w-full h-48 p-2 border border-gray-300 rounded-md mb-2 resize-none"
               placeholder="신고 내용을 입력하세요."
+              value={report}
+              onChange={(e) => setReport(e.target.value)}
             ></textarea>
             <div className="flex justify-end gap-4">
               <button
@@ -192,7 +209,9 @@ const Menu = () => {
               >
                 취소
               </button>
-              <button className="bg-[#0d1a26] text-white py-2 px-4 rounded-lg">
+              <button 
+                className="bg-[#0d1a26] text-white py-2 px-4 rounded-lg"
+                onClick={sendReport}>
                 보내기
               </button>
             </div>
