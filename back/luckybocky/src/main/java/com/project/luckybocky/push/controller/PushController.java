@@ -34,11 +34,14 @@ public class PushController {
     @PostMapping
     public ResponseEntity<MessageDto> pushComment(HttpSession session, @RequestBody PushDto pushDto) {
 
-        String toUserKey = pushDto.getUserKey();
-        String fromUserKey = (String) session.getAttribute("user");
+        String toUser = pushDto.getToUser();
+        String fromUser = (String) session.getAttribute("user");
         String type = pushDto.getType();
+        String url = pushDto.getUrl();
+
+        log.info("toUser : {}, fromUser : {}", toUser,session.getAttribute("user"));
         try {
-            pushService.sendPush(toUserKey, fromUserKey, type);
+            pushService.sendPush(toUser, fromUser, type,url);
             return ResponseEntity.status(HttpStatus.OK).body(
                     MessageDto.builder()
                             .status("success")
