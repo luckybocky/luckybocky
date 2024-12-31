@@ -50,6 +50,7 @@ public class PocketController {
         PocketDto pocketDto = new PocketDto();
         PocketInfoDto findPocket = pocketService.getPocketInfo(url);
         pocketDto.setOwner(findPocket.getOwnerNickname());
+        pocketDto.setOwnerKey(findPocket.getOwnerKey());
         List<ArticleResponseDto> articles = articleService.getArticlesByPocket(findPocket.getPocketSeq());
         pocketDto.setArticles(articles);
         return ResponseEntity.status(HttpStatus.OK).body(pocketDto);
