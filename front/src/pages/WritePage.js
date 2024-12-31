@@ -16,6 +16,11 @@ const WritePage = () => {
     }
     alert(`닉네임: ${nickname}\n장식물: ${decorationId}번\n메시지: ${message}`);
     navigate("/main");
+
+    //=====12-31 창희 추가 start=====
+    //복주머니에 복을 넣을때
+
+    //=====12-31 창희 추가 end=====
   };
 
   return (
