@@ -6,3 +6,18 @@
   font-family: "Nanum";
   src: url(./fonts/nanum.ttf);
 }
+
+@font-face {
+  font-family: "ChosunContennial";
+  src: url(./fonts/ChosunCentennial.ttf);
+}
+
+@font-face {
+  font-family: "KyunggiThousandYear";
+  src: url(./fonts/KyunggiThousandYear.ttf);
+}
+
+@font-face {
+  font-family: "SFHambaknun";
+  src: url(./fonts/SFHambaknun.ttf);
+}
