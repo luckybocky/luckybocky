@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainImage from "../image/pocket.png";
 import { useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
@@ -9,6 +9,8 @@ import { useParams } from "react-router-dom";
 import simpleImage from "../image/뱀.png";
 import jobImage from "../image/취업뱀.png";
 import eduImage from "../image/학업뱀.png";
+
+import { requestFcmToken } from "../api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -72,6 +74,14 @@ const MainPage = () => {
       alert("URL 복사에 실패했습니다. 브라우저 설정을 확인해주세요.");
     }
   };
+
+  //=====12-31 창희 추가 start=====
+  //main페이지에 들어오면 로그인이 성공했다고 판단하기에, 푸시를 위한 파이어베이스키 업데이트
+  console.log("12-31 창희 추가");
+  useEffect(() => {
+    requestFcmToken();
+  }, []);
+  //=====12-31 창희 추가 end=====
 
   return (
     <div className="relative flex flex-col items-center justify-center w-full max-w-[375px] min-h-screen bg-[#0d1a26] text-white overflow-hidden">
