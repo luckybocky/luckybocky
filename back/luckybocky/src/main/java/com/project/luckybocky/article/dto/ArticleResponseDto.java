@@ -17,6 +17,10 @@ public class ArticleResponseDto {
     private String content;
     private String comment;
 
+    //12-31 창희 추가
+    private String userKey;
+
+
     private String fortuneName;
     private String fortuneImgUrl;
     private String createdAt;
@@ -29,6 +33,11 @@ public class ArticleResponseDto {
         this.nickname = article.getUserNickname();
         this.content = article.getArticleContent();
         this.comment = article.getArticleComment();
+
+        //12-31 창희 추가
+        this.userKey=article.getUser().getUserKey();
+
+
         this.fortuneName = article.getFortune().getFortuneName();  // getFortune -> getFortunes
         this.fortuneImgUrl = article.getFortune().getFortuneImg();
         this.createdAt = article.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
