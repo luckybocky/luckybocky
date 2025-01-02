@@ -61,3 +61,19 @@ export const updateUser = async () => {
     console.error("update error", error);
   }
 };
+
+export const logout = async () => {
+  try {
+    const setUser = AuthStore.getState().setUser;
+    setUser({
+      userNickname: null,
+      alarmStatus: null,
+      fortuneVisibility: null,
+      createdAt: null,
+      address: null,
+    });
+    await ApiClient.post("auth/logout");
+  } catch (error) {
+    console.error("logout error", error);
+  }
+};

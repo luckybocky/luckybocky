@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
-import { updateUser } from "../api/AuthApi";
+import { updateUser, logout } from "../api/AuthApi";
 
 const AccountPage = () => {
   const user = AuthStore((state) => state.user);
@@ -38,6 +38,20 @@ const AccountPage = () => {
       fortuneVisibility: !user.fortuneVisibility,
     });
   };
+
+  const logoutButton = async () => {
+    navigate("/");
+    const setUser = AuthStore.getState().setUser;
+    setUser({
+      userNickname: null,
+      alarmStatus: null,
+      fortuneVisibility: null,
+      createdAt: null,
+      address: null,
+    });
+
+    await logout();
+  }
 
   return (
     <div className="relative flex flex-col w-full max-w-[375px] min-h-screen bg-[#0d1a26] text-white overflow-hidden">
@@ -115,7 +129,11 @@ const AccountPage = () => {
       {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 my-16" />
       <div>
-        <button>로그아웃</button>
+        <button
+          onClick={logoutButton}
+        >
+          로그아웃
+        </button>
       </div>
       <Footer />
     </div>
