@@ -1,4 +1,4 @@
-package com.project.luckybocky.login.service;
+package com.project.luckybocky.kakao.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.luckybocky.login.dto.LoginDto;
+import com.project.luckybocky.kakao.dto.KakaoLoginDto;
 import com.project.luckybocky.user.repository.UserRepository;
 import com.project.luckybocky.user.dto.UserDto;
 import com.project.luckybocky.user.entity.User;
@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class LoginService {
+public class KakaoService {
 	private final RestTemplate restTemplate;
 	private final UserRepository userRepository;
 
@@ -55,10 +55,10 @@ public class LoginService {
 		body.add("code", code);
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
-		ResponseEntity<LoginDto> response = restTemplate.postForEntity(
+		ResponseEntity<KakaoLoginDto> response = restTemplate.postForEntity(
 			tokenUri,
 			request,
-			LoginDto.class);
+			KakaoLoginDto.class);
 
 		if(response.getBody() != null) {
 			return response.getBody().getAccess_token();
