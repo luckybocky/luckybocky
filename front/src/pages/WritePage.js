@@ -1,21 +1,36 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { writeArticle } from "../api/ArticleApi";
 
 const WritePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const decorationId = location.state?.decorationId;
+  const pocketAddress = location.state?.pocketAddress;
+  const visibility = location.state?.visibility;
+  const pocketSeq = location.state?.pocketSeq;
 
   const [nickname, setNickname] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!nickname || !message) {
       alert("닉네임과 메시지를 입력해주세요!");
       return;
     }
-    alert(`닉네임: ${nickname}\n장식물: ${decorationId}번\n메시지: ${message}`);
-    navigate("/main");
+
+    const payload = {
+      pocketSeq,
+      pocketAddress,
+      visibility,
+      decorationId,
+      nickname,
+      message
+    }
+
+    await writeArticle(payload);
+
+    navigate("/" + pocketAddress);
 
     //=====12-31 창희 추가 start=====
     //복주머니에 복을 넣을때
