@@ -35,7 +35,7 @@ public class ArticleResponseDto {
         this.comment = article.getArticleComment();
 
         //12-31 창희 추가
-        this.userKey=article.getUser().getUserKey();
+        this.userKey = (article.getUser() == null) ? null : article.getUser().getUserKey();  // guest일 때 예외처리 추가
 
 
         this.fortuneName = article.getFortune().getFortuneName();  // getFortune -> getFortunes
