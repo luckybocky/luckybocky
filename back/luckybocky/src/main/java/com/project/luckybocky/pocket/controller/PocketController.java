@@ -49,6 +49,7 @@ public class PocketController {
     public ResponseEntity<PocketDto> getPocket(@PathVariable String url){
         PocketDto pocketDto = new PocketDto();
         PocketInfoDto findPocket = pocketService.getPocketInfo(url);
+        pocketDto.setPocketSeq(findPocket.getPocketSeq());  // 누락된 setter 추가
         pocketDto.setOwner(findPocket.getOwnerNickname());
         pocketDto.setOwnerKey(findPocket.getOwnerKey());
         List<ArticleResponseDto> articles = articleService.getArticlesByPocket(findPocket.getPocketSeq());
