@@ -15,3 +15,12 @@ export const createPocket = async () => {
     console.error("pocket address error", error);
   }
 };
+
+export const loadPocket = async (pocketAddress) => {
+  try {
+    const response = await ApiClient.get("pocket/" + pocketAddress);
+    return response.data;
+  } catch (error) {
+    console.error("Failed load pocket", error);
+  }
+}

@@ -9,3 +9,19 @@ export const myArticle = async () => {
     console.error("my Article error", error);
   }
 };
+
+export const writeArticle = async (payload) => {
+  try {
+    const setArticle = {
+      pocketSeq: payload.pocketSeq,
+      nickname: payload.nickname,
+      content: payload.message,
+      fortuneSeq: payload.decorationId,
+      visibility: payload.visibility === null ? false : payload.visibility
+    };
+    
+    await ApiClient.post("article", setArticle);
+  } catch (error) {
+    console.debug("write Article error", error);
+  }
+};

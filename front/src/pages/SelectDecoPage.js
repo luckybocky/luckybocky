@@ -1,19 +1,26 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import DecorationImage from "../image/heart.png";
+import { useNavigate, useLocation } from "react-router-dom";
+import FortuneImageBasic from "../image/fortunes/푸른뱀.png"
+import FortuneImageHealth from "../image/fortunes/건강뱀.png"
+import FortuneImageLove from "../image/fortunes/애정뱀.png"
+import FortuneImageWealth from "../image/fortunes/재물뱀.png"
+import FortuneImageJob from "../image/fortunes/취업뱀.png"
+import FortuneImageEdu from "../image/fortunes/학업뱀.png"
 
 const SelectDecoPage = () => {
+  const images = [FortuneImageBasic, FortuneImageHealth, FortuneImageLove, FortuneImageWealth, FortuneImageJob, FortuneImageEdu];
   const [selectedDecoration, setSelectedDecoration] = useState(null);
   const navigate = useNavigate();
-
-  const decorations = new Array(8).fill(null).map((_, idx) => idx + 1);
+  const location = useLocation();
+  const { address, fortuneVisibility, pocketSeq } = location.state;
+  const decorations = new Array(6).fill(null).map((_, idx) => idx + 1);
 
   const handleNext = () => {
     if (!selectedDecoration) {
       alert("장식을 선택해주세요!");
       return;
     }
-    navigate("/write", { state: { decorationId: selectedDecoration } });
+    navigate("/write", { state: { decorationId: selectedDecoration, pocketAddress: address, visibility: fortuneVisibility, pocketSeq } });
   };
 
   return (
@@ -29,7 +36,7 @@ const SelectDecoPage = () => {
             onClick={() => setSelectedDecoration(id)}
           >
             <img
-              src={DecorationImage}
+              src={images[id - 1]}
               alt="장식물"
               className="w-16 h-16 mx-auto"
             />

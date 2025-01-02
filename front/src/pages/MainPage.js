@@ -6,13 +6,18 @@ import Article from "../components/Article";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
-import simpleImage from "../image/뱀.png";
-import jobImage from "../image/취업뱀.png";
-import eduImage from "../image/학업뱀.png";
+import FortuneImageBasic from "../image/fortunes/푸른뱀.png"
+import FortuneImageHealth from "../image/fortunes/건강뱀.png"
+import FortuneImageLove from "../image/fortunes/애정뱀.png"
+import FortuneImageWealth from "../image/fortunes/재물뱀.png"
+import FortuneImageJob from "../image/fortunes/취업뱀.png"
+import FortuneImageEdu from "../image/fortunes/학업뱀.png"
+import { loadPocket } from "../api/PocketApi";
 
 import { requestFcmToken } from "../api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
 
 const MainPage = () => {
+  const images = [FortuneImageBasic, FortuneImageHealth, FortuneImageLove, FortuneImageWealth, FortuneImageJob, FortuneImageEdu];
   const navigate = useNavigate();
 
   const { address } = useParams();
@@ -20,21 +25,50 @@ const MainPage = () => {
   const [selectArticle, setSelectArticle] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [copied, setCopied] = useState(false); // URL 복사 알림 상태
+  const [pocket, setPocket] = useState(null);
+  const [decorations, setDecorations] = useState([]);
 
   const userNickname = AuthStore((state) => state.user.userNickname);
   const myAddress = AuthStore((state) => state.user.address);
+  const fortuneVisibility = AuthStore((state) => state.user.fortuneVisibility);
 
-  const decorations = [
-    { id: 1, position: "top-[20%] left-[36%]", image: simpleImage }, // 상단 중앙
-    { id: 2, position: "top-[40%] left-[5%]", image: eduImage }, // 상단 왼쪽
-    { id: 3, position: "top-[45%] left-[36%]", image: jobImage }, // 상단 오른쪽
-    { id: 4, position: "top-[40%] left-[67%]", image: simpleImage }, // 중단 왼쪽
-    { id: 5, position: "top-[60%] left-[5%]", image: eduImage }, // 중단 오른쪽
-    { id: 6, position: "top-[65%] left-[36%]", image: jobImage }, // 하단 왼쪽
-    { id: 7, position: "top-[60%] left-[67%]", image: jobImage }, // 하단 오른쪽
+  const positions = [
+    { id: 1, position: "top-[40%] left-[5%]"}, // 상단 왼쪽
+    { id: 2, position: "top-[45%] left-[36%]"}, // 상단 오른쪽 -> 가운데
+    { id: 3, position: "top-[40%] left-[67%]"}, // 중단 왼쪽 -> 상단 오른쪽
+    { id: 4, position: "top-[60%] left-[5%]"}, // 중단 오른쪽 -> 하단 왼쪽
+    { id: 5, position: "top-[65%] left-[36%]"}, // 하단 왼쪽 -> 가운데
+    { id: 6, position: "top-[60%] left-[67%]"}, // 하단 오른쪽
   ];
 
-  const decorationsPerPage = 8;
+
+  useEffect(() => {
+    const fetchPocket = async () => {
+      try {
+        const data = await loadPocket(address);
+        setPocket(data);
+
+        const articlesArray = data.articles || [];
+        
+        const updatedPocket = articlesArray.map((decoration, idx) => {
+          const decorationIdx = idx % 6; // 순환 인덱스
+          return {
+            id: decoration.articleSeq,
+            position: positions[decorationIdx].position,
+            image: parseInt(decoration.fortuneImgUrl)
+          };
+        });
+  
+        setDecorations(updatedPocket); // 위치가 할당된 데이터 저장
+      } catch (error) {
+        console.error("Error loading pocket:", error);
+      }
+    };
+
+    fetchPocket();
+  }, [address]);
+
+  const decorationsPerPage = 6;
   const totalPages = Math.ceil(decorations.length / decorationsPerPage);
   const currentDecorations = decorations.slice(
     (currentPage - 1) * decorationsPerPage,
@@ -104,7 +138,7 @@ const MainPage = () => {
             onClick={() => setSelectArticle(decoration.id)}
           >
             <img
-              src={decoration.image}
+              src={images[decoration.image]}
               alt="장식물"
               className="w-16 h-16 cursor-pointer"
             />
@@ -135,7 +169,7 @@ const MainPage = () => {
 
       <button
         onClick={
-          address === myAddress ? handleCopyURL : () => navigate("/select-deco")
+          address === myAddress ? handleCopyURL : () => navigate("/select-deco", {state: {address, fortuneVisibility, pocketSeq: pocket.pocketSeq}})
         }
         className="bg-white text-[#0d1a26] py-4 px-20 rounded-lg"
       >
