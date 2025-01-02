@@ -61,3 +61,11 @@ export const updateUser = async () => {
     console.error("update error", error);
   }
 };
+
+export const logout = async () => {
+  try {
+    await ApiClient.post("auth/logout");
+  } catch (error) {
+    console.error("logout error", error);
+  }
+};
