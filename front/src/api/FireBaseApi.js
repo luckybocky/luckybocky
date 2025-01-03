@@ -74,7 +74,29 @@ export const setupOnMessageListener = (callback) => {
 
 export const sendTokenToBackend = async (token) => {
   const myKey = { firebaseKey: token };
-  const response = await ApiClient.put(`api/v1/auth/firebase`, myKey);
+  const response = await ApiClient.put(`/auth/firebase`, myKey);
+  console.log(response);
+  return response.data.data;
+};
+
+export const sendArticlePush = async (pocketSeq) => {
+  const payload = {
+    type: "article",
+    contentSeq: pocketSeq,
+    url: `${window.location.origin}${window.location.pathname}`,
+  };
+  const response = await ApiClient.post(`/push`, payload);
+  console.log(response);
+  return response.data.data;
+};
+
+export const sendCommentPush = async (articleSeq) => {
+  const payload = {
+    type: "comment",
+    contentSeq: articleSeq,
+    url: `${window.location.origin}${window.location.pathname}`,
+  };
+  const response = await ApiClient.post(`/push`, payload);
   console.log(response);
   return response.data.data;
 };

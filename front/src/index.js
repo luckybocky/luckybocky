@@ -20,7 +20,7 @@ if ("serviceWorker" in navigator) {
 
 //=====12-31 창희 추가 start=====
 //main페이지에 들어오면 로그인이 성공했다고 판단하기에, 푸시를 위한 파이어베이스키 업데이트
-console.log("12-31 창희 추가");
+// console.log("12-31 창희 추가");
 
 setupOnMessageListener();
 

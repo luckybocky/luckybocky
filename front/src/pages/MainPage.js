@@ -6,18 +6,25 @@ import Article from "../components/Article";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
-import FortuneImageBasic from "../image/fortunes/푸른뱀.png"
-import FortuneImageHealth from "../image/fortunes/건강뱀.png"
-import FortuneImageLove from "../image/fortunes/애정뱀.png"
-import FortuneImageWealth from "../image/fortunes/재물뱀.png"
-import FortuneImageJob from "../image/fortunes/취업뱀.png"
-import FortuneImageEdu from "../image/fortunes/학업뱀.png"
+import FortuneImageBasic from "../image/fortunes/푸른뱀.png";
+import FortuneImageHealth from "../image/fortunes/건강뱀.png";
+import FortuneImageLove from "../image/fortunes/애정뱀.png";
+import FortuneImageWealth from "../image/fortunes/재물뱀.png";
+import FortuneImageJob from "../image/fortunes/취업뱀.png";
+import FortuneImageEdu from "../image/fortunes/학업뱀.png";
 import { loadPocket } from "../api/PocketApi";
 
 import { requestFcmToken } from "../api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
 
 const MainPage = () => {
-  const images = [FortuneImageBasic, FortuneImageHealth, FortuneImageLove, FortuneImageWealth, FortuneImageJob, FortuneImageEdu];
+  const images = [
+    FortuneImageBasic,
+    FortuneImageHealth,
+    FortuneImageLove,
+    FortuneImageWealth,
+    FortuneImageJob,
+    FortuneImageEdu,
+  ];
   const navigate = useNavigate();
 
   const { address } = useParams();
@@ -33,14 +40,13 @@ const MainPage = () => {
   const fortuneVisibility = AuthStore((state) => state.user.fortuneVisibility);
 
   const positions = [
-    { id: 1, position: "top-[40%] left-[5%]"}, // 상단 왼쪽
-    { id: 2, position: "top-[45%] left-[36%]"}, // 상단 오른쪽 -> 가운데
-    { id: 3, position: "top-[40%] left-[67%]"}, // 중단 왼쪽 -> 상단 오른쪽
-    { id: 4, position: "top-[60%] left-[5%]"}, // 중단 오른쪽 -> 하단 왼쪽
-    { id: 5, position: "top-[65%] left-[36%]"}, // 하단 왼쪽 -> 가운데
-    { id: 6, position: "top-[60%] left-[67%]"}, // 하단 오른쪽
+    { id: 1, position: "top-[40%] left-[5%]" }, // 상단 왼쪽
+    { id: 2, position: "top-[45%] left-[36%]" }, // 상단 오른쪽 -> 가운데
+    { id: 3, position: "top-[40%] left-[67%]" }, // 중단 왼쪽 -> 상단 오른쪽
+    { id: 4, position: "top-[60%] left-[5%]" }, // 중단 오른쪽 -> 하단 왼쪽
+    { id: 5, position: "top-[65%] left-[36%]" }, // 하단 왼쪽 -> 가운데
+    { id: 6, position: "top-[60%] left-[67%]" }, // 하단 오른쪽
   ];
-
 
   useEffect(() => {
     const fetchPocket = async () => {
@@ -49,16 +55,16 @@ const MainPage = () => {
         setPocket(data);
 
         const articlesArray = data.articles || [];
-        
+
         const updatedPocket = articlesArray.map((decoration, idx) => {
           const decorationIdx = idx % 6; // 순환 인덱스
           return {
             id: decoration.articleSeq,
             position: positions[decorationIdx].position,
-            image: parseInt(decoration.fortuneImgUrl)
+            image: parseInt(decoration.fortuneImgUrl),
           };
         });
-  
+
         setDecorations(updatedPocket); // 위치가 할당된 데이터 저장
       } catch (error) {
         console.error("Error loading pocket:", error);
@@ -111,8 +117,9 @@ const MainPage = () => {
 
   //=====12-31 창희 추가 start=====
   //main페이지에 들어오면 로그인이 성공했다고 판단하기에, 푸시를 위한 파이어베이스키 업데이트
-  console.log("12-31 창희 추가");
+
   useEffect(() => {
+    // console.log("12-31 창희 추가");
     requestFcmToken();
   }, []);
   //=====12-31 창희 추가 end=====
@@ -169,7 +176,16 @@ const MainPage = () => {
 
       <button
         onClick={
-          address === myAddress ? handleCopyURL : () => navigate("/select-deco", {state: {address, fortuneVisibility, pocketSeq: pocket.pocketSeq}})
+          address === myAddress
+            ? handleCopyURL
+            : () =>
+                navigate("/select-deco", {
+                  state: {
+                    address,
+                    fortuneVisibility,
+                    pocketSeq: pocket.pocketSeq,
+                  },
+                })
         }
         className="bg-white text-[#0d1a26] py-4 px-20 rounded-lg"
       >
