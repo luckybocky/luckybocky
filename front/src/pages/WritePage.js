@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { writeArticle } from "../api/ArticleApi";
+import { sendArticlePush } from "../api/FireBaseApi";
 
 const WritePage = () => {
   const location = useLocation();
@@ -25,8 +26,8 @@ const WritePage = () => {
       visibility,
       decorationId,
       nickname,
-      message
-    }
+      message,
+    };
 
     await writeArticle(payload);
 
@@ -34,7 +35,7 @@ const WritePage = () => {
 
     //=====12-31 창희 추가 start=====
     //복주머니에 복을 넣을때
-
+    sendArticlePush(pocketSeq);
     //=====12-31 창희 추가 end=====
   };
 
