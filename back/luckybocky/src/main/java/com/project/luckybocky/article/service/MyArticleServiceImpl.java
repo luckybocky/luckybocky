@@ -19,7 +19,7 @@ import java.util.List;
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
-public class MyArticleServiceImpl implements MyArticleService{
+public class MyArticleServiceImpl implements MyArticleService {
     private final MyArticleRepository myArticleRepository;
 
     @Override
@@ -28,15 +28,15 @@ public class MyArticleServiceImpl implements MyArticleService{
         List<MyArticleDto> myArticles = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        for(Article article : articleByUserKey){
+        for (Article article : articleByUserKey) {
             String pocketOwner = article.getPocket().getUser().getUserNickname();
             String articleOwner = article.getUserNickname();
             String content = article.getArticleContent();
             String fortuneName = article.getFortune().getFortuneName();
             String fortuneImg = article.getFortune().getFortuneImg();
-            String createdAt =  article.getCreatedAt().format(formatter);
+            String createdAt = article.getCreatedAt().format(formatter);
 
-            myArticles.add(new MyArticleDto(pocketOwner,articleOwner,content,fortuneName,fortuneImg,createdAt));
+            myArticles.add(new MyArticleDto(pocketOwner, articleOwner, content, fortuneName, fortuneImg, createdAt));
         }
 
         return new MyArticlesDto(myArticles);

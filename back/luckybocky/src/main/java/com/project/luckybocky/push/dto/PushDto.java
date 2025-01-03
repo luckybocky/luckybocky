@@ -10,6 +10,6 @@ import lombok.*;
 @Builder
 public class PushDto {
 	private String type;
-	private String toUser;
+	private int contentSeq;
 	private String url;
 }

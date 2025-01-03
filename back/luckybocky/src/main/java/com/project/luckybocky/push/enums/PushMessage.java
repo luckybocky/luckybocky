@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum PushMessage {
-    COMMENT("복이 들어왔어요!", "님이 복을 넣었어요!"),
-    REPLY("리복이 들어왔어요!", "님이 리복 했어요");
+    ARTICLE("복이 들어왔어요!", "님이 복을 넣었어요!"),
+    COMMENT("리복이 들어왔어요!", "님이 리복 했어요");
 
     private final String title;
     private final String body;
