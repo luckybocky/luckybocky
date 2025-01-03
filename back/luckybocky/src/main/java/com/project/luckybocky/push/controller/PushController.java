@@ -5,6 +5,7 @@ import com.google.api.Http;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.project.luckybocky.common.MessageDto;
 import com.project.luckybocky.push.dto.PushDto;
+import com.project.luckybocky.push.enums.PushMessage;
 import com.project.luckybocky.push.service.PushService;
 import com.project.luckybocky.user.dto.UserDto;
 import com.project.luckybocky.user.entity.User;
@@ -31,17 +32,14 @@ public class PushController {
 
     private final PushService pushService;
 
+
     @PostMapping
-    public ResponseEntity<MessageDto> pushComment(HttpSession session, @RequestBody PushDto pushDto) {
+    public ResponseEntity<MessageDto> pushContent(HttpSession session, @RequestBody PushDto pushDto) {
 
-        String toUser = pushDto.getToUser();
         String fromUser = (String) session.getAttribute("user");
-        String type = pushDto.getType();
-        String url = pushDto.getUrl();
-
-        log.info("toUser : {}, fromUser : {}", toUser,session.getAttribute("user"));
+        log.info(" Push Info : {}",pushDto);
         try {
-            pushService.sendPush(toUser, fromUser, type,url);
+            pushService.sendPush(fromUser, pushDto);
             return ResponseEntity.status(HttpStatus.OK).body(
                     MessageDto.builder()
                             .status("success")
@@ -49,11 +47,11 @@ public class PushController {
                             .build()
 
             );
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     MessageDto.builder()
                             .status("fail")
-                            .message("없는 사용자거나 푸시 타입이 잘못되었습니다.")
+                            .message(e.getMessage())
                             .build()
 
             );
@@ -67,6 +65,46 @@ public class PushController {
                     );
         }
     }
+
+
+//    @PostMapping("/test")
+//    public ResponseEntity<MessageDto> pushComment(HttpSession session, @RequestBody PushDto pushDto) {
+//
+//        session.setAttribute("user","changhee");
+//
+//        String toUser = pushDto.getToUser();
+//        String fromUser = (String) session.getAttribute("user");
+//        String type = pushDto.getType();
+//        String url = pushDto.getUrl();
+//
+//        log.info("toUser : {}, fromUser : {}", toUser,session.getAttribute("user"));
+//        try {
+//            pushService.sendPush(toUser, fromUser, type,url);
+//            return ResponseEntity.status(HttpStatus.OK).body(
+//                    MessageDto.builder()
+//                            .status("success")
+//                            .message("push success")
+//                            .build()
+//
+//            );
+//        } catch (IllegalArgumentException e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+//                    MessageDto.builder()
+//                            .status("fail")
+//                            .message("없는 사용자거나 푸시 타입이 잘못되었습니다.")
+//                            .build()
+//
+//            );
+//        } catch (FirebaseMessagingException e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
+//                    body(
+//                            MessageDto.builder()
+//                                    .status("fail")
+//                                    .message("푸시알림 전송에 실패했습니다.")
+//                                    .build()
+//                    );
+//        }
+//    }
 
 }
 

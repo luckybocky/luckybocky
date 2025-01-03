@@ -29,7 +29,6 @@ public class SettingController {
 
     @PutMapping
     public ResponseEntity<MessageDto> updateSetting(@RequestBody SettingDto settingDto, HttpSession session) {
-//        session.setAttribute("user", "changhee");
         String userKey = (String) session.getAttribute("user");
         boolean isSuccess = userSettingService.updateUserSetting(userKey,settingDto.getUserNickname(), settingDto.getAlarmStatus(), settingDto.getFortuneVisibility());
         if (!isSuccess) {

@@ -5,7 +5,14 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
+import com.project.luckybocky.article.dto.MyArticleDto;
+import com.project.luckybocky.article.dto.MyArticlesDto;
+import com.project.luckybocky.article.service.ArticlePushService;
+import com.project.luckybocky.article.service.MyArticleService;
+import com.project.luckybocky.pocket.service.PocketPushService;
+import com.project.luckybocky.push.dto.PushDto;
 import com.project.luckybocky.push.enums.PushMessage;
+import com.project.luckybocky.user.dto.UserDto;
 import com.project.luckybocky.user.entity.User;
 import com.project.luckybocky.user.service.UserSettingService;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +26,21 @@ import java.util.Optional;
 @Service
 public class PushServiceImpl implements PushService {
     private final UserSettingService userSettingService;
+    private final ArticlePushService articlePushService;
+    private final PocketPushService pocketPushService;
 
 
-    public void sendPush(String toUser, String fromUser, String type, String url) throws FirebaseMessagingException {
+    public void sendPush(String fromUser, PushDto pushDto) throws FirebaseMessagingException{
+        String type = pushDto.getType().toUpperCase();
+        String url =pushDto.getUrl();
+        int contentSeq = pushDto.getContentSeq();
+
+        String toUser = findUser(type,contentSeq);
+
+
         Optional<User> userOptional = userSettingService.findUserFirebaseKey(toUser);
+
+
 
         if (userOptional.isEmpty()) {
             throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
@@ -48,6 +66,19 @@ public class PushServiceImpl implements PushService {
 
         String response = FirebaseMessaging.getInstance().send(message);
     }
+
+    public String findUser(String type, int contentSeq){
+        if(type.equals(PushMessage.ARTICLE.name())){
+            //푸시 타입이 ARTICLE이면 복주머니 주인한테 푸시 보내야한다
+            return pocketPushService.findPocket(contentSeq);
+        }else if(type.equals(PushMessage.COMMENT.name())){
+            //푸시 타입이 Comment이면 복 주인한테 푸시 보내야한다
+            return articlePushService.findPocketOwner(contentSeq);
+        }
+
+        throw new IllegalArgumentException("푸시 타입이 아닙니다.");
+    }
+
 
 
 }
