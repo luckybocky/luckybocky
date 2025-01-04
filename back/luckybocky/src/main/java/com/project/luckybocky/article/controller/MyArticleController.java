@@ -2,6 +2,7 @@ package com.project.luckybocky.article.controller;
 
 import com.project.luckybocky.article.dto.MyArticlesDto;
 import com.project.luckybocky.article.service.MyArticleService;
+import com.project.luckybocky.common.DataResponseDto;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,12 +18,15 @@ public class MyArticleController {
     private final MyArticleService myArticleService;
 
     @GetMapping
-    public ResponseEntity<MyArticlesDto> myArticle(HttpSession session){
+    public ResponseEntity<DataResponseDto<MyArticlesDto>> myArticle(HttpSession session){
         String userKey = (String) session.getAttribute("user");
 //        String userKey ="changhee";
 
         MyArticlesDto myArticles = myArticleService.findMyArticles(userKey);
-        return ResponseEntity.status(HttpStatus.OK).body(myArticles);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                DataResponseDto.<MyArticlesDto>builder().message("success").data(myArticles).build()
+
+        );
     }
 
 }

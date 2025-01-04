@@ -1,7 +1,7 @@
 package com.project.luckybocky.user.controller;
 
 
-import com.project.luckybocky.common.MessageDto;
+import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.user.dto.FirebaseKeyRequest;
 import com.project.luckybocky.user.service.UserSettingService;
 import jakarta.servlet.http.HttpSession;
@@ -23,7 +23,7 @@ public class FireBaseController {
     private final UserSettingService userSettingService;
 
     @PutMapping
-    public ResponseEntity<MessageDto> updateFireBaseKey(HttpSession session, @RequestBody FirebaseKeyRequest firebaseKeyRequest) {
+    public ResponseEntity<ResponseDto> updateFireBaseKey(HttpSession session, @RequestBody FirebaseKeyRequest firebaseKeyRequest) {
         String userKey = (String) session.getAttribute("user");
 
         String firebaseKey = firebaseKeyRequest.getFirebaseKey();
@@ -32,18 +32,16 @@ public class FireBaseController {
         if (isChange) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(
-                            MessageDto
+                            ResponseDto
                                     .builder()
-                                    .status("success")
                                     .message("key update successful")
                                     .build()
                     );
 
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(MessageDto
+                    .body(ResponseDto
                             .builder()
-                            .status("error")
                             .message("Unauthorized")
                             .build()
                     );

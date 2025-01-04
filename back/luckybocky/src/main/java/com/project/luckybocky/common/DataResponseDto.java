@@ -1,10 +1,10 @@
 package com.project.luckybocky.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.experimental.SuperBuilder;
 
-@Getter
-@AllArgsConstructor
-public class DataResponseDto<T> extends ResponseDto {
+@Builder
+public class DataResponseDto<T>{
     private T data;
+    private String message;
 }

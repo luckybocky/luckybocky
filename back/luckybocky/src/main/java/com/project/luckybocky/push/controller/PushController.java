@@ -1,17 +1,10 @@
 package com.project.luckybocky.push.controller;
 
 
-import com.google.api.Http;
 import com.google.firebase.messaging.FirebaseMessagingException;
-import com.project.luckybocky.common.DataResponseDto;
-import com.project.luckybocky.common.MessageDto;
 import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.push.dto.PushDto;
-import com.project.luckybocky.push.enums.PushMessage;
 import com.project.luckybocky.push.service.PushService;
-import com.project.luckybocky.user.dto.UserDto;
-import com.project.luckybocky.user.entity.User;
-import com.project.luckybocky.user.service.UserSettingService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,22 +29,20 @@ public class PushController {
 
 
     @PostMapping
-    public ResponseEntity<MessageDto> pushContent(HttpSession session, @RequestBody PushDto pushDto) {
+    public ResponseEntity<ResponseDto> pushContent(HttpSession session, @RequestBody PushDto pushDto) {
         String fromUser = (String) session.getAttribute("user");
         log.info(" Push Info : {}",pushDto);
         try {
             pushService.sendPush(fromUser, pushDto);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    MessageDto.builder()
-                            .status("success")
+                    ResponseDto.builder()
                             .message("push success")
                             .build()
 
             );
         } catch (IllegalArgumentException | NullPointerException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    MessageDto.builder()
-                            .status("fail")
+                    ResponseDto.builder()
                             .message(e.getMessage())
                             .build()
 
@@ -59,8 +50,7 @@ public class PushController {
         } catch (FirebaseMessagingException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
                     body(
-                            MessageDto.builder()
-                                    .status("fail")
+                            ResponseDto.builder()
                                     .message("푸시알림 전송에 실패했습니다.")
                                     .build()
                     );
