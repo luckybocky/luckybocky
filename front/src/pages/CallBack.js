@@ -25,7 +25,7 @@ const CallBack = () => {
 
   return (
     <div>
-      <h1 className="min-h-screen flex items-center text-5xl">
+      <h1 className="min-h-screen flex items-center text-3xl">
         로그인 중 입니다...
       </h1>
     </div>

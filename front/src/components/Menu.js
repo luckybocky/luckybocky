@@ -8,7 +8,7 @@ import {
 import { AiOutlineAlert } from "react-icons/ai";
 import PocketIcon from "../image/pocketIcon.svg";
 import { saveFeedback } from "../api/FeedbackApi";
-import { saveReport } from "../api/ReportApi"
+import { saveReport } from "../api/ReportApi";
 import AuthStore from "../store/AuthStore";
 
 const Menu = () => {
@@ -44,17 +44,17 @@ const Menu = () => {
   };
 
   const sendReport = () => {
-    if (report === ""){
+    if (report === "") {
       alert("신고 내용을 입력해주세요.");
       return;
     } else {
-      saveReport(1,0,report);
+      saveReport(1, 0, report);
       alert("감사합니다. 신고 완료되었습니다.");
     }
 
     setReport("");
     setReportModalOpen(false);
-  }
+  };
 
   return (
     <div>
@@ -81,13 +81,13 @@ const Menu = () => {
         }`}
         style={{ width: "275px" }}
       >
-        <ul className="py-3 px-6 space-y-4">
+        <ul className="py-3 px-6 space-y-5">
           <button
             onClick={() => navigate("/account")}
             className="flex hover:underline items-center gap-2"
           >
             <IoSettingsOutline />
-            <span className="mb-1">계정 설정</span>
+            <span className="mt-1">계정 설정</span>
           </button>
           <button
             onClick={() => {
@@ -102,7 +102,7 @@ const Menu = () => {
               width="18"
               className="mb-1"
             ></img>
-            <span className="mb-1">내 복주머니 보러가기</span>
+            <span>내 복주머니 보러가기</span>
           </button>
           <button
             className="flex hover:underline items-center gap-2"
@@ -111,22 +111,22 @@ const Menu = () => {
               toggleMenu();
             }}
           >
-            <IoMailOutline />
-            <span className="mb-1">내가 보낸 메시지</span>
+            <IoMailOutline className="mb-1" />
+            <span>내가 보낸 메시지</span>
           </button>
           <button
             className="flex hover:underline items-center gap-2"
             onClick={() => setFeedbackModalOpen(true)}
           >
-            <IoChatbubblesOutline />
-            <span className="mb-1">피드백하기</span>
+            <IoChatbubblesOutline className="mb-1" />
+            <span>피드백하기</span>
           </button>
           <button
             className="flex hover:underline items-center gap-2"
             onClick={() => setReportModalOpen(true)}
           >
             <AiOutlineAlert className="mb-1" />
-            <span className="mb-1">신고하기</span>
+            <span className="">신고하기</span>
           </button>
         </ul>
         <footer className="border-t border-gray-600 p-4 text-center text-sm">
@@ -143,14 +143,14 @@ const Menu = () => {
             className="bg-white text-[#0d1a26] p-5 rounded-lg w-80"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-2xl font-bold mb-4">피드백하기</h2>
+            <h2 className="text-lg mb-4">피드백하기</h2>
             <textarea
               className="w-full h-60 p-2 border border-gray-300 rounded-md mb-2 resize-none"
               placeholder="피드백 내용을 입력하세요."
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
             ></textarea>
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-2">
               <div>
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -191,7 +191,7 @@ const Menu = () => {
             className="bg-white text-[#0d1a26] p-5 rounded-lg w-80"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-2xl font-bold mb-4">신고하기</h2>
+            <h2 className="text-lg mb-4">신고하기</h2>
             <input
               className="w-full p-2 border border-gray-300 rounded-md mb-4"
               placeholder="제목을 입력하세요."
@@ -202,16 +202,17 @@ const Menu = () => {
               value={report}
               onChange={(e) => setReport(e.target.value)}
             ></textarea>
-            <div className="flex justify-end gap-4">
+            <div className="flex justify-end gap-2">
               <button
                 className="bg-gray-300 text-black py-2 px-4 rounded-lg"
                 onClick={closeModals}
               >
                 취소
               </button>
-              <button 
+              <button
                 className="bg-[#0d1a26] text-white py-2 px-4 rounded-lg"
-                onClick={sendReport}>
+                onClick={sendReport}
+              >
                 보내기
               </button>
             </div>

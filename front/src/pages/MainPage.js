@@ -75,7 +75,10 @@ const MainPage = () => {
   }, [address]);
 
   const decorationsPerPage = 6;
-  const totalPages = Math.ceil(decorations.length / decorationsPerPage);
+  const totalPages = Math.max(
+    Math.ceil(decorations.length / decorationsPerPage),
+    1
+  );
   const currentDecorations = decorations.slice(
     (currentPage - 1) * decorationsPerPage,
     currentPage * decorationsPerPage
@@ -125,15 +128,15 @@ const MainPage = () => {
   //=====12-31 창희 추가 end=====
 
   return (
-    <div className="relative flex flex-col items-center justify-center w-full max-w-[375px] min-h-screen bg-[#0d1a26] text-white overflow-hidden">
+    <div className="relative flex flex-col items-center justify-center p-2 w-full max-w-[375px] min-h-screen bg-[#0d1a26] text-white overflow-hidden">
       <Menu />
       {/* 메인 화면 */}
       <div className="absolute top-4 left-4">
-        <h1 className="text-3xl mb-1">{userNickname} 님의 복주머니</h1>
-        <p className="text-xl">{decorations.length}개의 복이 왔어요.</p>
+        <h1 className="text-2xl mb-1">{userNickname} 님의 복주머니</h1>
+        <p className="text-base">{decorations.length}개의 복이 왔어요.</p>
       </div>
-      <h1 className="text-5xl font-bold mb-3">Lucky Bocky!</h1>
-      <p className="text-3xl mb-6">복 내놔라</p>
+      <h1 className="text-4xl mb-3">Lucky Bocky!</h1>
+      <p className="text-xl mb-6">복 내놔라</p>
 
       <div className="relative">
         <img src={MainImage} alt="복주머니 이미지" className="w-60 h-60 mb-6" />
@@ -154,13 +157,13 @@ const MainPage = () => {
       </div>
 
       {/* 페이지네이션 */}
-      <div className="flex justify-center mb-2 w-full px-10 text-lg">
+      <div className="flex justify-center mb-2 w-full px-10 text-base">
         <button
           onClick={handlePreviousPage}
           disabled={currentPage === 1}
-          className="bg-gray-700 text-white px-4 py-2 rounded disabled:opacity-50"
+          className="text-white px-2 rounded disabled:opacity-50"
         >
-          이전
+          {"<<"}
         </button>
         <p>
           {currentPage} / {totalPages}
@@ -168,9 +171,9 @@ const MainPage = () => {
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          className="bg-gray-700 text-white px-4 py-2 rounded disabled:opacity-50"
+          className=" text-white px-2 rounded disabled:opacity-50"
         >
-          다음
+          {">>"}
         </button>
       </div>
 
@@ -187,9 +190,11 @@ const MainPage = () => {
                   },
                 })
         }
-        className="bg-white text-[#0d1a26] py-4 px-20 rounded-lg"
+        className="bg-white text-[#0d1a26] py-4 px-20 rounded-lg w-full"
       >
-        {address === myAddress ? "내 복주머니 공유하기" : "복 전달하기"}
+        <span className="flex justify-center pt-1">
+          {address === myAddress ? "내 복주머니 공유하기" : "복 전달하기"}
+        </span>
       </button>
 
       {/* 복사 성공 알림 */}

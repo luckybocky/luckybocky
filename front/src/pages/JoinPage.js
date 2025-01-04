@@ -28,10 +28,10 @@ const JoinPage = () => {
   };
 
   return (
-    <div className="relative flex flex-col w-full max-w-[375px] min-h-screen bg-[#0d1a26] text-white overflow-hidden">
+    <div className="relative flex flex-col w-full max-w-[375px] min-h-screen bg-[#0d1a26] p-2 text-white overflow-hidden">
       {/* 계정 설정 화면 */}
-      <h1 className="text-5xl font-bold mb-8 mt-5">회원 가입</h1>
-      <h1 className="text-3xl">안녕하세요!!</h1>
+      <h1 className="text-3xl mb-8 mt-5">회원 가입</h1>
+      <h1 className="text-xl">안녕하세요!!</h1>
 
       {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 mt-3 mb-10" />
@@ -60,7 +60,7 @@ const JoinPage = () => {
             onChange={(e) => setIsAlarm(e.target.checked)}
             className="h-5 w-5"
           />
-          <span className="ml-2 w-[30px]">{isAlarm ? "허용" : "거절"}</span>
+          <span className="ml-2 w-[35px]">{isAlarm ? "허용" : "거절"}</span>
         </div>
       </div>
 
@@ -74,19 +74,21 @@ const JoinPage = () => {
             onChange={(e) => setIsPublic(e.target.checked)}
             className="h-5 w-5"
           />
-          <span className="ml-2 w-[30px]">{isPublic ? "공개" : "비밀"}</span>
+          <span className="ml-2 w-[35px]">{isPublic ? "공개" : "비밀"}</span>
         </div>
       </div>
 
       {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 mt-16 mb-12" />
       <button
-        className="bg-white text-[#0d1a26] py-4 rounded-lg text-3xl"
+        className="bg-white text-[#0d1a26] py-4 rounded-lg text-xl"
         onClick={joinUser}
       >
-        시작하기
+        <span className="flex justify-center pt-1">시작하기</span>
       </button>
-      <Footer />
+      <div className="flex justify-center">
+        <Footer />
+      </div>
     </div>
   );
 };

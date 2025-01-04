@@ -51,10 +51,10 @@ const AccountPage = () => {
     });
 
     await logout();
-  }
+  };
 
   return (
-    <div className="relative flex flex-col w-full max-w-[375px] min-h-screen bg-[#0d1a26] text-white overflow-hidden">
+    <div className="relative flex flex-col w-full max-w-[375px] min-h-screen bg-[#0d1a26] p-2 text-white overflow-hidden">
       {/* 뒤로 가기 버튼 */}
       <button
         className="absolute top-4 right-4 text-2xl z-20"
@@ -64,8 +64,8 @@ const AccountPage = () => {
       </button>
 
       {/* 계정 설정 화면 */}
-      <h1 className="text-5xl font-bold mb-8 mt-5">계정 설정</h1>
-      <h1 className="text-3xl">{user.userNickname} 님</h1>
+      <h1 className="text-3xl mb-8 mt-5">계정 설정</h1>
+      <h1 className="text-xl">{user.userNickname} 님</h1>
 
       {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 mt-3 mb-10" />
@@ -104,7 +104,7 @@ const AccountPage = () => {
             onChange={saveAlarmStatus}
             className="h-5 w-5"
           />
-          <span className="ml-2 w-[30px]">
+          <span className="ml-2 w-[35px]">
             {user.alarmStatus ? "허용" : "거절"}
           </span>
         </div>
@@ -120,7 +120,7 @@ const AccountPage = () => {
             onChange={saveFortuneVisibility}
             className="h-5 w-5"
           />
-          <span className="ml-2 w-[30px]">
+          <span className="ml-2 w-[35px]">
             {user.fortuneVisibility ? "공개" : "비밀"}
           </span>
         </div>
@@ -129,13 +129,11 @@ const AccountPage = () => {
       {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 my-16" />
       <div>
-        <button
-          onClick={logoutButton}
-        >
-          로그아웃
-        </button>
+        <button onClick={logoutButton}>로그아웃</button>
       </div>
-      <Footer />
+      <div className="flex justify-center">
+        <Footer />
+      </div>
     </div>
   );
 };

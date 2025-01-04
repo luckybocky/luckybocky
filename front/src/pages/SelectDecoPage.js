@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import FortuneImageBasic from "../image/fortunes/푸른뱀.png"
-import FortuneImageHealth from "../image/fortunes/건강뱀.png"
-import FortuneImageLove from "../image/fortunes/애정뱀.png"
-import FortuneImageWealth from "../image/fortunes/재물뱀.png"
-import FortuneImageJob from "../image/fortunes/취업뱀.png"
-import FortuneImageEdu from "../image/fortunes/학업뱀.png"
+import FortuneImageBasic from "../image/fortunes/푸른뱀.png";
+import FortuneImageHealth from "../image/fortunes/건강뱀.png";
+import FortuneImageLove from "../image/fortunes/애정뱀.png";
+import FortuneImageWealth from "../image/fortunes/재물뱀.png";
+import FortuneImageJob from "../image/fortunes/취업뱀.png";
+import FortuneImageEdu from "../image/fortunes/학업뱀.png";
 
 const SelectDecoPage = () => {
-  const images = [FortuneImageBasic, FortuneImageHealth, FortuneImageLove, FortuneImageWealth, FortuneImageJob, FortuneImageEdu];
+  const images = [
+    FortuneImageBasic,
+    FortuneImageHealth,
+    FortuneImageLove,
+    FortuneImageWealth,
+    FortuneImageJob,
+    FortuneImageEdu,
+  ];
   const [selectedDecoration, setSelectedDecoration] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,12 +27,19 @@ const SelectDecoPage = () => {
       alert("장식을 선택해주세요!");
       return;
     }
-    navigate("/write", { state: { decorationId: selectedDecoration, pocketAddress: address, visibility: fortuneVisibility, pocketSeq } });
+    navigate("/write", {
+      state: {
+        decorationId: selectedDecoration,
+        pocketAddress: address,
+        visibility: fortuneVisibility,
+        pocketSeq,
+      },
+    });
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full max-w-[375px] min-h-screen bg-[#f5f5f5] text-black mx-auto px-4">
-      <h1 className="text-2xl font-bold mb-4">장식을 골라주세요</h1>
+    <div className="flex flex-col items-center justify-center w-full max-w-[375px] min-h-screen bg-[#f5f5f5] text-black mx-auto p-2">
+      <h1 className="text-2xl mb-4">장식을 골라주세요</h1>
       <div className="grid grid-cols-3 gap-4 mb-6">
         {decorations.map((id) => (
           <button
