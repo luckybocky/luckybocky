@@ -26,10 +26,12 @@ public class Article extends BaseEntity {
     @Column(name = "article_seq") //12-23 창희 JoinColumn시 칼럼매핑을 하지못해서 명시적으로 추가
     private Integer articleSeq;
 
+    //복을 보낸 사용자 (null일 경우 비회원)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq") // 외래키 설정
     private User user;
 
+    //복을 보낸 사용자의 닉네임
     @Column(nullable = false)
     private String userNickname;
 
@@ -52,6 +54,7 @@ public class Article extends BaseEntity {
     private List<Report> reports = new ArrayList<>();
 
     //12-23 창희 복주머니 칼럼 추가
+    //어떤 복주머니에 달려있는 복인지
     @ManyToOne
     @JoinColumn(name = "pocket_seq")
     private Pocket pocket;

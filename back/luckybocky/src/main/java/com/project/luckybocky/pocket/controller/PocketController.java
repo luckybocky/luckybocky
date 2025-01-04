@@ -2,8 +2,7 @@ package com.project.luckybocky.pocket.controller;
 
 import com.project.luckybocky.article.dto.ArticleResponseDto;
 import com.project.luckybocky.article.service.ArticleService;
-import com.project.luckybocky.common.Message;
-import com.project.luckybocky.common.MessageDto;
+import com.project.luckybocky.common.DataResponseDto;
 import com.project.luckybocky.pocket.dto.PocketDto;
 import com.project.luckybocky.pocket.dto.PocketInfoDto;
 import com.project.luckybocky.pocket.service.PocketService;
@@ -15,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -57,23 +55,26 @@ public class PocketController {
         return ResponseEntity.status(HttpStatus.OK).body(pocketDto);
     }
 
-    @Description("복주머니 주소(url) 조회")
+    @Description("복주머니 주소 가져오기")
     @GetMapping("/address")
-    public ResponseEntity<Message> getPocketAddress(HttpSession session){
+    public ResponseEntity<DataResponseDto> getPocketAddress(HttpSession session){
         String userKey = (String) session.getAttribute("user");
         String address = pocketService.getPocketAddress(userKey);
-//        if (address == null){   // 복주머니에 할당된 주소가 없을 경우
-//            address = pocketService.createPocketAddress(userKey);
-//        }
 
-        return ResponseEntity.status(HttpStatus.OK).body(new Message(HttpStatus.OK, "복주머니 주소 조회 성공", address));
+        return ResponseEntity.status(HttpStatus.OK).body(
+                DataResponseDto.builder()
+                        .message("복주머니 주소 가져오기 성공")
+                        .data(address).build());
     }
 
     @Description("복주머니 생성")
     @PostMapping
-    public ResponseEntity<Message> createPocket(HttpSession session){
+    public ResponseEntity<DataResponseDto> createPocket(HttpSession session){
         String userKey = (String) session.getAttribute("user");
         String address= pocketService.createPocket(userKey);
-        return ResponseEntity.status(HttpStatus.OK).body(new Message(HttpStatus.OK, "복주머니 생성 성공",address));
+        return ResponseEntity.status(HttpStatus.OK).body(
+                DataResponseDto.builder()
+                        .message("복주머니 생성 성공")
+                        .data(address).build());
     }
 }
