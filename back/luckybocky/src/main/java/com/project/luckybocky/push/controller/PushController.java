@@ -3,7 +3,9 @@ package com.project.luckybocky.push.controller;
 
 import com.google.api.Http;
 import com.google.firebase.messaging.FirebaseMessagingException;
+import com.project.luckybocky.common.DataResponseDto;
 import com.project.luckybocky.common.MessageDto;
+import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.push.dto.PushDto;
 import com.project.luckybocky.push.enums.PushMessage;
 import com.project.luckybocky.push.service.PushService;
@@ -35,7 +37,6 @@ public class PushController {
 
     @PostMapping
     public ResponseEntity<MessageDto> pushContent(HttpSession session, @RequestBody PushDto pushDto) {
-
         String fromUser = (String) session.getAttribute("user");
         log.info(" Push Info : {}",pushDto);
         try {
