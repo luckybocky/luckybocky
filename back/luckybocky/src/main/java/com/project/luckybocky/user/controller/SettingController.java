@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/auth/user")
+@RequestMapping("api/v1/auth/user" )
 public class SettingController {
     private final UserSettingService userSettingService;
 
@@ -29,38 +29,32 @@ public class SettingController {
 
     @PutMapping
     public ResponseEntity<ResponseDto> updateSetting(@RequestBody SettingDto settingDto, HttpSession session) {
-        String userKey = (String) session.getAttribute("user");
-        boolean isSuccess = userSettingService.updateUserSetting(userKey,settingDto.getUserNickname(), settingDto.getAlarmStatus(), settingDto.getFortuneVisibility());
+        String userKey = (String) session.getAttribute("user" );
+        boolean isSuccess = userSettingService.updateUserSetting(userKey, settingDto.getUserNickname(), settingDto.getAlarmStatus(), settingDto.getFortuneVisibility());
         if (!isSuccess) {
-            log.info("setting user {}", "UNAUTHORIZED");
+            log.info("setting user {}", "UNAUTHORIZED" );
             ResponseDto messageDto = ResponseDto.builder()
-                    .message("Unauthorized")
+                    .message("Unauthorized" )
                     .build();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(messageDto);
         } else {
             ResponseDto messageDto = ResponseDto.builder()
-                    .message("setting successful")
+                    .message("setting successful" )
                     .build();
             return ResponseEntity.status(HttpStatus.OK).body(messageDto);
         }
     }
 
     @GetMapping
-    public ResponseEntity<DataResponseDto<UserInfoDto>> loadUserInfo(HttpSession session){
-        String userKey = (String) session.getAttribute("user");
+    public ResponseEntity<DataResponseDto<UserInfoDto>> loadUserInfo(HttpSession session) {
+        String userKey = (String) session.getAttribute("user" );
         UserInfoDto userInfoDto = userSettingService.getUserInfo(userKey);
-        log.info("user found {} {}",userKey, userInfoDto);
-        if(userInfoDto == null){
+        log.info("user found {} {}", userKey, userInfoDto);
+        if (userInfoDto == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(
-                            DataResponseDto.<UserInfoDto>builder().message("not found user").data(null).build()
-
-                    );
+                    .body(new DataResponseDto<UserInfoDto>("not found user", null));
         }
         return ResponseEntity.status(HttpStatus.OK)
-                .body(
-
-                        DataResponseDto.<UserInfoDto>builder().message("found user").data(userInfoDto).build()
-                );
+                .body(new DataResponseDto<UserInfoDto>("not found user", userInfoDto));
     }
 }
