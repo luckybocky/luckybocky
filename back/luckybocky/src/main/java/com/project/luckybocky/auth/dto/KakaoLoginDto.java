@@ -1,4 +1,4 @@
-package com.project.luckybocky.kakao.dto;
+package com.project.luckybocky.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

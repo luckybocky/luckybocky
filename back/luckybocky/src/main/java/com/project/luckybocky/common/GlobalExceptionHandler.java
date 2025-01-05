@@ -2,7 +2,10 @@ package com.project.luckybocky.common;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.project.luckybocky.article.exception.ArticleNotFoundException;
+import com.project.luckybocky.auth.exception.LoginFailedException;
+import com.project.luckybocky.feedback.exception.FeedbackNotFoundException;
 import com.project.luckybocky.pocket.exception.PocketNotFoundException;
+import com.project.luckybocky.report.exception.ReportNotFoundException;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,5 +46,32 @@ public class GlobalExceptionHandler {
     }
 
     //===== 창희 예외 추가 end ======
+
+    //===== 우재 예외 추가 start ======
+    @ExceptionHandler(SessionNotFoundException.class)
+    public ResponseEntity<ResponseDto> handleSessionNotFoundException(SessionNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler(NicknameNotFoundException.class)
+    public ResponseEntity<ResponseDto> handleNicknameNotFoundException(NicknameNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler(FeedbackNotFoundException.class)
+    public ResponseEntity<ResponseDto> handleFeedbackNotFoundException(FeedbackNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ReportNotFoundException.class)
+    public ResponseEntity<ResponseDto> handleReportNotFoundException(ReportNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler(LoginFailedException.class)
+    public ResponseEntity<ResponseDto> handleLoginFailedException(LoginFailedException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto(ex.getMessage()));
+    }
+    //===== 우재 예외 추가 end ======
 
 }
