@@ -28,6 +28,7 @@ const Menu = () => {
   const closeModals = () => {
     setFeedbackModalOpen(false);
     setReportModalOpen(false);
+    setRating(0);
   };
 
   const sendFeedback = () => {
@@ -38,7 +39,7 @@ const Menu = () => {
     } else {
       saveFeedback(feedback, rating);
       setFeedbackModalOpen(false);
-      setRating(5);
+      setRating(0);
       setFeedback("");
     }
   };
@@ -150,12 +151,12 @@ const Menu = () => {
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
             ></textarea>
-            <div className="flex justify-end gap-2">
-              <div>
+            <div className="flex justify-between">
+              <div className="flex gap-1 pl-1">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
-                    className={`px-1 ${
+                    className={`${
                       star <= rating ? "text-yellow-500" : "text-gray-300"
                     }`}
                     onClick={() => setRating(star)}
@@ -164,18 +165,20 @@ const Menu = () => {
                   </button>
                 ))}
               </div>
-              <button
-                className="bg-gray-300 text-black py-2 px-4 rounded-lg"
-                onClick={closeModals}
-              >
-                취소
-              </button>
-              <button
-                className="bg-[#0d1a26] text-white py-2 px-4 rounded-lg"
-                onClick={sendFeedback}
-              >
-                보내기
-              </button>
+              <div className="flex gap-2">
+                <button
+                  className="bg-gray-300 text-black py-2 px-4 rounded-lg"
+                  onClick={closeModals}
+                >
+                  취소
+                </button>
+                <button
+                  className="bg-[#0d1a26] text-white py-2 px-4 rounded-lg"
+                  onClick={sendFeedback}
+                >
+                  보내기
+                </button>
+              </div>
             </div>
           </div>
         </div>
