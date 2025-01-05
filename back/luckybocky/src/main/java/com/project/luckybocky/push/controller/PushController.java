@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("api/v1/push")
+@RequestMapping("api/v1/push" )
 //이 클래스가 REST API 컨트롤러임을 나타냅니다.
 //반환값은 JSON 형식으로 자동 변환됩니다.
 //없으면 반환값을 이름으로하는 뷰를 찾으려고 시도
@@ -30,30 +30,17 @@ public class PushController {
 
     @PostMapping
     public ResponseEntity<ResponseDto> pushContent(HttpSession session, @RequestBody PushDto pushDto) {
-        String fromUser = (String) session.getAttribute("user");
-        log.info(" Push Info : {}",pushDto);
+        String fromUser = (String) session.getAttribute("user" );
+        log.info(" Push Info : {}", pushDto);
         try {
             pushService.sendPush(fromUser, pushDto);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    ResponseDto.builder()
-                            .message("push success")
-                            .build()
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("push success" ));
 
-            );
         } catch (IllegalArgumentException | NullPointerException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    ResponseDto.builder()
-                            .message(e.getMessage())
-                            .build()
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto(e.getMessage()));
 
-            );
         } catch (FirebaseMessagingException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
-                    body(
-                            ResponseDto.builder()
-                                    .message("푸시알림 전송에 실패했습니다.")
-                                    .build()
-                    );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("푸시알림 전송에 실패했습니다." ));
         }
     }
 

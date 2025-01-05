@@ -12,21 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/article/user")
+@RequestMapping("/api/v1/article/user" )
 @RequiredArgsConstructor
 public class MyArticleController {
     private final MyArticleService myArticleService;
 
     @GetMapping
-    public ResponseEntity<DataResponseDto<MyArticlesDto>> myArticle(HttpSession session){
-        String userKey = (String) session.getAttribute("user");
+    public ResponseEntity<DataResponseDto<MyArticlesDto>> myArticle(HttpSession session) {
+        String userKey = (String) session.getAttribute("user" );
 //        String userKey ="changhee";
 
         MyArticlesDto myArticles = myArticleService.findMyArticles(userKey);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                DataResponseDto.<MyArticlesDto>builder().message("success").data(myArticles).build()
-
-        );
+        return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", myArticles));
     }
 
 }

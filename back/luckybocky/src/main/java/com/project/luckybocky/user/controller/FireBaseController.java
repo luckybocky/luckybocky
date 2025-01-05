@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("api/v1/auth/firebase")
+@RequestMapping("api/v1/auth/firebase" )
 @RequiredArgsConstructor
 @Slf4j
 public class FireBaseController {
@@ -24,27 +24,18 @@ public class FireBaseController {
 
     @PutMapping
     public ResponseEntity<ResponseDto> updateFireBaseKey(HttpSession session, @RequestBody FirebaseKeyRequest firebaseKeyRequest) {
-        String userKey = (String) session.getAttribute("user");
+        String userKey = (String) session.getAttribute("user" );
 
         String firebaseKey = firebaseKeyRequest.getFirebaseKey();
         log.info("update firebase Key {}", firebaseKeyRequest.getFirebaseKey());
         boolean isChange = userSettingService.updateFireBaseKey(userKey, firebaseKey);
         if (isChange) {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(
-                            ResponseDto
-                                    .builder()
-                                    .message("key update successful")
-                                    .build()
-                    );
+                    .body(new ResponseDto("key update successful" ));
 
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ResponseDto
-                            .builder()
-                            .message("Unauthorized")
-                            .build()
-                    );
+                    .body(new ResponseDto("Unauthorized" ));
 
         }
     }

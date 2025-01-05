@@ -1,9 +1,9 @@
 package com.project.luckybocky.common;
 
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 
-@Builder
+@AllArgsConstructor
 public class ResponseDto {
     private String message;
 
