@@ -20,23 +20,12 @@ import org.springframework.web.bind.annotation.*;
 public class SettingController {
     private final UserSettingService userSettingService;
 
-//    @PostMapping
-//    public ResponseEntity<User> userSave(@RequestBody User user){
-//        User saveUser = userSettingService.join(user);
-//        log.info("{}", user.toString());
-//        return ResponseEntity.status(HttpStatus.OK).body(saveUser);
-//    }
 
     @PutMapping
     public ResponseEntity<ResponseDto> updateSetting(@RequestBody SettingDto settingDto, HttpSession session) {
         String userKey = (String) session.getAttribute("user" );
-        boolean isSuccess = userSettingService.updateUserSetting(userKey, settingDto.getUserNickname(), settingDto.getAlarmStatus(), settingDto.getFortuneVisibility());
-        if (!isSuccess) {
-            log.info("setting user {}", "UNAUTHORIZED" );
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDto("Unauthorized" ));
-        } else {
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("setting successful" ));
-        }
+        userSettingService.updateUserSetting(userKey, settingDto.getUserNickname(), settingDto.getAlarmStatus(), settingDto.getFortuneVisibility());
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("setting successful" ));
     }
 
     @GetMapping
@@ -44,11 +33,6 @@ public class SettingController {
         String userKey = (String) session.getAttribute("user" );
         UserInfoDto userInfoDto = userSettingService.getUserInfo(userKey);
         log.info("user found {} {}", userKey, userInfoDto);
-        if (userInfoDto == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new DataResponseDto<UserInfoDto>("not found user", null));
-        }
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new DataResponseDto<UserInfoDto>("not found user", userInfoDto));
+        return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("not found user", userInfoDto));
     }
 }

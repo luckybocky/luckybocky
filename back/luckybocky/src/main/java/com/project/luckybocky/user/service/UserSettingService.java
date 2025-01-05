@@ -7,10 +7,10 @@ import java.util.Optional;
 
 public interface UserSettingService {
 
-    boolean updateUserSetting(String userKey,String userNickname, boolean alarmStatus,boolean fortuneVisibility);
+    void updateUserSetting(String userKey,String userNickname, boolean alarmStatus,boolean fortuneVisibility);
     UserInfoDto getUserInfo(String userKey);
     Optional<User> findUserFirebaseKey(String userKey);
 
-    boolean updateFireBaseKey(String userKey, String firebaseKey);
+    void updateFireBaseKey(String userKey, String firebaseKey);
     User join(User user);
 }

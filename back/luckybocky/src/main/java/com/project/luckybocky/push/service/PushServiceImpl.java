@@ -10,6 +10,7 @@ import com.project.luckybocky.pocket.service.PocketPushService;
 import com.project.luckybocky.push.dto.PushDto;
 import com.project.luckybocky.push.enums.PushMessage;
 import com.project.luckybocky.user.entity.User;
+import com.project.luckybocky.user.exception.UserNotFoundException;
 import com.project.luckybocky.user.service.UserSettingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class PushServiceImpl implements PushService {
 
 
         if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+            throw new UserNotFoundException("not found user");
         }
 
         PushMessage pushMessage = PushMessage.fromString(type);
