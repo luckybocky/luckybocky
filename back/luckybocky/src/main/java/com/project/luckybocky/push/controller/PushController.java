@@ -8,6 +8,7 @@ import com.project.luckybocky.push.service.PushService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,7 @@ public class PushController {
     private final PushService pushService;
 
 
+    @Description("푸시 알림")
     @PostMapping
     public ResponseEntity<ResponseDto> pushContent(HttpSession session, @RequestBody PushDto pushDto) throws FirebaseMessagingException {
         String fromUser = (String) session.getAttribute("user" );
