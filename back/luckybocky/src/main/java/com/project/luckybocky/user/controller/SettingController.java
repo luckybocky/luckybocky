@@ -33,15 +33,9 @@ public class SettingController {
         boolean isSuccess = userSettingService.updateUserSetting(userKey, settingDto.getUserNickname(), settingDto.getAlarmStatus(), settingDto.getFortuneVisibility());
         if (!isSuccess) {
             log.info("setting user {}", "UNAUTHORIZED" );
-            ResponseDto messageDto = ResponseDto.builder()
-                    .message("Unauthorized" )
-                    .build();
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(messageDto);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDto("Unauthorized" ));
         } else {
-            ResponseDto messageDto = ResponseDto.builder()
-                    .message("setting successful" )
-                    .build();
-            return ResponseEntity.status(HttpStatus.OK).body(messageDto);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("setting successful" ));
         }
     }
 
