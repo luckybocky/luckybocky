@@ -29,19 +29,11 @@ public class PushController {
 
 
     @PostMapping
-    public ResponseEntity<ResponseDto> pushContent(HttpSession session, @RequestBody PushDto pushDto) {
+    public ResponseEntity<ResponseDto> pushContent(HttpSession session, @RequestBody PushDto pushDto) throws FirebaseMessagingException {
         String fromUser = (String) session.getAttribute("user" );
         log.info(" Push Info : {}", pushDto);
-        try {
-            pushService.sendPush(fromUser, pushDto);
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("push success" ));
-
-        } catch (IllegalArgumentException | NullPointerException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto(e.getMessage()));
-
-        } catch (FirebaseMessagingException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("푸시알림 전송에 실패했습니다." ));
-        }
+        pushService.sendPush(fromUser, pushDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("push success" ));
     }
 
 
