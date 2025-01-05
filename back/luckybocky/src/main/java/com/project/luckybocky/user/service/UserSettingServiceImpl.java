@@ -2,6 +2,7 @@ package com.project.luckybocky.user.service;
 
 import com.project.luckybocky.user.dto.UserInfoDto;
 import com.project.luckybocky.user.entity.User;
+import com.project.luckybocky.user.exception.UserNotFoundException;
 import com.project.luckybocky.user.repository.UserSettingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,25 +21,24 @@ public class UserSettingServiceImpl implements UserSettingService{
     private final UserSettingRepository userSettingRepository;
 
     @Override
-    public boolean updateUserSetting(String userKey,String userNickname, boolean alarmStatus,boolean fortuneVisibility){
+    public void updateUserSetting(String userKey,String userNickname, boolean alarmStatus,boolean fortuneVisibility){
 
         Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
         if(userOptional.isEmpty()){
-            return false;
+            throw new UserNotFoundException("not found user");
         }
 
         User user = userOptional.get();
         log.info("setting user {}", user);
         user.updateUserInfo(userNickname,alarmStatus,fortuneVisibility);
-        return true;
     }
     @Override
     public UserInfoDto getUserInfo(String userKey) {
         Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
         if(userOptional.isEmpty()){
-            return null;
+            throw new UserNotFoundException("not found user");
         }
 
         User user = userOptional.get();
@@ -56,16 +56,15 @@ public class UserSettingServiceImpl implements UserSettingService{
     }
 
     @Override
-    public boolean updateFireBaseKey(String userKey, String firebaseKey) {
+    public void updateFireBaseKey(String userKey, String firebaseKey) {
         Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
         if(userOptional.isEmpty()){
-            return false;
+            throw new UserNotFoundException("not found user");
         }
 
         User user = userOptional.get();
         user.setFirebaseKey(firebaseKey);
-        return true;
     }
 
     @Override

@@ -28,15 +28,8 @@ public class FireBaseController {
 
         String firebaseKey = firebaseKeyRequest.getFirebaseKey();
         log.info("update firebase Key {}", firebaseKeyRequest.getFirebaseKey());
-        boolean isChange = userSettingService.updateFireBaseKey(userKey, firebaseKey);
-        if (isChange) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseDto("key update successful" ));
+        userSettingService.updateFireBaseKey(userKey, firebaseKey);
+        return ResponseEntity.status(HttpStatus.OK) .body(new ResponseDto("key update successful"));
 
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ResponseDto("Unauthorized" ));
-
-        }
     }
 }
