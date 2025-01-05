@@ -31,8 +31,7 @@ public class ArticleController {
     public ResponseEntity<ResponseDto> writeArticle(HttpSession session, @RequestBody WriteArticleDto writeArticleDto){
         String userKey = (String) session.getAttribute("user");
         articleService.createArticle(userKey, writeArticleDto);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ResponseDto.builder().message("복 달기 성공").build());
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("복 달기 성공"));
     }
 
     @Description("복주머니에서 복 삭제")
@@ -42,11 +41,10 @@ public class ArticleController {
 
         // 현재 로그인한 사용자가 해당 게시글의 주인(복을 받은 사용자)이 아닐 경우
         if (articleService.getOwnerByArticle(articleSeq) != userService.getUserSeq(userKey)){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    ResponseDto.builder().message("허가되지 않은 사용자").build());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDto("허가되지 않은 사용자"));
         }
 
         articleService.deleteArticle(articleSeq);
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.builder().message("복주머니에서 복 삭제 성공").build());
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("복주머니에서 복 삭제 성공"));
     }
 }

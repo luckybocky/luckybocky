@@ -60,11 +60,7 @@ public class PocketController {
     public ResponseEntity<DataResponseDto> getPocketAddress(HttpSession session){
         String userKey = (String) session.getAttribute("user");
         String address = pocketService.getPocketAddress(userKey);
-
-        return ResponseEntity.status(HttpStatus.OK).body(
-                DataResponseDto.builder()
-                        .message("복주머니 주소 가져오기 성공")
-                        .data(address).build());
+        return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("복주머니 주소 가져오기 성공", address));
     }
 
     @Description("복주머니 생성")
@@ -72,9 +68,6 @@ public class PocketController {
     public ResponseEntity<DataResponseDto> createPocket(HttpSession session){
         String userKey = (String) session.getAttribute("user");
         String address= pocketService.createPocket(userKey);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                DataResponseDto.builder()
-                        .message("복주머니 생성 성공")
-                        .data(address).build());
+        return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("복주머니 생성 성공", address));
     }
 }
