@@ -3,6 +3,7 @@ package com.project.luckybocky.article.controller;
 import com.project.luckybocky.article.dto.ArticleResponseDto;
 import com.project.luckybocky.article.dto.WriteArticleDto;
 import com.project.luckybocky.article.service.ArticleService;
+import com.project.luckybocky.common.DataResponseDto;
 import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -21,9 +22,9 @@ public class ArticleController {
 
     @Description("복 상세 조회")
     @GetMapping
-    public ResponseEntity<ArticleResponseDto> getArticleDetails(@RequestParam int articleSeq){
+    public ResponseEntity<DataResponseDto<ArticleResponseDto>> getArticleDetails(@RequestParam int articleSeq){
         ArticleResponseDto articleResponseDto = articleService.getArticleDetails(articleSeq);
-        return ResponseEntity.status(HttpStatus.OK).body(articleResponseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success: getting article", articleResponseDto));
     }
 
     @Description("복주머니에 복 달기")

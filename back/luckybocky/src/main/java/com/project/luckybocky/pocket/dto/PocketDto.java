@@ -11,7 +11,7 @@ import java.util.List;
 public class PocketDto {
 //    public int year = 2025;     // ** 아직 년도 별 구현 X
     private int pocketSeq;
-    private String owner;
-    private String ownerKey;
-    private List<ArticleResponseDto> articles;     // ** 이름을 pocket으로 하면 헷갈리지 않을까요?
+    private String user;
+    private String userKey;
+    private List<ArticleResponseDto> articles;
 }

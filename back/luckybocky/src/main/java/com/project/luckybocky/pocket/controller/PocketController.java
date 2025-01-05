@@ -24,9 +24,9 @@ public class PocketController {
     private final PocketService pocketService;
     private final ArticleService articleService;
 
-    @Description("복주머니 조회")
+    @Description("나의 복주머니 조회")
     @GetMapping
-    public ResponseEntity<PocketDto> getAllArticlesInPocket(HttpSession session){
+    public ResponseEntity<DataResponseDto<PocketDto>> getAllArticlesInPocket(HttpSession session){
         String userKey = (String) session.getAttribute("user");
         PocketInfoDto pocketInfoDto = pocketService.getPocketInfoByUser(userKey);
 
@@ -36,23 +36,23 @@ public class PocketController {
 
         PocketDto pocketDto = new PocketDto();
         pocketDto.setPocketSeq(pocketInfoDto.getPocketSeq());
-        pocketDto.setOwner(pocketInfoDto.getOwnerNickname());
+        pocketDto.setUser(pocketInfoDto.getOwnerNickname());
         pocketDto.setArticles(articleService.getArticlesByUser(userKey));
 
-        return ResponseEntity.status(HttpStatus.OK).body(pocketDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success: getting pocket by user", pocketDto));
     }
 
     @Description("복주머니 주소로 복주머니 조회")
     @GetMapping("/{url}")
-    public ResponseEntity<PocketDto> getPocket(@PathVariable String url){
+    public ResponseEntity<DataResponseDto<PocketDto>> getPocket(@PathVariable String url){
         PocketDto pocketDto = new PocketDto();
         PocketInfoDto findPocket = pocketService.getPocketInfo(url);
         pocketDto.setPocketSeq(findPocket.getPocketSeq());  // 누락된 setter 추가
-        pocketDto.setOwner(findPocket.getOwnerNickname());
-        pocketDto.setOwnerKey(findPocket.getOwnerKey());
+        pocketDto.setUser(findPocket.getOwnerNickname());
+        pocketDto.setUserKey(findPocket.getOwnerKey());
         List<ArticleResponseDto> articles = articleService.getArticlesByPocket(findPocket.getPocketSeq());
         pocketDto.setArticles(articles);
-        return ResponseEntity.status(HttpStatus.OK).body(pocketDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success: getting pocket by address", pocketDto));
     }
 
     @Description("복주머니 주소 가져오기")
