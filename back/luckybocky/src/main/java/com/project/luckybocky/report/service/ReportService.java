@@ -14,6 +14,7 @@ import com.project.luckybocky.report.dto.ReportReqDto;
 import com.project.luckybocky.report.dto.ReportResDto;
 import com.project.luckybocky.report.entity.Report;
 import com.project.luckybocky.report.exception.ReportNotFoundException;
+import com.project.luckybocky.report.exception.ReportSaveException;
 import com.project.luckybocky.report.repository.ReportRepository;
 import com.project.luckybocky.user.entity.User;
 import com.project.luckybocky.user.exception.UserNotFoundException;
@@ -43,13 +44,17 @@ public class ReportService {
 		Article article = articleRepository.findByArticleSeq(reportReqDto.getArticleSeq())
 			.orElseThrow(() -> new ArticleNotFoundException(reportReqDto.getArticleSeq() + " Article not found"));
 
-		reportRepository.save(
-			Report.builder()
-				.article(article)
-				.user(user)
-				.reportType(reportReqDto.getReportType())
-				.reportContent(reportReqDto.getReportContent())
-				.build());
+		try {
+			reportRepository.save(
+				Report.builder()
+					.article(article)
+					.user(user)
+					.reportType(reportReqDto.getReportType())
+					.reportContent(reportReqDto.getReportContent())
+					.build());
+		} catch (Exception e) {
+			throw new ReportSaveException(e.getMessage());
+		}
 	}
 
 	public ReportResDto getReport() {
