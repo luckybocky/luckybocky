@@ -8,7 +8,7 @@ export const checkLogin = async () => {
     const setUser = AuthStore.getState().setUser;
 
     const response = await ApiClient.get("auth/user");
-    const data = response.data;
+    const data = response.data.data;
 
     let address = "";
 
