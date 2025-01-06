@@ -14,7 +14,6 @@ import com.project.luckybocky.pocket.entity.Pocket;
 import com.project.luckybocky.pocket.exception.PocketNotFoundException;
 import com.project.luckybocky.pocket.repository.PocketRepository;
 import com.project.luckybocky.user.entity.User;
-import com.project.luckybocky.user.exception.UserNotFoundException;
 import com.project.luckybocky.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
