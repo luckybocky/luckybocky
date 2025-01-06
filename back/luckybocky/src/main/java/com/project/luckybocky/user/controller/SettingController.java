@@ -9,6 +9,7 @@ import com.project.luckybocky.user.service.UserSettingService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ public class SettingController {
     private final UserSettingService userSettingService;
 
 
+    @Description("설정변경(푸시, 공개유무,닉네임)")
     @PutMapping
     public ResponseEntity<ResponseDto> updateSetting(@RequestBody SettingDto settingDto, HttpSession session) {
         String userKey = (String) session.getAttribute("user" );
@@ -28,6 +30,7 @@ public class SettingController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("setting successful" ));
     }
 
+    @Description("내 정보 조회")
     @GetMapping
     public ResponseEntity<DataResponseDto<UserInfoDto>> loadUserInfo(HttpSession session) {
         String userKey = (String) session.getAttribute("user" );
