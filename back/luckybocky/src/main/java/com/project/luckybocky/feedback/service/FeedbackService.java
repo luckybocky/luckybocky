@@ -11,6 +11,7 @@ import com.project.luckybocky.feedback.dto.FeedbackResDto;
 import com.project.luckybocky.feedback.entity.Feedback;
 import com.project.luckybocky.feedback.exception.FeedbackNotFoundException;
 import com.project.luckybocky.common.SessionNotFoundException;
+import com.project.luckybocky.feedback.exception.FeedbackSaveException;
 import com.project.luckybocky.feedback.repository.FeedbackRepository;
 import com.project.luckybocky.user.entity.User;
 import com.project.luckybocky.user.exception.UserNotFoundException;
@@ -40,13 +41,17 @@ public class FeedbackService {
 		User user = userRepository.findByUserKey(userKey)
 			.orElseThrow(() -> new UserNotFoundException("User not found with key"));
 
-		feedbackRepository.save(
-			Feedback.builder()
-				.user(user)
-				.feedbackContent(feedbackReqDto.getFeedbackContent())
-				.feedbackRate(feedbackReqDto.getFeedbackRate())
-				.build()
-		);
+		try {
+			feedbackRepository.save(
+				Feedback.builder()
+					.user(user)
+					.feedbackContent(feedbackReqDto.getFeedbackContent())
+					.feedbackRate(feedbackReqDto.getFeedbackRate())
+					.build()
+			);
+		} catch (Exception e) {
+			throw new FeedbackSaveException(e.getMessage());
+		}
 	}
 
 	public FeedbackResDto getFeedback() {

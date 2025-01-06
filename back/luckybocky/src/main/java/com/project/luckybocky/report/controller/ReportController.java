@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.luckybocky.common.DataResponseDto;
 import com.project.luckybocky.common.ResponseDto;
-import com.project.luckybocky.report.dto.ReportDto;
 import com.project.luckybocky.report.dto.ReportReqDto;
 import com.project.luckybocky.report.dto.ReportResDto;
 import com.project.luckybocky.report.service.ReportService;

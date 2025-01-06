@@ -1,11 +1,12 @@
 package com.project.luckybocky.common;
 
-import com.google.api.Http;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.project.luckybocky.article.exception.ArticleNotFoundException;
 import com.project.luckybocky.article.exception.CommentConflictException;
+import com.project.luckybocky.feedback.exception.FeedbackSaveException;
 import com.project.luckybocky.fortune.exception.FortuneNotFoundException;
 import com.project.luckybocky.pocket.exception.PocketNotFoundException;
+import com.project.luckybocky.report.exception.ReportSaveException;
 import com.project.luckybocky.user.exception.ForbiddenUserException;
 import com.project.luckybocky.auth.exception.LoginFailedException;
 import com.project.luckybocky.feedback.exception.FeedbackNotFoundException;
@@ -92,6 +93,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(LoginFailedException.class)
     public ResponseEntity<ResponseDto> handleLoginFailedException(LoginFailedException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ReportSaveException.class)
+    public ResponseEntity<ResponseDto> handleReportSaveException(ReportSaveException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(new ResponseDto("Report save error: " + ex.getMessage()));
+    }
+
+    @ExceptionHandler(FeedbackSaveException.class)
+    public ResponseEntity<ResponseDto> handleFeedbackSaveException(FeedbackSaveException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(new ResponseDto("Feedback save error: " + ex.getMessage()));
     }
     //===== 우재 예외 추가 end ======
 }
