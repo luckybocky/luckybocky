@@ -32,15 +32,15 @@ export const checkLogin = async () => {
     }
 
     return 2;
-  } catch {
-    //서버 오류 or 비로그인
+  } catch (error) {
+    console.error("check login error", error);
   }
 };
 
 export const callback = async (code) => {
   if (code) {
     try {
-      const response = await ApiClient.get(`auth/callback?code=${code}`);
+      await ApiClient.get(`auth/callback?code=${code}`);
 
       const result = await checkLogin();
 
@@ -56,7 +56,7 @@ export const updateUser = async () => {
   const user = AuthStore.getState().user;
 
   try {
-    const response = await ApiClient.put("auth/user", user);
+    await ApiClient.put("auth/user", user);
   } catch (error) {
     console.error("update error", error);
   }

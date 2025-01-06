@@ -74,9 +74,11 @@ export const setupOnMessageListener = (callback) => {
 
 export const sendTokenToBackend = async (token) => {
   const myKey = { firebaseKey: token };
-  const response = await ApiClient.put(`/auth/firebase`, myKey);
-  console.log(response);
-  return response.data.data;
+  try {
+    await ApiClient.put(`/auth/firebase`, myKey);
+  } catch (error) {
+    console.error("Error sending token to backend", error);
+  }
 };
 
 export const sendArticlePush = async (pocketSeq) => {
@@ -85,9 +87,11 @@ export const sendArticlePush = async (pocketSeq) => {
     contentSeq: pocketSeq,
     url: `${window.location.origin}${window.location.pathname}`,
   };
-  const response = await ApiClient.post(`/push`, payload);
-  console.log(response);
-  return response.data.data;
+  try {
+    await ApiClient.post(`/push`, payload);
+  } catch (error) {
+    console.error("push error", error);
+  }
 };
 
 export const sendCommentPush = async (articleSeq) => {
@@ -96,7 +100,9 @@ export const sendCommentPush = async (articleSeq) => {
     contentSeq: articleSeq,
     url: `${window.location.origin}${window.location.pathname}`,
   };
-  const response = await ApiClient.post(`/push`, payload);
-  console.log(response);
-  return response.data.data;
+  try {
+    await ApiClient.post(`/push`, payload);
+  } catch (error) {
+    console.error("push error", error);
+  }
 };

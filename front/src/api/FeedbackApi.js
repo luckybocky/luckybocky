@@ -4,7 +4,7 @@ export const saveFeedback = async (content, rating) => {
   const feedback = { feedbackContent: content, feedbackRate: rating };
 
   try {
-    const response = await ApiClient.post("feedback", feedback);
+    await ApiClient.post("feedback", feedback);
   } catch (error) {
     console.error("feedback error", error);
   }

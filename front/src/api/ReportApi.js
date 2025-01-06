@@ -4,11 +4,12 @@ export const saveReport = async (article, type, content) => {
   console.log("Payload:", { article, type, content }); // 확인용 로그
 
   try {
-    const report = {articleSeq: article, reportType: type, reportContent: content}
-
-    const response = await ApiClient.post(`report`, report);
-
-    return response.data.message;
+    const report = {
+      articleSeq: article,
+      reportType: type,
+      reportContent: content,
+    };
+    await ApiClient.post(`report`, report);
   } catch (error) {
     console.error("report error", error);
   }
