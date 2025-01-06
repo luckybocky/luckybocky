@@ -1,18 +1,19 @@
 package com.project.luckybocky.feedback.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.project.luckybocky.common.BaseEntity;
+import com.project.luckybocky.common.NicknameNotFoundException;
 import com.project.luckybocky.feedback.dto.FeedbackDto;
 import com.project.luckybocky.feedback.dto.FeedbackReqDto;
 import com.project.luckybocky.feedback.dto.FeedbackResDto;
 import com.project.luckybocky.feedback.entity.Feedback;
+import com.project.luckybocky.feedback.exception.FeedbackNotFoundException;
+import com.project.luckybocky.common.SessionNotFoundException;
 import com.project.luckybocky.feedback.repository.FeedbackRepository;
 import com.project.luckybocky.user.entity.User;
+import com.project.luckybocky.user.exception.UserNotFoundException;
 import com.project.luckybocky.user.repository.UserRepository;
 
 import jakarta.servlet.http.HttpSession;
@@ -28,60 +29,43 @@ public class FeedbackService {
 	private final FeedbackRepository feedbackRepository;
 	private final UserRepository userRepository;
 
-	public FeedbackDto saveFeedback(FeedbackReqDto feedbackReqDto, HttpSession session) {
-		Object userKey = session.getAttribute("user");
-		// TODO 추후 예외처리 확실하게 수정할 것
-		log.debug("userKey: {}", userKey);
-		log.debug("feedbackDto: {}", feedbackReqDto);
-
-		if(userKey != null) {
-			Optional<User> user = userRepository.findByUserKey(userKey.toString());
-
-			if(user.isPresent()) {
-				feedbackRepository.save(
-					Feedback.builder()
-						.user(user.get())
-						.feedbackContent(feedbackReqDto.getFeedbackContent())
-						.feedbackRate(feedbackReqDto.getFeedbackRate())
-						.build()
-				);
-
-				LocalDateTime current_time = LocalDateTime.now();  // 논의 후, 제거 -> 이유: db 저장 시간이랑 차이 날까봐
-				return FeedbackDto.builder()
-					.userSeq(user.get().getUserSeq())
-					.feedbackContent(feedbackReqDto.getFeedbackContent())
-					.feedbackRate(feedbackReqDto.getFeedbackRate())
-					.createdAt(current_time)
-					.modifiedAt(current_time)
-					.isDeleted(false)
-					.build();
-			}
+	public void saveFeedback(FeedbackReqDto feedbackReqDto, HttpSession session) {
+		if(session == null) {
+			throw new SessionNotFoundException("User session not found, unable to save feedback");
+		} else if(session.getAttribute("nickname") == null) {
+			throw new NicknameNotFoundException("User nickname is null, unable to save feedback");
 		}
+		String userKey = (String) session.getAttribute("user");
 
-		return null;
+		User user = userRepository.findByUserKey(userKey)
+			.orElseThrow(() -> new UserNotFoundException("User not found with key"));
+
+		feedbackRepository.save(
+			Feedback.builder()
+				.user(user)
+				.feedbackContent(feedbackReqDto.getFeedbackContent())
+				.feedbackRate(feedbackReqDto.getFeedbackRate())
+				.build()
+		);
 	}
 
 	public FeedbackResDto getFeedback() {
 		List<Feedback> feedbacks = feedbackRepository.findAll();
-
-		if(!feedbacks.isEmpty()) {
-			List<FeedbackDto> feedbackDtoList = feedbacks.stream()
-				.map(feedback -> FeedbackDto.builder()
-					.feedbackSeq(feedback.getFeedbackSeq())
-					.userSeq(feedback.getUser().getUserSeq())
-					.feedbackContent(feedback.getFeedbackContent())
-					.feedbackRate(feedback.getFeedbackRate())
-					.createdAt(feedback.getCreatedAt())
-					.modifiedAt(feedback.getModifiedAt())
-					.isDeleted(feedback.isDeleted())
-					.build())
-				.toList();
-
-			return FeedbackResDto.builder()
-				.feedbacks(feedbackDtoList)
-				.build();
+		if(feedbacks.isEmpty()) {
+			throw new FeedbackNotFoundException("Feedback is nothing");
 		}
 
-		return null;
+		List<FeedbackDto> feedbackDtoList = feedbacks.stream()
+			.map(feedback -> FeedbackDto.builder()
+				.feedbackSeq(feedback.getFeedbackSeq())
+				.userSeq(feedback.getUser().getUserSeq())
+				.feedbackContent(feedback.getFeedbackContent())
+				.feedbackRate(feedback.getFeedbackRate())
+				.build())
+			.toList();
+
+		return FeedbackResDto.builder()
+			.feedbacks(feedbackDtoList)
+			.build();
 	}
 }

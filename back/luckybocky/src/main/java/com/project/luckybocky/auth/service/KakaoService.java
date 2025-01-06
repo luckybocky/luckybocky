@@ -1,4 +1,4 @@
-package com.project.luckybocky.kakao.service;
+package com.project.luckybocky.auth.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.luckybocky.kakao.dto.KakaoLoginDto;
+import com.project.luckybocky.auth.dto.KakaoLoginDto;
 import com.project.luckybocky.user.repository.UserRepository;
 import com.project.luckybocky.user.dto.UserDto;
 import com.project.luckybocky.user.entity.User;
