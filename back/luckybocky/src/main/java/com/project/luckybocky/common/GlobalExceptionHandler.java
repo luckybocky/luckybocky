@@ -1,15 +1,18 @@
 package com.project.luckybocky.common;
 
+import com.google.api.Http;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.project.luckybocky.article.exception.ArticleNotFoundException;
+import com.project.luckybocky.article.exception.CommentConflictException;
+import com.project.luckybocky.fortune.exception.FortuneNotFoundException;
+import com.project.luckybocky.pocket.exception.PocketNotFoundException;
+import com.project.luckybocky.user.exception.ForbiddenUserException;
 import com.project.luckybocky.auth.exception.LoginFailedException;
 import com.project.luckybocky.feedback.exception.FeedbackNotFoundException;
-import com.project.luckybocky.pocket.exception.PocketNotFoundException;
 import com.project.luckybocky.report.exception.ReportNotFoundException;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -17,9 +20,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    public ResponseEntity<ResponseDto> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto(ex.getMessage()));
     }
 
 
@@ -47,6 +49,25 @@ public class GlobalExceptionHandler {
 
     //===== 창희 예외 추가 end ======
 
+    //===== 재원 예외 추가 start ======
+    @ExceptionHandler(FortuneNotFoundException.class)
+    public ResponseEntity<ResponseDto> handleFortuneNotFoundException(FortuneNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler(CommentConflictException.class)
+    public ResponseEntity<ResponseDto> handleCommentConflictException(CommentConflictException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ForbiddenUserException.class)
+    public ResponseEntity<ResponseDto> handleForbiddenUserException(ForbiddenUserException ex){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseDto(ex.getMessage()));
+    }
+
+
+    //===== 재원 예외 추가 end ======
+
     //===== 우재 예외 추가 start ======
     @ExceptionHandler(SessionNotFoundException.class)
     public ResponseEntity<ResponseDto> handleSessionNotFoundException(SessionNotFoundException ex) {
@@ -73,5 +94,4 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto(ex.getMessage()));
     }
     //===== 우재 예외 추가 end ======
-
 }

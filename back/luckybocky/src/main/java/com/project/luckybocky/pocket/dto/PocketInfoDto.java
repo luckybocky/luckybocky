@@ -9,15 +9,17 @@ import lombok.Setter;
 public class PocketInfoDto {
     private int pocketSeq;
     private String pocketAddress;
-    private int ownerSeq;
-    private String ownerKey;
-    private String ownerNickname;
+    private int userSeq;
+    private String userKey;
+    private String userNickname;
+    private boolean fortuneVisibility;
 
     public PocketInfoDto(Pocket pocket){
         this.pocketSeq = pocket.getPocketSeq();
         this.pocketAddress = pocket.getPocketAddress();
-        this.ownerSeq = pocket.getUser().getUserSeq();
-        this.ownerKey = pocket.getUser().getUserKey();
-        this.ownerNickname = pocket.getUser().getUserNickname();
+        this.userSeq = pocket.getUser().getUserSeq();
+        this.userKey = pocket.getUser().getUserKey();
+        this.userNickname = pocket.getUser().getUserNickname();
+        this.fortuneVisibility = pocket.getUser().isFortuneVisibility();
     }
 }

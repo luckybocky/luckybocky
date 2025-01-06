@@ -3,7 +3,9 @@ package com.project.luckybocky.article.controller;
 import com.project.luckybocky.article.dto.ArticleResponseDto;
 import com.project.luckybocky.article.dto.WriteArticleDto;
 import com.project.luckybocky.article.service.ArticleService;
+import com.project.luckybocky.common.DataResponseDto;
 import com.project.luckybocky.common.ResponseDto;
+import com.project.luckybocky.user.exception.ForbiddenUserException;
 import com.project.luckybocky.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +23,9 @@ public class ArticleController {
 
     @Description("복 상세 조회")
     @GetMapping
-    public ResponseEntity<ArticleResponseDto> getArticleDetails(@RequestParam int articleSeq){
+    public ResponseEntity<DataResponseDto<ArticleResponseDto>> getArticleDetails(@RequestParam int articleSeq){
         ArticleResponseDto articleResponseDto = articleService.getArticleDetails(articleSeq);
-        return ResponseEntity.status(HttpStatus.OK).body(articleResponseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success: get article", articleResponseDto));
     }
 
     @Description("복주머니에 복 달기")
@@ -31,8 +33,7 @@ public class ArticleController {
     public ResponseEntity<ResponseDto> writeArticle(HttpSession session, @RequestBody WriteArticleDto writeArticleDto){
         String userKey = (String) session.getAttribute("user");
         articleService.createArticle(userKey, writeArticleDto);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ResponseDto.builder().message("복 달기 성공").build());
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success: post article"));
     }
 
     @Description("복주머니에서 복 삭제")
@@ -42,11 +43,10 @@ public class ArticleController {
 
         // 현재 로그인한 사용자가 해당 게시글의 주인(복을 받은 사용자)이 아닐 경우
         if (articleService.getOwnerByArticle(articleSeq) != userService.getUserSeq(userKey)){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    ResponseDto.builder().message("허가되지 않은 사용자").build());
+            throw new ForbiddenUserException("forbidden user");
+        } else {
+            articleService.deleteArticle(articleSeq);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success: delete article"));
         }
-
-        articleService.deleteArticle(articleSeq);
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.builder().message("복주머니에서 복 삭제 성공").build());
     }
 }

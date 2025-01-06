@@ -2,6 +2,7 @@ package com.project.luckybocky.article.dto;
 
 import com.project.luckybocky.article.entity.Article;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,37 +12,33 @@ import java.time.format.DateTimeFormatter;
 @Setter
 @AllArgsConstructor
 public class ArticleResponseDto {
+    private boolean articleVisibility;  // article 공개여부
     private int articleSeq;
 
-    private String nickname;
-    private String content;
-    private String comment;
-
     //12-31 창희 추가
-    private String userKey;
+    private String userKey;             // 작성자 Key
+    private String userNickname;        // 작성자 닉네임
 
-
+    private String articleContent;
+    private String articleComment;
     private String fortuneName;
-    private String fortuneImgUrl;
+    private String fortuneImg;
     private String createdAt;
 
-    private boolean guest;    // null일 경우 비회원
-    private boolean visibility;     // 공개여부
 
     public ArticleResponseDto(Article article){
+        this.articleVisibility = article.getArticleVisibility() == 1 ? true : false;
         this.articleSeq = article.getArticleSeq();
-        this.nickname = article.getUserNickname();
-        this.content = article.getArticleContent();
-        this.comment = article.getArticleComment();
 
         //12-31 창희 추가
         this.userKey = (article.getUser() == null) ? null : article.getUser().getUserKey();  // guest일 때 예외처리 추가
-
+        this.userNickname = article.getUserNickname();
+        this.articleContent = article.getArticleContent();
+        this.articleComment = article.getArticleComment();
 
         this.fortuneName = article.getFortune().getFortuneName();  // getFortune -> getFortunes
-        this.fortuneImgUrl = article.getFortune().getFortuneImg();
+        this.fortuneImg = article.getFortune().getFortuneImg();
         this.createdAt = article.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        this.guest = (article.getUser() == null) ? true : false;
-        this.visibility = article.getArticleVisibility() == 1 ? true : false;
     }
+
 }
