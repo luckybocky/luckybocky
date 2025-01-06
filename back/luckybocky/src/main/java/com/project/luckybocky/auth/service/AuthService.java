@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class KakaoService {
+public class AuthService {
 	private final RestTemplate restTemplate;
 	private final UserRepository userRepository;
 
