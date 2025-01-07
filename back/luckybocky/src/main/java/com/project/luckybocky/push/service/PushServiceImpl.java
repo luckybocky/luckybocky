@@ -48,11 +48,13 @@ public class PushServiceImpl implements PushService {
         String title = pushMessage.getTitle();
         String body = fromUser+pushMessage.getBody();
 
-        //알림을 허용한 사람한테만 보낸다.
-        if (!user.isAlarmStatus()) {
+        //알림을 허용한 사람한테만 보낸다, 파이어베이스키가 없으면 보내지 않는다.
+        if (!user.isAlarmStatus() || user.getFirebaseKey()==null || user.getFirebaseKey().isEmpty()) {
             log.info("{} is push off", user.getUserNickname());
             return;
         }
+
+
 
         Notification notification = Notification.builder()
                 .setBody(body)

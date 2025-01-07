@@ -21,6 +21,6 @@ public class ArticlePushServiceImpl implements ArticlePushService{
 
         if(article ==null) throw new ArticleNotFoundException("not found article");
 
-        return article.getPocket().getUser().getUserKey();
+        return article.getUser().getUserKey();
     }
 }
