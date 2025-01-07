@@ -1,29 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import FortuneImageBasic from "../image/fortunes/푸른뱀.png";
-import FortuneImageHealth from "../image/fortunes/건강뱀.png";
-import FortuneImageLove from "../image/fortunes/애정뱀.png";
-import FortuneImageWealth from "../image/fortunes/재물뱀.png";
-import FortuneImageJob from "../image/fortunes/취업뱀.png";
-import FortuneImageEdu from "../image/fortunes/학업뱀.png";
+import fortuneImages from "../components/FortuneImages";
 
 const SelectDecoPage = () => {
-  const images = [
-    FortuneImageBasic,
-    FortuneImageHealth,
-    FortuneImageLove,
-    FortuneImageWealth,
-    FortuneImageJob,
-    FortuneImageEdu,
-  ];
   const [selectedDecoration, setSelectedDecoration] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const { address, fortuneVisibility, pocketSeq } = location.state;
-  const decorations = new Array(6).fill(null).map((_, idx) => idx + 1);
+  const { address, pocketSeq } = location.state;
+  const decorations = new Array(6).fill(null).map((_, idx) => idx);
 
   const handleNext = () => {
-    if (!selectedDecoration) {
+    if (selectedDecoration === null) {
       alert("장식을 선택해주세요!");
       return;
     }
@@ -31,7 +18,7 @@ const SelectDecoPage = () => {
       state: {
         decorationId: selectedDecoration,
         pocketAddress: address,
-        visibility: fortuneVisibility,
+        // visibility: fortuneVisibility,
         pocketSeq,
       },
     });
@@ -50,7 +37,7 @@ const SelectDecoPage = () => {
             onClick={() => setSelectedDecoration(id)}
           >
             <img
-              src={images[id - 1]}
+              src={fortuneImages[id]}
               alt="장식물"
               className="w-16 h-16 mx-auto"
             />
@@ -60,13 +47,13 @@ const SelectDecoPage = () => {
       <div className="flex gap-2">
         <button
           onClick={() => navigate(-1)}
-          className="bg-gray-500 text-white py-2 px-6 rounded-md"
+          className="bg-gray-500 text-white py-2 px-6 rounded-lg"
         >
           이전
         </button>
         <button
           onClick={handleNext}
-          className="bg-blue-500 text-white py-2 px-6 rounded-md"
+          className="bg-blue-500 text-white py-2 px-6 rounded-lg"
         >
           다음
         </button>

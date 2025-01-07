@@ -141,7 +141,7 @@ const Menu = () => {
           onClick={closeModals}
         >
           <div
-            className="bg-white text-[#0d1a26] p-5 rounded-lg w-80"
+            className="bg-white text-[#0d1a26] p-4 rounded-lg w-80"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-lg mb-4">피드백하기</h2>
@@ -191,7 +191,7 @@ const Menu = () => {
           onClick={closeModals}
         >
           <div
-            className="bg-white text-[#0d1a26] p-5 rounded-lg w-80"
+            className="bg-white text-[#0d1a26] p-4 rounded-lg w-80"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-lg mb-4">신고하기</h2>

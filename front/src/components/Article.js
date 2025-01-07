@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { saveComment } from "../api/CommentApi";
 import { saveReport } from "../api/ReportApi";
 import { sendCommentPush } from "../api/FireBaseApi";
@@ -8,21 +8,43 @@ import {
   AiOutlineDelete,
   AiOutlineClose,
 } from "react-icons/ai";
+import { loadArticle, deleteArticle } from "../api/ArticleApi";
 
-const Article = ({ onClose, content, articleSeq }) => {
+const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [report, setReport] = useState("");
   const [reportType, setReportType] = useState(0);
   const [message, setMessage] = useState(null);
+  const [detail, setDetail] = useState(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [commentModalOpen, setCommentModalOpen] = useState(false);
 
-  const sendComment = () => {
+  const confirmDelete = async () => {
+    await deleteArticle(articleSeq);
+    onClose();
+    onDelete();
+  };
+
+  const confirmComment = async () => {
+    await sendComment();
+    fetchArticle();
+  };
+
+  const fetchArticle = async () => {
+    const result = await loadArticle(articleSeq);
+    setDetail(result);
+  };
+
+  useEffect(() => {
+    fetchArticle();
+  }, [articleSeq]);
+
+  const sendComment = async () => {
     if (!message) {
       alert("답장을 입력해주세요 :)");
       return;
     }
-
-    alert(`${articleSeq}번 복에 답장하기 : ${message}`);
-    saveComment(articleSeq, message);
+    await saveComment(articleSeq, message);
 
     //=====01-03 창희 추가 start=====
     //리복할때
@@ -47,23 +69,15 @@ const Article = ({ onClose, content, articleSeq }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-gray-100 rounded-lg p-6 w-[300px] text-center shadow-lg">
-        <div className="flex justify-between mb-4">
-          <button
-            className="bg-red-500 text-white py-2 px-4 rounded-md"
-            onClick={onClose}
-          >
-            <AiOutlineDelete />
-          </button>
-
-          <button
-            className="bg-yellow-500 text-white py-2 px-4 rounded-md"
-            onClick={() => setReportModalOpen(true)}
-          >
-            <AiOutlineAlert />
-          </button>
-
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-lg p-4 max-w-[375px] w-full text-center shadow-lg"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex justify-end mb-1">
           <button
             className="bg-blue-500 text-white py-2 px-4 rounded-md"
             onClick={onClose}
@@ -71,23 +85,108 @@ const Article = ({ onClose, content, articleSeq }) => {
             <AiOutlineClose />
           </button>
         </div>
+        <div className="border rounded-md mb-2 p-1 text-start ">
+          <div className="text-[black] text-lg mb-1">
+            {"From. " + detail?.userNickname}
+          </div>
+          <div className="text-[black] font-bold h-[200px] overflow-y-auto">
+            {detail?.articleContent}
+          </div>
+        </div>
 
-        <h2 className="text-xl font-bold mb-4">{content}</h2>
+        <textarea
+          className="text-black w-full h-24 p-1 border rounded-md resize-none"
+          value={detail?.articleComment ? detail?.articleComment : message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="나도 복 보내기"
+          disabled={detail?.articleComment}
+        />
 
-        <div>
-          <textarea
-            className="text-xl w-full h-24 p-2 border rounded-md mb-4 resize-none"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="나도 복 보내기"
-          />
+        <div className="flex justify-between">
+          <div className="flex gap-2">
+            <button
+              className="bg-yellow-500 text-white py-2 px-4 rounded-md"
+              onClick={() => setReportModalOpen(true)}
+            >
+              <AiOutlineAlert />
+            </button>
+            {myAddress === address && (
+              <button
+                className="bg-red-500 text-white py-2 px-4 rounded-md"
+                onClick={() => setDeleteModalOpen(true)}
+              >
+                <AiOutlineDelete />
+              </button>
+            )}
 
-          <button
-            className="bg-green-500 text-white py-2 px-4 rounded-md"
-            onClick={sendComment}
-          >
-            <AiOutlineMail />
-          </button>
+            {deleteModalOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <div
+                  className="bg-white rounded-lg p-6 w-80 shadow-lg text-center"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <h2 className="text-lg text-black mb-4">
+                    메세지는 다시 복구할 수 없어요.
+                  </h2>
+                  <p className="text-gray-700 mb-6">정말 삭제하시겠어요?</p>
+                  <div className="flex justify-center gap-4">
+                    <button
+                      className="bg-gray-300 text-black py-2 px-4 rounded-md"
+                      onClick={() => setDeleteModalOpen(false)}
+                    >
+                      취소
+                    </button>
+                    <button
+                      className="bg-red-500 text-white py-2 px-4 rounded-md"
+                      onClick={confirmDelete}
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          {!detail?.articleComment && (
+            <button
+              className={`${
+                message ? "bg-green-500" : "bg-gray-400"
+              } text-white py-2 px-4 rounded-md`}
+              onClick={() => {
+                setCommentModalOpen(true);
+              }}
+              disabled={!message}
+            >
+              <AiOutlineMail />
+            </button>
+          )}
+
+          {commentModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+              <div
+                className="bg-white rounded-lg p-6 w-80 shadow-lg text-center"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h2 className="text-lg text-black mb-4">
+                  답장을 전달하시겠어요?
+                </h2>
+                <div className="flex justify-center gap-4">
+                  <button
+                    className="bg-gray-300 text-black py-2 px-4 rounded-md"
+                    onClick={() => setCommentModalOpen(false)}
+                  >
+                    취소
+                  </button>
+                  <button
+                    className="bg-green-500 text-white py-2 px-4 rounded-md"
+                    onClick={confirmComment}
+                  >
+                    전달
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

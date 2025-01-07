@@ -43,7 +43,7 @@ const router = createBrowserRouter([
         element: <CallBack />,
       },
       {
-        path: "*",
+        path: "/error",
         element: <ErrorPage />,
       },
       {

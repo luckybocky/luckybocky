@@ -42,8 +42,13 @@ const JoinPage = () => {
         <input
           type="text"
           value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-          className="border p-2 rounded-lg text-black mr-4 w-full"
+          onChange={(e) => {
+            const input = e.target.value;
+            if (input.length <= 8) {
+              setNickname(input); // 8자 이하일 때만 상태 업데이트
+            }
+          }}
+          className="border p-2 rounded-md text-black mr-4 w-full"
         />
       </div>
 

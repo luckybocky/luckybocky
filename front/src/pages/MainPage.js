@@ -6,25 +6,12 @@ import Article from "../components/Article";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
-import FortuneImageBasic from "../image/fortunes/푸른뱀.png";
-import FortuneImageHealth from "../image/fortunes/건강뱀.png";
-import FortuneImageLove from "../image/fortunes/애정뱀.png";
-import FortuneImageWealth from "../image/fortunes/재물뱀.png";
-import FortuneImageJob from "../image/fortunes/취업뱀.png";
-import FortuneImageEdu from "../image/fortunes/학업뱀.png";
+import fortuneImages from "../components/FortuneImages";
 import { loadPocket } from "../api/PocketApi";
 
 import { requestFcmToken } from "../api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
 
 const MainPage = () => {
-  const images = [
-    FortuneImageBasic,
-    FortuneImageHealth,
-    FortuneImageLove,
-    FortuneImageWealth,
-    FortuneImageJob,
-    FortuneImageEdu,
-  ];
   const navigate = useNavigate();
 
   const { address } = useParams();
@@ -35,42 +22,43 @@ const MainPage = () => {
   const [pocket, setPocket] = useState(null);
   const [decorations, setDecorations] = useState([]);
 
-  const userNickname = AuthStore((state) => state.user.userNickname);
   const myAddress = AuthStore((state) => state.user.address);
-  const fortuneVisibility = AuthStore((state) => state.user.fortuneVisibility);
+  // const fortuneVisibility = AuthStore((state) => state.user.fortuneVisibility);
 
   const positions = [
-    { id: 1, position: "top-[40%] left-[5%]" }, // 상단 왼쪽
-    { id: 2, position: "top-[45%] left-[36%]" }, // 상단 오른쪽 -> 가운데
-    { id: 3, position: "top-[40%] left-[67%]" }, // 중단 왼쪽 -> 상단 오른쪽
-    { id: 4, position: "top-[60%] left-[5%]" }, // 중단 오른쪽 -> 하단 왼쪽
-    { id: 5, position: "top-[65%] left-[36%]" }, // 하단 왼쪽 -> 가운데
-    { id: 6, position: "top-[60%] left-[67%]" }, // 하단 오른쪽
+    { id: 1, position: "top-[20%] left-[6%]" }, // 상단 왼쪽
+    { id: 2, position: "top-[25%] left-[38%]" }, // 상단 오른쪽 -> 가운데
+    { id: 3, position: "top-[20%] left-[70%]" }, // 중단 왼쪽 -> 상단 오른쪽
+    { id: 4, position: "top-[50%] left-[6%]" }, // 중단 오른쪽 -> 하단 왼쪽
+    { id: 5, position: "top-[55%] left-[38%]" }, // 하단 왼쪽 -> 가운데
+    { id: 6, position: "top-[50%] left-[70%]" }, // 하단 오른쪽
   ];
 
+  const fetchPocket = async () => {
+    try {
+      const data = await loadPocket(address);
+      setPocket(data);
+
+      const articlesArray = data.articles || [];
+
+      const updatedPocket = articlesArray.map((decoration, idx) => {
+        const decorationIdx = idx % 6; // 순환 인덱스
+        return {
+          id: decoration.articleSeq,
+          position: positions[decorationIdx].position,
+          image: parseInt(decoration.fortuneImg),
+        };
+      });
+
+      console.log(data);
+
+      setDecorations(updatedPocket); // 위치가 할당된 데이터 저장
+    } catch (error) {
+      navigate("/error");
+    }
+  };
+
   useEffect(() => {
-    const fetchPocket = async () => {
-      try {
-        const data = await loadPocket(address);
-        setPocket(data);
-
-        const articlesArray = data.articles || [];
-
-        const updatedPocket = articlesArray.map((decoration, idx) => {
-          const decorationIdx = idx % 6; // 순환 인덱스
-          return {
-            id: decoration.articleSeq,
-            position: positions[decorationIdx].position,
-            image: parseInt(decoration.fortuneImgUrl),
-          };
-        });
-
-        setDecorations(updatedPocket); // 위치가 할당된 데이터 저장
-      } catch (error) {
-        console.error("Error loading pocket:", error);
-      }
-    };
-
     fetchPocket();
   }, [address]);
 
@@ -132,14 +120,17 @@ const MainPage = () => {
       <Menu />
       {/* 메인 화면 */}
       <div className="absolute top-4 left-4">
-        <h1 className="text-2xl mb-1">{userNickname} 님의 복주머니</h1>
+        <h1 className="text-xl mb-1">
+          <span className="text-[pink]">{pocket?.userNickname}</span> 님의
+          복주머니
+        </h1>
         <p className="text-base">{decorations.length}개의 복이 왔어요.</p>
       </div>
-      <h1 className="text-4xl mb-3">Lucky Bocky!</h1>
-      <p className="text-xl mb-6">복 내놔라</p>
+      {/* <h1 className="text-4xl mb-3">Lucky Bocky!</h1>
+      <p className="text-xl mb-6">복 내놔라</p> */}
 
       <div className="relative">
-        <img src={MainImage} alt="복주머니 이미지" className="w-60 h-60 mb-6" />
+        <img src={MainImage} alt="복주머니 이미지" className="w-80 h-80 mb-6" />
         {/* 장식물 배치 */}
         {currentDecorations.map((decoration) => (
           <button
@@ -147,10 +138,11 @@ const MainPage = () => {
             className={`absolute ${decoration.position}`}
             onClick={() => setSelectArticle(decoration.id)}
           >
+            {decoration.image}
             <img
-              src={images[decoration.image]}
+              src={fortuneImages[decoration.image]}
               alt="장식물"
-              className="w-16 h-16 cursor-pointer"
+              className="w-20 h-20 cursor-pointer"
             />
           </button>
         ))}
@@ -185,7 +177,7 @@ const MainPage = () => {
                 navigate("/select-deco", {
                   state: {
                     address,
-                    fortuneVisibility,
+                    // fortuneVisibility,
                     pocketSeq: pocket.pocketSeq,
                   },
                 })
@@ -208,8 +200,10 @@ const MainPage = () => {
       {selectArticle && (
         <Article
           onClose={() => setSelectArticle(null)}
-          content={`장식물 ${selectArticle}번의 메시지입니다.`}
           articleSeq={selectArticle}
+          onDelete={fetchPocket}
+          myAddress={myAddress}
+          address={address}
         />
       )}
 
