@@ -32,7 +32,10 @@ public class PushController {
     @Description("푸시 알림")
     @PostMapping
     public ResponseEntity<ResponseDto> pushContent(HttpSession session, @RequestBody PushDto pushDto) throws FirebaseMessagingException {
-        String fromUser = (String) session.getAttribute("user" );
+        String userKey = (String) session.getAttribute("name" );
+        if(userKey==null) return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("비회원은 푸시를 지원하지 않습니다." ));
+
+        String fromUser = (String) session.getAttribute("nickname" );
         log.info(" Push Info : {}", pushDto);
         pushService.sendPush(fromUser, pushDto);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("push success" ));
