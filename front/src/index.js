@@ -6,8 +6,13 @@ import reportWebVitals from "./reportWebVitals";
 
 import { setupOnMessageListener } from "./api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
 
+// iOS 환경 감지 함수
+const isIos = () => {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+};
+
 // 서비스 워커 등록
-if ("serviceWorker" in navigator) {
+if ("serviceWorker" in navigator && !isIos()) {
   navigator.serviceWorker
     .register("/firebase-messaging-sw.js") // 서비스 워커 경로
     .then((registration) => {
@@ -16,6 +21,8 @@ if ("serviceWorker" in navigator) {
     .catch((error) => {
       console.error("Service Worker registration failed:", error);
     });
+} else if (isIos()) {
+  console.log("iOS 환경에서는 서비스워커를 지원하지 않습니다.");
 }
 
 //=====12-31 창희 추가 start=====

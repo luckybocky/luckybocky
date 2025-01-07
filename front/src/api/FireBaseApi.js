@@ -10,7 +10,7 @@ export const requestFcmToken = async () => {
         vapidKey: process.env.REACT_APP_FIREBASE_VAPID_KEY,
       });
       console.log("FCM success");
-      console.log("FCM Token:", token);
+      // console.log("FCM Token:", token);
 
       // setupOnMessageListener();
 
@@ -30,8 +30,8 @@ export const requestFcmToken = async () => {
 // 메시지 수신 처리
 export const setupOnMessageListener = (callback) => {
   onMessage(messaging, (payload) => {
-    console.log("Message received: ", payload);
-    console.log("target Url: ", payload.data.url);
+    // console.log("Message received: ", payload);
+    // console.log("target Url: ", payload.data.url);
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
       body: payload.notification.body,
