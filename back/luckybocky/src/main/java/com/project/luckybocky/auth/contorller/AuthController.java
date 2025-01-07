@@ -56,16 +56,16 @@ public class AuthController {
 	public ResponseEntity<ResponseDto> kakaoLogin(@RequestParam("code") String code, HttpSession session)
 		throws JsonProcessingException {
 		UserDto userDto = kakaoService.kakaoLogin(code);
-		log.debug("{}", userDto);
-		if(userDto == null) {
-			throw new LoginFailedException("Callback Failed, unable to login");
-		}
 
 		String user = userDto.getUserKey();
 		String nickname = userDto.getUserNickname();
 
 		session.setAttribute("user", user);
 		session.setAttribute("nickname", nickname);
+
+		log.info("Session user: {}", session.getAttribute("user"));
+		log.info("Session nickname: {}", session.getAttribute("nickname"));
+		log.info("Login success");
 
 		return ResponseEntity
 			.status(HttpStatus.OK)
@@ -88,6 +88,8 @@ public class AuthController {
 		}
 
 		session.invalidate();
+
+		log.info("Logout success");
 
 		return ResponseEntity
 			.status(HttpStatus.OK)
