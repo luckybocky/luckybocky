@@ -22,9 +22,11 @@ import com.project.luckybocky.user.repository.UserRepository;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReportService {
 	private final UserRepository userRepository;
 	private final ArticleRepository articleRepository;
@@ -33,8 +35,6 @@ public class ReportService {
 	public void saveReport(ReportReqDto reportReqDto, HttpSession session) {
 		if(session == null) {
 			throw new SessionNotFoundException("User session not found, unable to save feedback");
-		} else if(session.getAttribute("nickname") == null) {
-			throw new NicknameNotFoundException("User nickname is null, unable to save feedback");
 		}
 		String userKey = (String) session.getAttribute("user");
 
@@ -52,6 +52,7 @@ public class ReportService {
 					.reportType(reportReqDto.getReportType())
 					.reportContent(reportReqDto.getReportContent())
 					.build());
+			log.info("Report save success");
 		} catch (Exception e) {
 			throw new ReportSaveException(e.getMessage());
 		}
@@ -67,6 +68,7 @@ public class ReportService {
 			.map(report -> ReportDto.builder()
 				.reportSeq(report.getReportSeq())
 				.articleSeq(report.getArticle().getArticleSeq())
+				.userSeq(report.getArticle().getUser() == null ? null: report.getUser().getUserSeq())
 				.reportType(report.getReportType())
 				.reportContent(report.getReportContent())
 				.createdAt(report.getCreatedAt())
@@ -75,8 +77,11 @@ public class ReportService {
 				.build())
 			.toList();
 
-		return ReportResDto.builder()
+		ReportResDto reportResDto = ReportResDto.builder()
 			.reports(reportDtoList)
 			.build();
+
+		log.info("Report inquiry success");
+		return reportResDto;
 	}
 }

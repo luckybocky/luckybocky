@@ -15,14 +15,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.luckybocky.auth.dto.KakaoLoginDto;
+import com.project.luckybocky.auth.exception.LoginFailedException;
 import com.project.luckybocky.user.repository.UserRepository;
 import com.project.luckybocky.user.dto.UserDto;
 import com.project.luckybocky.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 	private final RestTemplate restTemplate;
 	private final UserRepository userRepository;
@@ -67,7 +70,7 @@ public class AuthService {
 		return null;
 	}
 
-	public UserDto getLoginUser(String accessToken) throws JsonProcessingException {
+	public String getUserKey(String accessToken) throws JsonProcessingException {
 		String userInfoUri = "https://kapi.kakao.com/v2/user/me";
 
 		HttpHeaders headers = new HttpHeaders();
@@ -85,33 +88,53 @@ public class AuthService {
 			ObjectMapper objectMapper = new ObjectMapper();
 			String responseBody = response.getBody();
 			JsonNode jsonNode = objectMapper.readTree(responseBody);
-			return UserDto.builder()
-				.userKey("K" + jsonNode.get("id").asText())
-				.alarmStatus(false)
-				.fortuneVisibility(false)
-				.build();
+			log.info("userKey create success");
+			return "K" + jsonNode.get("id").asText();
 		}
 
+		log.info("userKey create failed. Check response body");
 		return null;
 	}
 
 	public UserDto kakaoLogin(String code) throws JsonProcessingException {
 		String accessToken = getToken(code);
 
-		if(accessToken != null) {
-			UserDto userDto = getLoginUser(accessToken);
-			userRepository.findByUserKey(userDto.getUserKey())
-				.orElseGet(() -> userRepository.save(
+		if (accessToken == null) {
+			throw new LoginFailedException("Access token acquisition failed, unable to login");
+		}
+
+		String userKey = getUserKey(accessToken);
+		if (userKey == null) {
+			throw new LoginFailedException("UserKey acquisition failed, unable to login");
+		}
+
+		try {
+			User user = userRepository.findByUserKey(userKey)
+				.orElseGet(() -> userRepository.save(  // 가입되어 있지 않은 사람이면 기본 정보 저장
 					User.builder()
-						.userKey(userDto.getUserKey())
-						.userNickname(userDto.getUserNickname())
-						.firebaseKey(userDto.getFirebaseKey())
-						.alarmStatus(userDto.getAlarmStatus())
-						.fortuneVisibility(userDto.getFortuneVisibility())
+						.userKey(userKey)
+						.alarmStatus(false)
+						.fortuneVisibility(false)
 						.build()
 				));
+
+			UserDto userDto = UserDto.builder()
+				.userKey(userKey)
+				.userNickname(user.getUserNickname())
+				.firebaseKey(user.getFirebaseKey())
+				.alarmStatus(user.isAlarmStatus())
+				.fortuneVisibility(user.isFortuneVisibility())
+				.build();
+
+			if(userDto.getUserNickname() == null) {
+				log.info("userDto(new coming) create success: {}", userDto);
+			} else {
+				log.info("userDto(revisiting) create success: {}", userDto);
+			}
+
 			return userDto;
+		} catch (Exception e) {
+			throw new LoginFailedException("User information save failed, unable to login");
 		}
-		return null;
 	}
 }

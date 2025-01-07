@@ -33,8 +33,6 @@ public class FeedbackService {
 	public void saveFeedback(FeedbackReqDto feedbackReqDto, HttpSession session) {
 		if(session == null) {
 			throw new SessionNotFoundException("User session not found, unable to save feedback");
-		} else if(session.getAttribute("nickname") == null) {
-			throw new NicknameNotFoundException("User nickname is null, unable to save feedback");
 		}
 		String userKey = (String) session.getAttribute("user");
 
@@ -49,6 +47,7 @@ public class FeedbackService {
 					.feedbackRate(feedbackReqDto.getFeedbackRate())
 					.build()
 			);
+			log.info("Feedback save success");
 		} catch (Exception e) {
 			throw new FeedbackSaveException(e.getMessage());
 		}
@@ -66,11 +65,17 @@ public class FeedbackService {
 				.userSeq(feedback.getUser().getUserSeq())
 				.feedbackContent(feedback.getFeedbackContent())
 				.feedbackRate(feedback.getFeedbackRate())
+				.createdAt(feedback.getCreatedAt())
+				.modifiedAt(feedback.getModifiedAt())
+				.isDeleted(feedback.isDeleted())
 				.build())
 			.toList();
 
-		return FeedbackResDto.builder()
+		FeedbackResDto feedbackResDto = FeedbackResDto.builder()
 			.feedbacks(feedbackDtoList)
 			.build();
+
+		log.info("Feedback inquiry success");
+		return feedbackResDto;
 	}
 }
