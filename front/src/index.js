@@ -14,17 +14,24 @@ const isIos = () => {
   return isIosDevice && isKakaoWebView;
 };
 // 서비스 워커 등록
-if ("serviceWorker" in navigator && !isIos()) {
-  navigator.serviceWorker
-    .register("/firebase-messaging-sw.js") // 서비스 워커 경로
-    .then((registration) => {
-      console.log("Service Worker registered with scope:", registration.scope);
-    })
-    .catch((error) => {
-      console.error("Service Worker registration failed:", error);
-    });
-} else if (isIos()) {
-  console.log("iOS 환경에서는 서비스워커를 지원하지 않습니다.");
+try {
+  if ("serviceWorker" in navigator && !isIos()) {
+    navigator.serviceWorker
+      .register("/firebase-messaging-sw.js") // 서비스 워커 경로
+      .then((registration) => {
+        console.log(
+          "Service Worker registered with scope:",
+          registration.scope
+        );
+      })
+      .catch((error) => {
+        console.error("Service Worker registration failed:", error);
+      });
+  } else if (isIos()) {
+    console.log("iOS 환경에서는 서비스워커를 지원하지 않습니다.");
+  }
+} catch (error) {
+  console.error("Service Worker 등록 중 예기치 못한 오류 발생:", error);
 }
 
 //=====12-31 창희 추가 start=====
