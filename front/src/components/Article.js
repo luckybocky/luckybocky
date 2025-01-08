@@ -69,6 +69,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
 
   const sendReport = () => {
     console.log("Sending seq:", articleSeq); // sendReport 호출 시 seq 값 확인
+
     if (reportType == 0) {
       alert("신고 유형을 선택해주세요.");
     } else if (report === "") {
@@ -76,8 +77,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
     } else {
       // alert(`${articleSeq}, ${reportType}, ${report}`)
       saveReport(articleSeq, reportType, report);
-      setReported(true);
-      setTimeout(() => setReported(false), 2000);
+      alert("감사합니다. 신고 완료되었습니다.");
       setReport("");
       setReportType(0);
       setReportModalOpen(false);
