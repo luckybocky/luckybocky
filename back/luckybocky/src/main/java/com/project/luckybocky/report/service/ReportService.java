@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.project.luckybocky.article.entity.Article;
 import com.project.luckybocky.article.exception.ArticleNotFoundException;
 import com.project.luckybocky.article.repository.ArticleRepository;
-import com.project.luckybocky.common.NicknameNotFoundException;
 import com.project.luckybocky.common.SessionNotFoundException;
 import com.project.luckybocky.report.dto.ReportDto;
 import com.project.luckybocky.report.dto.ReportReqDto;
@@ -38,8 +37,11 @@ public class ReportService {
 		}
 		String userKey = (String) session.getAttribute("user");
 
-		User user = userRepository.findByUserKey(userKey)
-			.orElseThrow(() -> new UserNotFoundException("User not found with key"));
+		userRepository.findByUserKey(userKey)
+			.orElseThrow(() -> new UserNotFoundException("Reporter not found with key"));  // 유효 신고자인지 확인
+
+		User offender = userRepository.findByUserSeq(reportReqDto.getUserSeq())
+			.orElseThrow(() -> new UserNotFoundException("Offender not found with key"));
 
 		Article article = articleRepository.findByArticleSeq(reportReqDto.getArticleSeq())
 			.orElseThrow(() -> new ArticleNotFoundException(reportReqDto.getArticleSeq() + " Article not found"));
@@ -48,7 +50,7 @@ public class ReportService {
 			reportRepository.save(
 				Report.builder()
 					.article(article)
-					.user(user)
+					.user(offender)
 					.reportType(reportReqDto.getReportType())
 					.reportContent(reportReqDto.getReportContent())
 					.build());
@@ -68,7 +70,7 @@ public class ReportService {
 			.map(report -> ReportDto.builder()
 				.reportSeq(report.getReportSeq())
 				.articleSeq(report.getArticle().getArticleSeq())
-				.userSeq(report.getArticle().getUser() == null ? null: report.getUser().getUserSeq())
+				.userSeq(report.getArticle().getUser().getUserSeq())
 				.reportType(report.getReportType())
 				.reportContent(report.getReportContent())
 				.createdAt(report.getCreatedAt())

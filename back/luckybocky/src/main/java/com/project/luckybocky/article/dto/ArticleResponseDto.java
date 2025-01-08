@@ -16,7 +16,7 @@ public class ArticleResponseDto {
     private int articleSeq;
 
     //12-31 창희 추가
-    private String userKey;             // 작성자 Key
+    private Integer userSeq;             // 작성자 Key -> Seq(우재 변경)
     private String userNickname;        // 작성자 닉네임
 
     private String articleContent;
@@ -31,7 +31,7 @@ public class ArticleResponseDto {
         this.articleSeq = article.getArticleSeq();
 
         //12-31 창희 추가
-        this.userKey = (article.getUser() == null) ? null : article.getUser().getUserKey();  // guest일 때 예외처리 추가
+        this.userSeq = (article.getUser() == null) ? null : article.getUser().getUserSeq();  // guest일 때 예외처리 추가
         this.userNickname = article.getUserNickname();
         this.articleContent = article.getArticleContent();
         this.articleComment = article.getArticleComment();
