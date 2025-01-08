@@ -26,12 +26,12 @@ const MainPage = () => {
   // const fortuneVisibility = AuthStore((state) => state.user.fortuneVisibility);
 
   const positions = [
-    { id: 1, position: "top-[20%] left-[6%]" }, // 상단 왼쪽
-    { id: 2, position: "top-[25%] left-[38%]" }, // 상단 오른쪽 -> 가운데
-    { id: 3, position: "top-[20%] left-[70%]" }, // 중단 왼쪽 -> 상단 오른쪽
-    { id: 4, position: "top-[50%] left-[6%]" }, // 중단 오른쪽 -> 하단 왼쪽
-    { id: 5, position: "top-[55%] left-[38%]" }, // 하단 왼쪽 -> 가운데
-    { id: 6, position: "top-[50%] left-[70%]" }, // 하단 오른쪽
+    { id: 1, position: "top-[30%] left-[6%]" }, // 상단 왼쪽
+    { id: 2, position: "top-[35%] left-[38%]" }, // 상단 오른쪽 -> 가운데
+    { id: 3, position: "top-[30%] left-[70%]" }, // 중단 왼쪽 -> 상단 오른쪽
+    { id: 4, position: "top-[60%] left-[6%]" }, // 중단 오른쪽 -> 하단 왼쪽
+    { id: 5, position: "top-[65%] left-[38%]" }, // 하단 왼쪽 -> 가운데
+    { id: 6, position: "top-[60%] left-[70%]" }, // 하단 오른쪽
   ];
 
   const fetchPocket = async () => {
@@ -46,7 +46,7 @@ const MainPage = () => {
         return {
           id: decoration.articleSeq,
           position: positions[decorationIdx].position,
-          image: parseInt(decoration.fortuneImg),
+          image: decoration.fortuneImg,
         };
       });
 
@@ -138,7 +138,6 @@ const MainPage = () => {
             className={`absolute ${decoration.position}`}
             onClick={() => setSelectArticle(decoration.id)}
           >
-            {decoration.image}
             <img
               src={fortuneImages[decoration.image]}
               alt="장식물"

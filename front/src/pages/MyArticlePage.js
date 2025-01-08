@@ -2,11 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
 import { myArticle } from "../api/ArticleApi";
+import fortuneImages from "../components/FortuneImages";
+import AuthStore from "../store/AuthStore";
 
 const MyArticlePage = () => {
   const navigate = useNavigate();
 
   const [articles, setArticles] = useState([]);
+
+  const user = AuthStore((state) => state.user);
+
+  useEffect(() => {
+    if (!user.createdAt) navigate("/");
+  }, [user]);
 
   const init = async () => {
     const result = await myArticle();
@@ -38,12 +46,18 @@ const MyArticlePage = () => {
       <h1 className="text-xl mb-4">메시지 목록</h1>
 
       {/* 메시지 리스트 */}
-      <div className="w-full px-4 flex-1 space-y-4 pb-16">
+      <div className="w-full px-4 flex-1 space-y-8 pb-16 mt-8">
         {articles?.map((article, index) => (
           <div
             key={index}
-            className="bg-[#593c2c] rounded-lg p-4 shadow-md text-left"
+            className="relative bg-[#593c2c] rounded-lg p-4 shadow-md text-left border-2 border-[gray]"
           >
+            {/* 이미지 추가 */}
+            <img
+              src={fortuneImages[article.fortuneImg]}
+              alt="Fortune"
+              className="absolute top-[-45px] left-3/4 transform -translate-x-1/2 w-[100px] h-[100px] object-contain"
+            />
             <div className="mb-1 text-lg">To. {article.pocketOwner}</div>
             <div className="mb-2 whitespace-pre-wrap break-words">
               {article.content}
@@ -51,6 +65,15 @@ const MyArticlePage = () => {
             <div className="text-right text-sm text-[#ccc]">
               From. {article.articleOwner}
             </div>
+            {article.comment && (
+              <div>
+                <hr className="border-t-2 border-[gray] mt-1 mb-2" />
+                <div className="mb-1 text-lg">Re.</div>
+                <div className="whitespace-pre-wrap break-words">
+                  {article.comment}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>

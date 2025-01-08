@@ -11,10 +11,13 @@ const AccountPage = () => {
 
   const [nickname, setNickname] = useState(null);
   const [changeMode, setChangeMode] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
   useEffect(() => {
+    if (!user.createdAt) navigate("/");
     if (nickname == null) setNickname(user.userNickname);
-    if (user.createdAt) updateUser();
+    updateUser();
   }, [user]);
 
   const navigate = useNavigate();
@@ -24,6 +27,9 @@ const AccountPage = () => {
       ...user,
       userNickname: nickname,
     });
+
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   };
 
   const saveAlarmStatus = () => {
@@ -31,15 +37,26 @@ const AccountPage = () => {
       ...user,
       alarmStatus: !user.alarmStatus,
     });
+
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   };
   const saveFortuneVisibility = () => {
     setUser({
       ...user,
       fortuneVisibility: !user.fortuneVisibility,
     });
+
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   };
 
-  const logoutButton = async () => {
+  const logoutButton = () => {
+    setLogoutModalOpen(true);
+  };
+
+  const confirmLogout = async () => {
+    setLogoutModalOpen(false);
     navigate("/");
     const setUser = AuthStore.getState().setUser;
     setUser({
@@ -141,6 +158,38 @@ const AccountPage = () => {
       <div className="flex justify-center">
         <Footer />
       </div>
+
+      {/* 변경 성공 알림 */}
+      {saved && (
+        <div className="fixed bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
+          정상적으로 변경되었습니다!
+        </div>
+      )}
+
+      {logoutModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div
+            className="bg-white rounded-lg p-6 w-80 shadow-lg text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-lg text-black mb-4">로그아웃 하시겠어요?</h2>
+            <div className="flex justify-center gap-4">
+              <button
+                className="bg-gray-300 text-black py-2 px-4 rounded-md"
+                onClick={() => setLogoutModalOpen(false)}
+              >
+                취소
+              </button>
+              <button
+                className="bg-red-500 text-white py-2 px-4 rounded-md"
+                onClick={confirmLogout}
+              >
+                로그아웃
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

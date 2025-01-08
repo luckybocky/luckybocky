@@ -1,8 +1,21 @@
 import { messaging, getToken, onMessage } from "../components/firebase-config";
 import ApiClient from "./ApiClient";
 
+// iOS 환경 감지 함수
+const isIos = () => {
+  const ua = navigator.userAgent;
+  const isIosDevice = /iPhone|iPad|iPod/i.test(ua);
+  const isKakaoWebView = /KAKAOTALK/i.test(ua);
+  return isIosDevice && isKakaoWebView;
+};
+
 // 푸시 알림 권한 요청 및 토큰 획득
 export const requestFcmToken = async () => {
+  if (isIos()) {
+    console.log("iOS WebView에서는 FCM 토큰 요청을 생략합니다.");
+    return null;
+  }
+
   try {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
@@ -29,6 +42,11 @@ export const requestFcmToken = async () => {
 
 // 메시지 수신 처리
 export const setupOnMessageListener = (callback) => {
+  if (isIos()) {
+    console.log("iOS WebView에서는 FCM 토큰 요청을 생략합니다.");
+    return null;
+  }
+
   onMessage(messaging, (payload) => {
     // console.log("Message received: ", payload);
     // console.log("target Url: ", payload.data.url);
