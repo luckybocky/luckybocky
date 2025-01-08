@@ -2,7 +2,6 @@ package com.project.luckybocky.article.dto;
 
 import com.project.luckybocky.article.entity.Article;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,11 +21,11 @@ public class ArticleResponseDto {
     private String articleContent;
     private String articleComment;
     private String fortuneName;
-    private String fortuneImg;
+    private int fortuneImg;
     private String createdAt;
 
 
-    public ArticleResponseDto(Article article){
+    public ArticleResponseDto(Article article) {
         this.articleVisibility = article.getArticleVisibility() == 1 ? true : false;
         this.articleSeq = article.getArticleSeq();
 
@@ -37,7 +36,7 @@ public class ArticleResponseDto {
         this.articleComment = article.getArticleComment();
 
         this.fortuneName = article.getFortune().getFortuneName();  // getFortune -> getFortunes
-        this.fortuneImg = article.getFortune().getFortuneImg();
+        this.fortuneImg = article.getFortune().getFortuneSeq();
         this.createdAt = article.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 

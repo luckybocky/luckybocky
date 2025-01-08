@@ -4,10 +4,8 @@ import com.project.luckybocky.article.dto.MyArticleDto;
 import com.project.luckybocky.article.dto.MyArticlesDto;
 import com.project.luckybocky.article.entity.Article;
 import com.project.luckybocky.article.repository.MyArticleRepository;
-import jakarta.persistence.Entity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +31,7 @@ public class MyArticleServiceImpl implements MyArticleService {
             String articleOwner = article.getUserNickname();
             String content = article.getArticleContent();
             String fortuneName = article.getFortune().getFortuneName();
-            String fortuneImg = article.getFortune().getFortuneImg();
+            int fortuneImg = article.getFortune().getFortuneSeq();
             String createdAt = article.getCreatedAt().format(formatter);
 
             myArticles.add(new MyArticleDto(pocketOwner, articleOwner, content, fortuneName, fortuneImg, createdAt));
