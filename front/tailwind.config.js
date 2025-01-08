@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Jalnan", "sans-serif"],
+        sans: ["Jalnan"],
       },
     },
   },
