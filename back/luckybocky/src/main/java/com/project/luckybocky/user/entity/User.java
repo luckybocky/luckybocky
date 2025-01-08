@@ -50,8 +50,11 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Feedback> feedbacks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Report> reports = new ArrayList<>();
+    @OneToMany(mappedBy = "reporter")
+    private List<Report> reporters; // 내가 신고한 목록
+
+    @OneToMany(mappedBy = "offender")
+    private List<Report> offenders; // 내가 신고당한 목록
     //12-23 창희 피드백, 신고 칼럼 추가 end
 
     @Override

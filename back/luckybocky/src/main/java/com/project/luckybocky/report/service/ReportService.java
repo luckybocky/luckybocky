@@ -37,20 +37,24 @@ public class ReportService {
 		}
 		String userKey = (String) session.getAttribute("user");
 
-		userRepository.findByUserKey(userKey)
-			.orElseThrow(() -> new UserNotFoundException("Reporter not found with key"));  // 유효 신고자인지 확인
-
-		User offender = userRepository.findByUserSeq(reportReqDto.getUserSeq())
-			.orElseThrow(() -> new UserNotFoundException("Offender not found with key"));
-
 		Article article = articleRepository.findByArticleSeq(reportReqDto.getArticleSeq())
 			.orElseThrow(() -> new ArticleNotFoundException(reportReqDto.getArticleSeq() + " Article not found"));
+
+		User reporter = userRepository.findByUserKey(userKey)
+			.orElseThrow(() -> new UserNotFoundException("Reporter not found with key"));  // 유효 신고자인지 확인
+
+		User offender = null;
+		if(article.getUser() != null) {
+			offender = userRepository.findByUserSeq(article.getUser().getUserSeq())
+				.orElseThrow(() -> new UserNotFoundException("Offender not found userSeq"));
+		}
 
 		try {
 			reportRepository.save(
 				Report.builder()
 					.article(article)
-					.user(offender)
+					.reporter(reporter)
+					.offender(offender)
 					.reportType(reportReqDto.getReportType())
 					.reportContent(reportReqDto.getReportContent())
 					.build());
@@ -70,7 +74,8 @@ public class ReportService {
 			.map(report -> ReportDto.builder()
 				.reportSeq(report.getReportSeq())
 				.articleSeq(report.getArticle().getArticleSeq())
-				.userSeq(report.getArticle().getUser().getUserSeq())
+				.reporterSeq(report.getReporter().getUserSeq())
+				.offenderSeq(report.getOffender().getUserSeq())
 				.reportType(report.getReportType())
 				.reportContent(report.getReportContent())
 				.createdAt(report.getCreatedAt())

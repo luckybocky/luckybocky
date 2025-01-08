@@ -16,7 +16,8 @@ import lombok.ToString;
 public class ReportDto {
 	private Integer reportSeq;
 	private Integer articleSeq;
-	private Integer userSeq;
+	private Integer reporterSeq;
+	private Integer offenderSeq;
 	private byte reportType;
 	private String reportContent;
 	private LocalDateTime createdAt;
