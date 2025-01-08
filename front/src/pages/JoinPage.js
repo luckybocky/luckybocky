@@ -32,7 +32,7 @@ const JoinPage = () => {
   };
 
   return (
-    <div className="relative flex flex-col w-full max-w-[375px] min-h-screen bg-[#0d1a26] p-2 text-white overflow-hidden">
+    <div className="relative flex flex-col w-full max-w-[375px] min-h-screen bg-[#333] p-2 text-white overflow-hidden">
       {/* 계정 설정 화면 */}
       <h1 className="text-3xl mb-8 mt-5">회원 가입</h1>
       <h1 className="text-xl">안녕하세요!!</h1>

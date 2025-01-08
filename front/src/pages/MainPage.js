@@ -116,7 +116,7 @@ const MainPage = () => {
   //=====12-31 창희 추가 end=====
 
   return (
-    <div className="relative flex flex-col items-center justify-center p-2 w-full max-w-[375px] min-h-screen bg-[#0d1a26] text-white overflow-hidden">
+    <div className="relative flex flex-col items-center justify-center p-2 w-full max-w-[375px] min-h-screen bg-[#ba947f] text-white overflow-hidden">
       <Menu />
       {/* 메인 화면 */}
       <div className="absolute top-4 left-4">
@@ -152,7 +152,7 @@ const MainPage = () => {
         <button
           onClick={handlePreviousPage}
           disabled={currentPage === 1}
-          className="text-white px-2 rounded disabled:opacity-50"
+          className="px-2 rounded disabled:opacity-50"
         >
           {"<<"}
         </button>
@@ -162,7 +162,7 @@ const MainPage = () => {
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          className=" text-white px-2 rounded disabled:opacity-50"
+          className="px-2 rounded disabled:opacity-50"
         >
           {">>"}
         </button>
