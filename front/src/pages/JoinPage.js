@@ -14,15 +14,19 @@ const JoinPage = () => {
 
   const navigate = useNavigate();
 
-  const joinUser = () => {
-    setUser({
+  useEffect(() => {
+    if (user.createdAt) navigate("/");
+  }, [user]);
+
+  const joinUser = async () => {
+    await setUser({
       ...user,
       userNickname: nickname,
       alarmStatus: isAlarm,
       fortuneVisibility: isPublic,
     });
 
-    updateUser();
+    await updateUser();
 
     navigate(`/${user.address}`);
   };

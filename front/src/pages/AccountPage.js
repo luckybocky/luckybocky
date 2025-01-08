@@ -15,8 +15,9 @@ const AccountPage = () => {
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
   useEffect(() => {
+    if (!user.createdAt) navigate("/");
     if (nickname == null) setNickname(user.userNickname);
-    if (user.createdAt) updateUser();
+    updateUser();
   }, [user]);
 
   const navigate = useNavigate();

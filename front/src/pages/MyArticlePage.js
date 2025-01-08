@@ -3,11 +3,18 @@ import { useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
 import { myArticle } from "../api/ArticleApi";
 import fortuneImages from "../components/FortuneImages";
+import AuthStore from "../store/AuthStore";
 
 const MyArticlePage = () => {
   const navigate = useNavigate();
 
   const [articles, setArticles] = useState([]);
+
+  const user = AuthStore((state) => state.user);
+
+  useEffect(() => {
+    if (!user.createdAt) navigate("/");
+  }, [user]);
 
   const init = async () => {
     const result = await myArticle();
