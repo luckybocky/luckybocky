@@ -8,9 +8,11 @@ import { setupOnMessageListener } from "./api/FireBaseApi"; //12-31 창희 추�
 
 // iOS 환경 감지 함수
 const isIos = () => {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const ua = navigator.userAgent;
+  const isIosDevice = /iPhone|iPad|iPod/i.test(ua);
+  const isKakaoWebView = /KAKAOTALK/i.test(ua);
+  return isIosDevice && isKakaoWebView;
 };
-
 // 서비스 워커 등록
 if ("serviceWorker" in navigator && !isIos()) {
   navigator.serviceWorker
