@@ -3,7 +3,10 @@ import ApiClient from "./ApiClient";
 
 // iOS 환경 감지 함수
 const isIos = () => {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const ua = navigator.userAgent;
+  const isIosDevice = /iPhone|iPad|iPod/i.test(ua);
+  const isKakaoWebView = /KAKAOTALK/i.test(ua);
+  return isIosDevice && isKakaoWebView;
 };
 
 // 푸시 알림 권한 요청 및 토큰 획득
