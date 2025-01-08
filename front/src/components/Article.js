@@ -109,7 +109,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
           <div className="text-[black] text-lg mb-1">
             {"From. " + detail?.userNickname}
           </div>
-          <div className="text-[black] font-bold h-[200px] overflow-y-auto">
+          <div className="text-[black] h-[200px] overflow-y-auto">
             {detail?.articleContent}
           </div>
         </div>
@@ -220,7 +220,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
               className="bg-white text-[#0d1a26] p-5 rounded-lg w-80"
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 className="text-2xl font-bold mb-4">신고하기</h2>
+              <h2 className="text-2xl mb-4">신고하기</h2>
 
               <label style={{ color: "gray" }}>
                 <select
