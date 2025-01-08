@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import MainImage from "../image/pocket.png";
+import MainImage from "../image/landing.png";
 import kakaoIcon from "../image/kakao-icon.png";
 import { useNavigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";

@@ -18,6 +18,7 @@ const WritePage = () => {
   const [nickname, setNickname] = useState("");
   const [message, setMessage] = useState("");
   const [visibility, setVisibility] = useState(false);
+  const [saveModalOpen, setSaveModalOpen] = useState(false);
 
   const handleSubmit = async () => {
     if (!nickname || !message) {
@@ -25,6 +26,10 @@ const WritePage = () => {
       return;
     }
 
+    setSaveModalOpen(true);
+  };
+
+  const confirmWrite = async () => {
     const payload = {
       pocketSeq,
       pocketAddress,
@@ -42,6 +47,7 @@ const WritePage = () => {
     //복주머니에 복을 넣을때
     sendArticlePush(pocketSeq);
     //=====12-31 창희 추가 end=====
+    setSaveModalOpen(false);
   };
 
   useEffect(() => {
@@ -62,7 +68,7 @@ const WritePage = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="메시지를 입력하세요"
-          className="w-full h-60 p-2 border rounded-md resize-none"
+          className="w-full h-60 p-2 pt-4 border rounded-md resize-none"
         />
       </div>
       <div className="w-full mb-4">
@@ -99,6 +105,33 @@ const WritePage = () => {
           </button>
         </div>
       </div>
+
+      {saveModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div
+            className="bg-white rounded-lg p-6 w-80 shadow-lg text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-lg text-black mb-4">
+              이대로 복을 전달하시겠어요?
+            </h2>
+            <div className="flex justify-center gap-4">
+              <button
+                className="bg-gray-300 text-black py-2 px-4 rounded-md"
+                onClick={() => setSaveModalOpen(false)}
+              >
+                취소
+              </button>
+              <button
+                className="bg-blue-500 text-white py-2 px-4 rounded-md"
+                onClick={confirmWrite}
+              >
+                저장
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
