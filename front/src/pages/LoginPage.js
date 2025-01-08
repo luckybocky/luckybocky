@@ -30,7 +30,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center text-center bg-[#0d1a26] text-white min-h-screen p-2 w-full max-w-[375px]">
+    <div className="relative flex flex-col items-center justify-center text-center bg-[#0d1a26] text-white min-h-screen p-2 w-full max-w-[375px]">
       <h1 className="text-4xl mb-2">Lucky Bocky!</h1>
       <p className="text-xl mb-6">복 내놔라</p>
       <img src={MainImage} alt="복주머니 이미지" className="w-60 h-60 mb-6" />
