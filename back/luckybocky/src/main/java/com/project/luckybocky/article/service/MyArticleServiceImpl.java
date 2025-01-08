@@ -27,14 +27,16 @@ public class MyArticleServiceImpl implements MyArticleService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         for (Article article : articleByUserKey) {
-            String pocketOwner = article.getPocket().getUser().getUserNickname();
-            String articleOwner = article.getUserNickname();
-            String content = article.getArticleContent();
-            String fortuneName = article.getFortune().getFortuneName();
-            int fortuneImg = article.getFortune().getFortuneSeq();
-            String createdAt = article.getCreatedAt().format(formatter);
-
-            myArticles.add(new MyArticleDto(pocketOwner, articleOwner, content, fortuneName, fortuneImg, createdAt));
+            myArticles.add(MyArticleDto
+                    .builder()
+                    .pocketOwner(article.getPocket().getUser().getUserNickname())
+                    .articleOwner(article.getUserNickname())
+                    .content(article.getArticleContent())
+                    .comment(article.getArticleComment())
+                    .fortuneName(article.getFortune().getFortuneName())
+                    .fortuneImg(article.getFortune().getFortuneSeq())
+                    .createdAt(article.getCreatedAt().format(formatter))
+                    .build());
         }
 
         return new MyArticlesDto(myArticles);
