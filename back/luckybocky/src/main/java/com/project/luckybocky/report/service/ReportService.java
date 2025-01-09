@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.project.luckybocky.article.entity.Article;
 import com.project.luckybocky.article.exception.ArticleNotFoundException;
 import com.project.luckybocky.article.repository.ArticleRepository;
-import com.project.luckybocky.common.NicknameNotFoundException;
 import com.project.luckybocky.common.SessionNotFoundException;
 import com.project.luckybocky.report.dto.ReportDto;
 import com.project.luckybocky.report.dto.ReportReqDto;
@@ -38,17 +37,24 @@ public class ReportService {
 		}
 		String userKey = (String) session.getAttribute("user");
 
-		User user = userRepository.findByUserKey(userKey)
-			.orElseThrow(() -> new UserNotFoundException("User not found with key"));
-
 		Article article = articleRepository.findByArticleSeq(reportReqDto.getArticleSeq())
 			.orElseThrow(() -> new ArticleNotFoundException(reportReqDto.getArticleSeq() + " Article not found"));
+
+		User reporter = userRepository.findByUserKey(userKey)
+			.orElseThrow(() -> new UserNotFoundException("Reporter not found with key"));  // 유효 신고자인지 확인
+
+		User offender = null;
+		if(article.getUser() != null) {
+			offender = userRepository.findByUserSeq(article.getUser().getUserSeq())
+				.orElseThrow(() -> new UserNotFoundException("Offender not found userSeq"));
+		}
 
 		try {
 			reportRepository.save(
 				Report.builder()
 					.article(article)
-					.user(user)
+					.reporter(reporter)
+					.offender(offender)
 					.reportType(reportReqDto.getReportType())
 					.reportContent(reportReqDto.getReportContent())
 					.build());
@@ -68,7 +74,8 @@ public class ReportService {
 			.map(report -> ReportDto.builder()
 				.reportSeq(report.getReportSeq())
 				.articleSeq(report.getArticle().getArticleSeq())
-				.userSeq(report.getArticle().getUser() == null ? null: report.getUser().getUserSeq())
+				.reporterSeq(report.getReporter().getUserSeq())
+				.offenderSeq(report.getOffender().getUserSeq())
 				.reportType(report.getReportType())
 				.reportContent(report.getReportContent())
 				.createdAt(report.getCreatedAt())

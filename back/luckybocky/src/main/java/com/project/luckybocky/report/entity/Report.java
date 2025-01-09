@@ -24,8 +24,12 @@ public class Report extends BaseEntity {
     private Article article;
 
     @ManyToOne
-    @JoinColumn(name = "user_seq", referencedColumnName = "user_seq")
-    private User user;
+    @JoinColumn(name = "reporter_seq", referencedColumnName = "user_seq")
+    private User reporter;  // 게시글 신고자
+
+    @ManyToOne
+    @JoinColumn(name = "offender_seq", referencedColumnName = "user_seq")
+    private User offender;  // 신고당한 게시글 주인
 
     private byte reportType;
 
