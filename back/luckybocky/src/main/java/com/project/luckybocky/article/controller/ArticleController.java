@@ -23,14 +23,15 @@ public class ArticleController {
 
     @Description("복 상세 조회")
     @GetMapping
-    public ResponseEntity<DataResponseDto<ArticleResponseDto>> getArticleDetails(@RequestParam int articleSeq){
-        ArticleResponseDto articleResponseDto = articleService.getArticleDetails(articleSeq);
+    public ResponseEntity<DataResponseDto<ArticleResponseDto>> getArticleDetails(HttpSession session, @RequestParam int articleSeq) {
+        String userKey = (String) session.getAttribute("user");
+        ArticleResponseDto articleResponseDto = articleService.getArticleDetails(userKey, articleSeq);
         return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success: get article", articleResponseDto));
     }
 
     @Description("복주머니에 복 달기")
     @PostMapping
-    public ResponseEntity<ResponseDto> writeArticle(HttpSession session, @RequestBody WriteArticleDto writeArticleDto){
+    public ResponseEntity<ResponseDto> writeArticle(HttpSession session, @RequestBody WriteArticleDto writeArticleDto) {
         String userKey = (String) session.getAttribute("user");
         articleService.createArticle(userKey, writeArticleDto);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success: post article"));
@@ -38,11 +39,11 @@ public class ArticleController {
 
     @Description("복주머니에서 복 삭제")
     @DeleteMapping
-    public ResponseEntity<ResponseDto> deleteArticle(HttpSession session, @RequestParam int articleSeq){
+    public ResponseEntity<ResponseDto> deleteArticle(HttpSession session, @RequestParam int articleSeq) {
         String userKey = (String) session.getAttribute("user");
 
         // 현재 로그인한 사용자가 해당 게시글의 주인(복을 받은 사용자)이 아닐 경우
-        if (articleService.getOwnerByArticle(articleSeq) != userService.getUserSeq(userKey)){
+        if (articleService.getOwnerByArticle(articleSeq) != userService.getUserSeq(userKey)) {
             throw new ForbiddenUserException("forbidden user");
         } else {
             articleService.deleteArticle(articleSeq);
