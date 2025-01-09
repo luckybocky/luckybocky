@@ -191,7 +191,7 @@ const MainPage = () => {
       {/* 복사 성공 알림 */}
       {copied && (
         <div className="fixed bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md">
-          URL이 복사되었습니다!
+          URL 복사 완료!
         </div>
       )}
 

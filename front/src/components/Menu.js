@@ -238,10 +238,10 @@ const Menu = () => {
         </div>
       )} */}
 
-      {/* 신고 성공 알림 */}
+      {/*피드백 성공 알림 */}
       {feedbackAlarm && (
         <div className="fixed bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md z-30 transform -translate-x-1/2">
-          피드백이 전달되었습니다!
+          피드백 전달 완료!
         </div>
       )}
     </div>

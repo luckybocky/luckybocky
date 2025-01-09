@@ -77,7 +77,8 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
     } else {
       // alert(`${articleSeq}, ${reportType}, ${report}`)
       saveReport(articleSeq, reportType, report);
-      alert("감사합니다. 신고 완료되었습니다.");
+      setReported(true);
+      setTimeout(() => setReported(false), 2000);
       setReport("");
       setReportType(0);
       setReportModalOpen(false);
@@ -266,7 +267,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
         {/* 신고 성공 알림 */}
         {reported && (
           <div className="fixed bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md">
-            정상적으로 신고되었습니다!
+            신고 완료!
           </div>
         )}
       </div>

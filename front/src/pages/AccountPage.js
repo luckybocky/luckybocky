@@ -162,7 +162,7 @@ const AccountPage = () => {
       {/* 변경 성공 알림 */}
       {saved && (
         <div className="fixed bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
-          정상적으로 변경되었습니다!
+          변경 완료!
         </div>
       )}
 
