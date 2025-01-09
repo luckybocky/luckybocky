@@ -17,7 +17,7 @@ const WritePage = () => {
 
   const [nickname, setNickname] = useState("");
   const [message, setMessage] = useState("");
-  const [visibility, setVisibility] = useState(false);
+  const [visibility, setVisibility] = useState(true);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
 
   const handleSubmit = async () => {
@@ -84,8 +84,8 @@ const WritePage = () => {
         <label className="flex items-center pl-1">
           <input
             type="checkbox"
-            checked={visibility}
-            onChange={(e) => setVisibility(e.target.checked)}
+            checked={!visibility}
+            onChange={(e) => setVisibility(!e.target.checked)}
             className="mr-2 h-5 w-5"
           />
           비밀글
