@@ -11,6 +11,9 @@ const isIos = () => {
 
 // 푸시 알림 권한 요청 및 토큰 획득
 export const requestFcmToken = async () => {
+  console.log("requestFcmToken");
+  console.log(navigator.userAgent);
+  console.log(isIos());
   if (isIos()) {
     console.log("iOS WebView에서는 FCM 토큰 요청을 생략합니다.");
     return null;
