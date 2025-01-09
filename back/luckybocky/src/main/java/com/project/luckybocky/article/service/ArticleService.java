@@ -1,6 +1,7 @@
 package com.project.luckybocky.article.service;
 
 import com.project.luckybocky.article.dto.ArticleResponseDto;
+import com.project.luckybocky.article.dto.ArticleSummaryDto;
 import com.project.luckybocky.article.dto.CommentDto;
 import com.project.luckybocky.article.dto.WriteArticleDto;
 import com.project.luckybocky.article.entity.Article;
@@ -32,10 +33,21 @@ public class ArticleService {
     private final UserRepository userRepository;
     private final FortuneRepository fortuneRepository;
 
-    public ArticleResponseDto getArticleDetails(int articleSeq){
+    public ArticleResponseDto getArticleDetails(String userKey, int articleSeq) {
         Article article = articleRepository.findByArticleSeq(articleSeq)
                 .orElseThrow(() -> new ArticleNotFoundException("not found article"));
-        return new ArticleResponseDto(article);
+
+        ArticleResponseDto response = new ArticleResponseDto(article);
+
+        if (userKey == null || !userKey.equals(article.getPocket().getUser().getUserKey())) {    // 복주머니의 주인이 아닐경우
+            // 비공개 복주머니나 비공개 글인 경우 -> 전부 비공개로 설정
+            if (!article.getPocket().getUser().isFortuneVisibility() || !article.isArticleVisibility()) {
+                response.setArticleContent("비밀글입니다.");
+                response.setArticleComment("비밀글입니다.");
+            }
+        }
+
+        return response;
     }
 
     // 사용자가 보유한 복주머니 가져오기
@@ -60,14 +72,14 @@ public class ArticleService {
                 .orElseThrow(() -> new FortuneNotFoundException("Invalid fortuneSeq: " + writeArticleDto.getFortuneSeq()));
 
         Pocket pocket = pocketRepository.findPocketByPocketSeq(writeArticleDto.getPocketSeq())
-            .orElseThrow(() -> new PocketNotFoundException("Invalid pocketSeq: " + writeArticleDto.getPocketSeq()));
+                .orElseThrow(() -> new PocketNotFoundException("Invalid pocketSeq: " + writeArticleDto.getPocketSeq()));
 
         Article article = Article.builder()
                 .user(user.orElse(null))
                 .userNickname(writeArticleDto.getNickname())
                 .articleContent(writeArticleDto.getContent())
                 .articleComment(null)
-                .articleVisibility(writeArticleDto.isVisibility() ? 1 : 0)
+                .articleVisibility(writeArticleDto.isVisibility())
                 .fortune(fortune)
                 .pocket(pocket)
                 .build();
@@ -75,11 +87,11 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
-    public ArticleResponseDto updateComment(CommentDto commentDto){
+    public ArticleResponseDto updateComment(CommentDto commentDto) {
         int findArticle = commentDto.getArticleSeq();
         Article article = articleRepository.findByArticleSeq(findArticle)
                 .orElseThrow(() -> new ArticleNotFoundException("not found article"));
-        if (article.getArticleComment() != null){
+        if (article.getArticleComment() != null) {
             throw new CommentConflictException("Already exist comment");
         }
         article.updateComment(commentDto.getComment());
@@ -94,7 +106,7 @@ public class ArticleService {
         articleRepository.delete(findArticle);
     }
 
-    public int getOwnerByArticle(int articleSeq){
+    public int getOwnerByArticle(int articleSeq) {
         Article findArticle = articleRepository.findByArticleSeq(articleSeq)
                 .orElseThrow(() -> new ArticleNotFoundException("not found article"));
         Pocket pocket = findArticle.getPocket();
@@ -102,46 +114,46 @@ public class ArticleService {
     }
 
     // 모든 복을 가져오기 (공개여부 체크 X)
-    public List<ArticleResponseDto> getAllArticles(int pocketSeq){
+    public List<ArticleSummaryDto> getAllArticles(int pocketSeq) {
         Pocket pocket = pocketRepository.findPocketByPocketSeq(pocketSeq)
                 .orElseThrow(() -> new PocketNotFoundException("not found pocket"));
-        List<ArticleResponseDto> result = pocket.getArticles().stream()
-                .map(a -> new ArticleResponseDto(a))
+
+        return pocket.getArticles().stream()
+                .map(Article::summaryArticle)
                 .collect(Collectors.toList());
-        return result;
     }
 
-    // 모든 복의 공개여부 체크 후 가져오기
-    public List<ArticleResponseDto> getAllArticlesCheck(int pocketSeq) {
-        Pocket pocket = pocketRepository.findPocketByPocketSeq(pocketSeq)
-                .orElseThrow(() -> new PocketNotFoundException("not found pocket"));
-        List<ArticleResponseDto> result = pocket.getArticles().stream()
-                .map(article -> {
-                    ArticleResponseDto dto = new ArticleResponseDto(article);
-                    if (!dto.isArticleVisibility()) {
-                        dto.setArticleContent("비밀글입니다.");
-                        dto.setArticleComment("비밀글입니다.");
-                    }
-                    return dto;
-                })
-                .collect(Collectors.toList());
-        return result;
-    }
+//    // 모든 복의 공개여부 체크 후 가져오기
+//    public List<ArticleResponseDto> getAllArticlesCheck(int pocketSeq) {
+//        Pocket pocket = pocketRepository.findPocketByPocketSeq(pocketSeq)
+//                .orElseThrow(() -> new PocketNotFoundException("not found pocket"));
+//        List<ArticleResponseDto> result = pocket.getArticles().stream()
+//                .map(article -> {
+//                    ArticleResponseDto dto = new ArticleResponseDto(article);
+//                    if (!dto.isArticleVisibility()) {
+//                        dto.setArticleContent("비밀글입니다.");
+//                        dto.setArticleComment("비밀글입니다.");
+//                    }
+//                    return dto;
+//                })
+//                .collect(Collectors.toList());
+//        return result;
+//    }
 
-    // 모든 복을 비공개로 가져오기
-    public List<ArticleResponseDto> getAllArticlesInvisible(int pocketSeq) {
-        Pocket pocket = pocketRepository.findPocketByPocketSeq(pocketSeq)
-                .orElseThrow(() -> new PocketNotFoundException("not found pocket"));
-        List<ArticleResponseDto> result = pocket.getArticles().stream()
-                .map(article -> {
-                    ArticleResponseDto dto = new ArticleResponseDto(article);
-                    dto.setArticleContent("비밀글입니다.");
-                    dto.setArticleComment("비밀글입니다.");
-                    return dto;
-                })
-                .collect(Collectors.toList());
-        return result;
-    }
+//    // 모든 복을 비공개로 가져오기
+//    public List<ArticleResponseDto> getAllArticlesInvisible(int pocketSeq) {
+//        Pocket pocket = pocketRepository.findPocketByPocketSeq(pocketSeq)
+//                .orElseThrow(() -> new PocketNotFoundException("not found pocket"));
+//        List<ArticleResponseDto> result = pocket.getArticles().stream()
+//                .map(article -> {
+//                    ArticleResponseDto dto = new ArticleResponseDto(article);
+//                    dto.setArticleContent("비밀글입니다.");
+//                    dto.setArticleComment("비밀글입니다.");
+//                    return dto;
+//                })
+//                .collect(Collectors.toList());
+//        return result;
+//    }
 
 //    public List<ArticleResponseDto> getArticlesByUser(String userKey){
 //        User user = userRepository.findByUserKey(userKey)

@@ -1,5 +1,6 @@
 package com.project.luckybocky.article.entity;
 
+import com.project.luckybocky.article.dto.ArticleSummaryDto;
 import com.project.luckybocky.common.BaseEntity;
 import com.project.luckybocky.fortune.entity.Fortune;
 import com.project.luckybocky.pocket.entity.Pocket;
@@ -40,8 +41,8 @@ public class Article extends BaseEntity {
     @JoinColumn(name = "fortune_seq", columnDefinition = "smallint", nullable = false)
     private Fortune fortune;
 
-    @Column(columnDefinition = "tinyint", nullable = false)
-    private int articleVisibility;
+    @Column(nullable = false)
+    private boolean articleVisibility;
 
     @Column(length = 500)
     private String articleContent;
@@ -59,8 +60,11 @@ public class Article extends BaseEntity {
     @JoinColumn(name = "pocket_seq")
     private Pocket pocket;
 
-    public void updateComment(String comment){
+    public void updateComment(String comment) {
         this.articleComment = comment;
     }
 
+    public ArticleSummaryDto summaryArticle() {
+        return new ArticleSummaryDto(this.articleSeq, this.getFortune().getFortuneName(), this.fortune.getFortuneSeq());
+    }
 }

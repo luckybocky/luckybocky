@@ -26,7 +26,7 @@ public class ArticleResponseDto {
 
 
     public ArticleResponseDto(Article article) {
-        this.articleVisibility = article.getArticleVisibility() == 1 ? true : false;
+        this.articleVisibility = article.isArticleVisibility();
         this.articleSeq = article.getArticleSeq();
 
         //12-31 창희 추가
