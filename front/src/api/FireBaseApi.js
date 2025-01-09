@@ -5,15 +5,16 @@ import ApiClient from "./ApiClient";
 const isIos = () => {
   const ua = navigator.userAgent;
   const isIosDevice = /iPhone|iPad|iPod/i.test(ua);
-  const isKakaoWebView = /KAKAOTALK/i.test(ua);
-  return isIosDevice && isKakaoWebView;
+  // const isKakaoWebView = /KAKAOTALK/i.test(ua);
+  // return isIosDevice && isKakaoWebView;
+  return isIosDevice;
 };
 
 // 푸시 알림 권한 요청 및 토큰 획득
 export const requestFcmToken = async () => {
-  console.log("requestFcmToken");
-  console.log(navigator.userAgent);
-  console.log(isIos());
+  // console.log("requestFcmToken");
+  // console.log(navigator.userAgent);
+  // console.log(isIos());
   if (isIos()) {
     console.log("iOS WebView에서는 FCM 토큰 요청을 생략합니다.");
     return null;
@@ -34,11 +35,11 @@ export const requestFcmToken = async () => {
 
       return token; // 토큰 반환
     } else {
-      console.error("Notification permission denied");
+      console.log("Notification permission denied");
       return null;
     }
   } catch (error) {
-    console.error("Error getting FCM token:", error);
+    console.log("Error getting FCM token:", error);
     return null;
   }
 };

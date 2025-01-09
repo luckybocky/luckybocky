@@ -10,8 +10,9 @@ import { setupOnMessageListener } from "./api/FireBaseApi"; //12-31 창희 추�
 const isIos = () => {
   const ua = navigator.userAgent;
   const isIosDevice = /iPhone|iPad|iPod/i.test(ua);
-  const isKakaoWebView = /KAKAOTALK/i.test(ua);
-  return isIosDevice && isKakaoWebView;
+  // const isKakaoWebView = /KAKAOTALK/i.test(ua);
+  // return isIosDevice && isKakaoWebView;
+  return isIosDevice;
 };
 // 서비스 워커 등록
 try {
