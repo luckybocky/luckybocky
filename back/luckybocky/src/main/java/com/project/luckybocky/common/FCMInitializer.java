@@ -20,7 +20,6 @@ public class FCMInitializer {
 
     @PostConstruct
     public void initialize() throws IOException {
-        System.out.println("==============================");
 
         if (FirebaseApp.getApps().isEmpty()) {
             InputStream serviceAccount = serviceAccountResource.getInputStream();
@@ -37,7 +36,7 @@ public class FCMInitializer {
             log.info("[FirebaseApp.initializeApp]");
 
         }else{
-            log.info("error");
+            log.info("firebase init error");
         }
     }
 }
