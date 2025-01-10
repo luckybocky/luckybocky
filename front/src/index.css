@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Jalnan";
+  src: url(./fonts/Jalnan.ttf);
+  font-display: block;
+}
