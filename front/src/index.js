@@ -7,6 +7,16 @@ import reportWebVitals from "./reportWebVitals";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 
+// 전역 에러 핸들러 추가
+window.onerror = function (message, source, lineno, colno, error) {
+  alert("Global Error Captured:");
+  alert(`Message: ${message}`);
+  alert(`Source: ${source}`);
+  alert(`Line: ${lineno}, Column: ${colno}`);
+  alert("Error Object:", error);
+};
+alert(navigator.userAgent);
+
 // import { setupOnMessageListener } from "./api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
 
 // iOS 환경 감지 함수
