@@ -11,10 +11,16 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_ID,
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
-// Firebase 앱 초기화
-const app = initializeApp(firebaseConfig);
+let messaging;
+try {
+  // Firebase 앱 초기화
+  const app = initializeApp(firebaseConfig);
 
-// Firebase Messaging 인스턴스 생성
-const messaging = getMessaging(app);
-
+  // Firebase Messaging 인스턴스 생성
+  messaging = getMessaging(app);
+} catch (error) {
+  console.error("Firebase 초기화 중 오류 발생:", error);
+  // 오류 발생 시 사용자에게 알림
+  alert("Firebase 초기화에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+}
 export { messaging, getToken, onMessage };
