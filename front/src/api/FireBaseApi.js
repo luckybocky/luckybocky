@@ -115,3 +115,14 @@ export const sendCommentPush = async (articleSeq) => {
     console.error("push error", error);
   }
 };
+export const sendLog = async (msg) => {
+  console.log(msg);
+  const payload = {
+    message: msg,
+  };
+  try {
+    await ApiClient.post(`/push/log`, payload);
+  } catch (error) {
+    console.error("log error", error);
+  }
+};
