@@ -12,9 +12,9 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 // Firebase 앱 초기화
-// const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
 // Firebase Messaging 인스턴스 생성
-// const messaging = getMessaging(app);
+const messaging = getMessaging(app);
 
-// export { messaging, getToken, onMessage };
+export { messaging, getToken, onMessage };
