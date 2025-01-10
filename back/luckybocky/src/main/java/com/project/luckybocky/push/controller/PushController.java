@@ -6,10 +6,7 @@ import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.push.dto.PushDto;
 import com.project.luckybocky.push.service.PushService;
 import jakarta.servlet.http.HttpSession;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
@@ -50,6 +47,7 @@ public class PushController {
     @AllArgsConstructor
     @Getter
     @Setter
+    @NoArgsConstructor
     static class Message{
         String message;
     }
