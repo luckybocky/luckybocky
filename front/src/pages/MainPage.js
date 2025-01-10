@@ -9,8 +9,6 @@ import { useParams } from "react-router-dom";
 import fortuneImages from "../components/FortuneImages";
 import { loadPocket } from "../api/PocketApi";
 
-import { requestFcmToken } from "../api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
-
 const MainPage = () => {
   const navigate = useNavigate();
 
@@ -105,15 +103,6 @@ const MainPage = () => {
       alert("URL 복사에 실패했습니다. 브라우저 설정을 확인해주세요.");
     }
   };
-
-  //=====12-31 창희 추가 start=====
-  //main페이지에 들어오면 로그인이 성공했다고 판단하기에, 푸시를 위한 파이어베이스키 업데이트
-
-  useEffect(() => {
-    // console.log("12-31 창희 추가");
-    requestFcmToken();
-  }, []);
-  //=====12-31 창희 추가 end=====
 
   return (
     <div className="relative flex flex-col items-center justify-center p-2 w-full max-w-[375px] min-h-screen bg-[#ba947f] text-white overflow-hidden">
