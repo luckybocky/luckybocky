@@ -4,6 +4,7 @@ import kakaoIcon from "../image/kakao-icon.png";
 import { useNavigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
+import { sendLog } from "../api/FireBaseApi";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ const LoginPage = () => {
   const user = AuthStore((state) => state.user);
 
   useEffect(() => {
+    sendLog("login");
+
     if (user.createdAt != null) navigate(`/${user.address}`);
   }, [user, navigate]);
 
