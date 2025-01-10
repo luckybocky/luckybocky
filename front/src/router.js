@@ -1,4 +1,4 @@
-import { createHashRouter } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import AccountPage from "./pages/AccountPage";
@@ -10,7 +10,7 @@ import ErrorPage from "./pages/ErrorPage";
 import JoinPage from "./pages/JoinPage";
 import CheckUser from "./components/CheckUser";
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     element: <CheckUser />,
     children: [

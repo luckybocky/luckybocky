@@ -4,6 +4,9 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+
 // import { setupOnMessageListener } from "./api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
 
 // iOS 환경 감지 함수
