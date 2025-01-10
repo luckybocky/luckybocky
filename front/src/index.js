@@ -8,8 +8,7 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 
 // import { setupOnMessageListener } from "./api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
-import { sendLog } from "./api/FireBaseApi";
-sendLog("index");
+
 // iOS 환경 감지 함수
 // const isIos = () => {
 //   const ua = navigator.userAgent;
