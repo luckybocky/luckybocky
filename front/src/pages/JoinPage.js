@@ -8,14 +8,14 @@ const JoinPage = () => {
   const user = AuthStore((state) => state.user);
   const setUser = AuthStore((state) => state.setUser);
 
-  const [nickname, setNickname] = useState(null);
+  const [nickname, setNickname] = useState("");
   const [isPublic, setIsPublic] = useState(false); // 공개 여부
   const [isAlarm, setIsAlarm] = useState(false); // 알람 여부
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user.createdAt) navigate("/");
+    if (user.userNickname !== null) navigate("/");
   }, [user]);
 
   const joinUser = async () => {
@@ -36,10 +36,8 @@ const JoinPage = () => {
       {/* 계정 설정 화면 */}
       <h1 className="text-3xl mb-8 mt-5">회원 가입</h1>
       <h1 className="text-xl">안녕하세요!!</h1>
-
       {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 mt-3 mb-10" />
-
       {/* 닉네임 변경 */}
       <label className="mb-1">닉네임</label>
       <div className="flex items-center">
@@ -55,10 +53,15 @@ const JoinPage = () => {
           className="border p-2 rounded-md text-black mr-4 w-full"
         />
       </div>
-
+      <div>
+        {(nickname?.length < 2 || nickname?.length > 8) && (
+          <span className="absolute text-red-500 text-sm mt-1">
+            닉네임은 2~8자 사이여야 합니다.
+          </span>
+        )}
+      </div>
       {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 mt-16 mb-10" />
-
       {/* 알림 설정 여부 */}
       <div className="flex items-center mb-8">
         <label className="mr-4">알림 설정 여부</label>
@@ -72,7 +75,6 @@ const JoinPage = () => {
           <span className="ml-2 w-[35px]">{isAlarm ? "허용" : "거절"}</span>
         </div>
       </div>
-
       {/* 메시지 공개 여부 */}
       <div className="flex items-center">
         <label className="mr-4">메시지 공개 여부</label>
@@ -86,12 +88,16 @@ const JoinPage = () => {
           <span className="ml-2 w-[35px]">{isPublic ? "공개" : "비밀"}</span>
         </div>
       </div>
-
       {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 mt-16 mb-12" />
       <button
-        className="bg-white text-[#0d1a26] py-4 rounded-lg text-xl"
+        className={`${
+          nickname?.length >= 2 && nickname?.length <= 8
+            ? "bg-white"
+            : "bg-gray-400"
+        } text-[#0d1a26] py-4 rounded-lg text-xl`}
         onClick={joinUser}
+        disabled={nickname?.length < 2 || nickname?.length > 8}
       >
         <span className="flex justify-center pt-1">시작하기</span>
       </button>

@@ -5,7 +5,6 @@
   "dependencies": {
     "@react-native-firebase/messaging": "^21.6.1",
     "axios": "^1.7.9",
-    "core-js": "^3.40.0",
     "cra-template": "1.2.0",
     "firebase": "^11.1.0",
     "react": "^18.3.1",
@@ -14,7 +13,6 @@
     "react-native": "^0.76.5",
     "react-router-dom": "^6.28.0",
     "react-scripts": "^5.0.1",
-    "regenerator-runtime": "^0.14.1",
     "zustand": "^5.0.2"
   },
   "scripts": {
@@ -33,12 +31,15 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "iOS >= 11",
+      "Safari >= 11"
     ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 safari version",
+      "iOS >= 11"
     ]
   },
   "devDependencies": {

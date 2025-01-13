@@ -4,14 +4,21 @@ import kakaoIcon from "../image/kakao-icon.png";
 import { useNavigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
+import { sendLog } from "../api/FireBaseApi";
 
+import { requestFcmToken } from "../api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
 const LoginPage = () => {
   const navigate = useNavigate();
 
   const user = AuthStore((state) => state.user);
 
   useEffect(() => {
-    if (user.createdAt != null) navigate(`/${user.address}`);
+    sendLog("login");
+
+    if (user.createdAt != null) {
+      requestFcmToken();
+      navigate(`/${user.address}`);
+    }
   }, [user, navigate]);
 
   // 카카오 소셜 로그인 / 로그아웃

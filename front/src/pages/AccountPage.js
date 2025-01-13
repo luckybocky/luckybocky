@@ -9,14 +9,14 @@ const AccountPage = () => {
   const user = AuthStore((state) => state.user);
   const setUser = AuthStore((state) => state.setUser);
 
-  const [nickname, setNickname] = useState(null);
+  const [nickname, setNickname] = useState("");
   const [changeMode, setChangeMode] = useState(false);
   const [saved, setSaved] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
   useEffect(() => {
     if (!user.createdAt) navigate("/");
-    if (nickname == null) setNickname(user.userNickname);
+    if (nickname === "") setNickname(user.userNickname);
     updateUser();
   }, [user]);
 
@@ -109,10 +109,22 @@ const AccountPage = () => {
             if (changeMode) saveNickname();
             setChangeMode((prev) => !prev);
           }}
-          className="bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 w-[50px]"
+          className={`${
+            nickname?.length >= 2 && nickname?.length <= 8
+              ? "bg-blue-500 hover:bg-blue-600"
+              : "bg-gray-400 cursor-not-allowed"
+          } text-white py-2 rounded-lg w-[50px]`}
+          disabled={nickname?.length < 2 || nickname?.length > 8}
         >
           {changeMode ? "저장" : "변경"}
         </button>
+      </div>
+      <div>
+        {changeMode && (nickname?.length < 2 || nickname?.length > 8) && (
+          <span className="absolute text-red-500 text-sm mt-1">
+            닉네임은 2~8자 사이여야 합니다.
+          </span>
+        )}
       </div>
 
       {/* 구분선 추가 */}
