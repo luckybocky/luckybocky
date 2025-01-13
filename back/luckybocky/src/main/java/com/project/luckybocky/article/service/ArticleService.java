@@ -42,9 +42,14 @@ public class ArticleService {
         if (userKey == null || !userKey.equals(article.getPocket().getUser().getUserKey())) {    // 복주머니의 주인이 아닐경우
             // 비공개 복주머니나 비공개 글인 경우 -> 전부 비공개로 설정
             if (!article.getPocket().getUser().isFortuneVisibility() || !article.isArticleVisibility()) {
+                response.setArticleVisibility(false);
                 response.setArticleContent("비밀글입니다.");
                 response.setArticleComment("비밀글입니다.");
             }
+        }
+        //복주머니 주인의 경우 -> 비밀글 설정을 다 공개로 바꿈
+        else {
+            response.setArticleVisibility(true);
         }
 
         return response;
