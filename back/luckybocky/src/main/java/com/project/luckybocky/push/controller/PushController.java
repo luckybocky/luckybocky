@@ -6,15 +6,12 @@ import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.push.dto.PushDto;
 import com.project.luckybocky.push.service.PushService;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("api/v1/push" )
 //이 클래스가 REST API 컨트롤러임을 나타냅니다.
@@ -33,12 +30,29 @@ public class PushController {
     @PostMapping
     public ResponseEntity<ResponseDto> pushContent(HttpSession session, @RequestBody PushDto pushDto) throws FirebaseMessagingException {
         String userKey = (String) session.getAttribute("name" );
-        if(userKey==null) return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("비회원은 푸시를 지원하지 않습니다." ));
+        if(userKey==null){
+            log.info("{}", "비회원은 푸시를 보낼 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("비회원은 푸시를 지원하지 않습니다." ));
+        }
 
         String fromUser = (String) session.getAttribute("nickname" );
         log.info(" Push Info : {}", pushDto);
         pushService.sendPush(fromUser, pushDto);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("push success" ));
+    }
+
+    @PostMapping("/log")
+    public ResponseEntity<ResponseDto> checkLog(@RequestBody Message message){
+        log.info(" checkLog : {}", message.getMessage());
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success" ));
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    static class Message{
+        String message;
     }
 
 
