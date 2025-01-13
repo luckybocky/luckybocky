@@ -35,17 +35,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ArticleNotFoundException.class)
     public ResponseEntity<ResponseDto> handleArticleNotFoundException(ArticleNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto(ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDto(ex.getMessage()));
     }
 
     @ExceptionHandler(PocketNotFoundException.class)
     public ResponseEntity<ResponseDto> handlePocketNotFoundException(PocketNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto(ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDto(ex.getMessage()));
     }
 
     @ExceptionHandler(FirebaseMessagingException.class)
     public ResponseEntity<ResponseDto> handleFirebaseMessagingException(FirebaseMessagingException ex){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("firebase end error "+ ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("firebase end error "+ ex.getMessage()));
     }
 
     //===== 창희 예외 추가 end ======
