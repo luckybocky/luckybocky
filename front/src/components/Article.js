@@ -7,6 +7,7 @@ import {
   AiOutlineAlert,
   AiOutlineDelete,
   AiOutlineClose,
+  AiOutlineLock,
 } from "react-icons/ai";
 import { loadArticle, deleteArticle } from "../api/ArticleApi";
 import fortuneImages from "../components/FortuneImages";
@@ -109,24 +110,44 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
               <AiOutlineClose size={24} />
             </button>
           </div>
-          <div className="border rounded-md mb-2 p-1 text-start ">
-            <div className="text-[black] text-lg mb-1">
-              {"From. " + detail?.userNickname}
+
+          <div className="relative">
+            <div
+              className={`border rounded-md mb-2 p-1 text-start ${
+                !detail.articleVisibility ? "filter blur-lg" : ""
+              }`}
+            >
+              <div className="text-[black] text-lg mb-1">
+                {"From. " + detail?.userNickname}
+              </div>
+              <div className="text-[black] h-[200px] overflow-y-auto">
+                {detail?.articleContent}
+              </div>
             </div>
-            <div className="text-[black] h-[200px] overflow-y-auto">
-              {detail?.articleContent}
-            </div>
+            <textarea
+              className={`text-black w-full h-24 p-1 border rounded-md resize-none ${
+                !detail.articleVisibility ? "filter blur-lg" : ""
+              }`}
+              value={detail?.articleComment ? detail?.articleComment : message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder={`${myAddress !== address ? "" : "나도 복 보내기"}`}
+              disabled={detail?.articleComment || myAddress !== address}
+            />
+
+            {/* 자물쇠 아이콘 추가 */}
+            {!detail.articleVisibility && (
+              <div className="absolute flex-col rounded-md inset-0 bg-gray-800 bg-opacity-60 flex items-center justify-center z-50">
+                <AiOutlineLock size={160} className="text-white" />
+                <div className="text-2xl">비밀글입니다.</div>
+              </div>
+            )}
           </div>
 
-          <textarea
-            className="text-black w-full h-24 p-1 border rounded-md resize-none"
-            value={detail?.articleComment ? detail?.articleComment : message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder={`${myAddress !== address ? "" : "나도 복 보내기"}`}
-            disabled={detail?.articleComment || myAddress !== address}
-          />
-
-          <div className="flex justify-between">
+          <div
+            className={`flex justify-between ${
+              !detail.articleVisibility ? "invisible" : ""
+            }`}
+          >
             <div className="flex gap-2">
               <button
                 className="bg-yellow-500 text-white py-1 px-3 rounded-md"
