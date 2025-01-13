@@ -3,8 +3,16 @@ package com.project.luckybocky.push.controller;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.project.luckybocky.common.ResponseDto;
+import com.project.luckybocky.exam.exception.ExamException;
+import com.project.luckybocky.pocket.exception.PocketNotFoundException;
 import com.project.luckybocky.push.dto.PushDto;
 import com.project.luckybocky.push.service.PushService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -20,19 +28,31 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-
+@Tag(name = "푸시 알림", description = "푸시 알림")
 public class PushController {
 
     private final PushService pushService;
 
 
     @Description("푸시 알림")
+    @Operation(
+            summary = "푸시 알림 요청",
+            description = "복(댓글)과 리복(대댓글) 추가시 푸시 알림을 보낸다"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "푸시 성공"),
+            @ApiResponse(responseCode = "401", description = "비회원은 푸시를 보낼수 없음"),
+            @ApiResponse(responseCode = "404", description = "컨텐츠를 찾을 수 없음",
+                    content = @Content(schema = @Schema(implementation = PocketNotFoundException.class))),
+            @ApiResponse(responseCode = "500", description = "FCM접근 실패",
+                    content = @Content(schema = @Schema(implementation = FirebaseMessagingException.class)))
+    })
     @PostMapping
     public ResponseEntity<ResponseDto> pushContent(HttpSession session, @RequestBody PushDto pushDto) throws FirebaseMessagingException {
         String userKey = (String) session.getAttribute("name" );
         if(userKey==null){
             log.info("{}", "비회원은 푸시를 보낼 수 없습니다.");
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("비회원은 푸시를 지원하지 않습니다." ));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDto("비회원은 푸시를 지원하지 않습니다." ));
         }
 
         String fromUser = (String) session.getAttribute("nickname" );
