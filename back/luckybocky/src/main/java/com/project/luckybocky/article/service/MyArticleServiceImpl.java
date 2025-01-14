@@ -25,7 +25,7 @@ public class MyArticleServiceImpl implements MyArticleService {
     public MyArticlesDto findMyArticles(String userKey) {
 
         if(userKey == null){
-            throw new UserNotFoundException("not found user");
+            throw new UserNotFoundException();
         }
 
         List<Article> articleByUserKey = myArticleRepository.findArticleByUserKey(userKey);

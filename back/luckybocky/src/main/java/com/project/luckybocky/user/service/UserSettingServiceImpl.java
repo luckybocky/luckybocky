@@ -4,8 +4,10 @@ import com.project.luckybocky.user.dto.UserInfoDto;
 import com.project.luckybocky.user.entity.User;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 import com.project.luckybocky.user.repository.UserSettingRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,64 +18,65 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserSettingServiceImpl implements UserSettingService{
+public class UserSettingServiceImpl implements UserSettingService {
 
-    private final UserSettingRepository userSettingRepository;
+	private final UserSettingRepository userSettingRepository;
 
-    @Override
-    public void updateUserSetting(String userKey,String userNickname, boolean alarmStatus,boolean fortuneVisibility){
+	@Override
+	public void updateUserSetting(String userKey, String userNickname, boolean alarmStatus, boolean fortuneVisibility) {
 
-        Optional<User> userOptional = userSettingRepository.findByKey(userKey);
+		Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
-        if(userOptional.isEmpty()){
-            throw new UserNotFoundException("not found user");
-        }
+		if (userOptional.isEmpty()) {
+			throw new UserNotFoundException();
+		}
 
-        User user = userOptional.get();
-        log.info("setting user {}", user);
-        user.updateUserInfo(userNickname,alarmStatus,fortuneVisibility);
-    }
-    @Override
-    public UserInfoDto getUserInfo(String userKey) {
-        Optional<User> userOptional = userSettingRepository.findByKey(userKey);
+		User user = userOptional.get();
+		log.info("setting user {}", user);
+		user.updateUserInfo(userNickname, alarmStatus, fortuneVisibility);
+	}
 
-        if(userOptional.isEmpty()){
-            throw new UserNotFoundException("not found user");
-        }
+	@Override
+	public UserInfoDto getUserInfo(String userKey) {
+		Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
-        User user = userOptional.get();
-        log.info("findByUserKey {}", user);
+		if (userOptional.isEmpty()) {
+			throw new UserNotFoundException();
+		}
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String formattedDate = user.getCreatedAt().format(formatter);
+		User user = userOptional.get();
+		log.info("findByUserKey {}", user);
 
-        return UserInfoDto.builder()
-                .userNickname(user.getUserNickname())
-                .alarmStatus(user.isAlarmStatus())
-                .fortuneVisibility(user.isFortuneVisibility())
-                .createdAt(formattedDate)
-                .build();
-    }
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		String formattedDate = user.getCreatedAt().format(formatter);
 
-    @Override
-    public void updateFireBaseKey(String userKey, String firebaseKey) {
-        Optional<User> userOptional = userSettingRepository.findByKey(userKey);
+		return UserInfoDto.builder()
+			.userNickname(user.getUserNickname())
+			.alarmStatus(user.isAlarmStatus())
+			.fortuneVisibility(user.isFortuneVisibility())
+			.createdAt(formattedDate)
+			.build();
+	}
 
-        if(userOptional.isEmpty()){
-            throw new UserNotFoundException("not found user");
-        }
+	@Override
+	public void updateFireBaseKey(String userKey, String firebaseKey) {
+		Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
-        User user = userOptional.get();
-        user.setFirebaseKey(firebaseKey);
-    }
+		if (userOptional.isEmpty()) {
+			throw new UserNotFoundException();
+		}
 
-    @Override
-    public User join(User user) {
-        return userSettingRepository.save(user);
-    }
+		User user = userOptional.get();
+		user.setFirebaseKey(firebaseKey);
+	}
 
-    @Override
-    public Optional<User> findUserFirebaseKey(String userKey) {
-        return userSettingRepository.findByKey(userKey);
-    }
+	@Override
+	public User join(User user) {
+		return userSettingRepository.save(user);
+	}
+
+	@Override
+	public Optional<User> findUserFirebaseKey(String userKey) {
+		return userSettingRepository.findByKey(userKey);
+	}
 }

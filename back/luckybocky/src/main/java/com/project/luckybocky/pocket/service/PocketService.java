@@ -22,22 +22,22 @@ public class PocketService {
 
     public String getPocketAddress(String userKey){
         User user = userRepository.findByUserKey(userKey)
-                .orElseThrow(() -> new UserNotFoundException("not found user"));
+                .orElseThrow(() -> new UserNotFoundException());
         Pocket pocket = pocketRepository.findPocketByUser(user)
-                .orElseThrow(() -> new PocketNotFoundException("not found pocket"));
+                .orElseThrow(() -> new PocketNotFoundException());
 
         return pocket.getPocketAddress();
     }
 
     public PocketInfoDto getPocketInfo(String address){
         Pocket pocket = pocketRepository.findPocketByPocketAddress(address)
-                .orElseThrow(() -> new PocketNotFoundException("not found pocket"));
+                .orElseThrow(() -> new PocketNotFoundException());
         return new PocketInfoDto(pocket);
     }
 
     public String createPocket(String userKey) {
         User user = userRepository.findByUserKey(userKey)
-                .orElseThrow(() -> new UserNotFoundException("not found user"));
+                .orElseThrow(() -> new UserNotFoundException());
 
         //uuid로 복주머니 링크 생성 후 저장 & 반환
         UUID uuid = UUID.randomUUID();
@@ -52,9 +52,9 @@ public class PocketService {
 
     public PocketInfoDto getPocketInfoByUser(String userKey){
         User user = userRepository.findByUserKey(userKey)
-                .orElseThrow(() -> new UserNotFoundException("not found user"));
+                .orElseThrow(() -> new UserNotFoundException());
         Pocket pocket = pocketRepository.findFirstByUserOrderByCreatedAtDesc(user)
-                .orElseThrow(() -> new PocketNotFoundException("not found pocket"));
+                .orElseThrow(() -> new PocketNotFoundException());
         return new PocketInfoDto(pocket);
     }
 }
