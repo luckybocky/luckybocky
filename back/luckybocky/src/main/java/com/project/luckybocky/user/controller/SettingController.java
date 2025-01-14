@@ -3,6 +3,7 @@ package com.project.luckybocky.user.controller;
 
 import com.project.luckybocky.common.DataResponseDto;
 import com.project.luckybocky.common.ResponseDto;
+import com.project.luckybocky.user.dto.FirebaseKeyRequest;
 import com.project.luckybocky.user.dto.SettingDto;
 import com.project.luckybocky.user.dto.UserInfoDto;
 import com.project.luckybocky.user.exception.UserNotFoundException;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/auth/user" )
+@RequestMapping("api/v1/auth" )
 @Tag(name = "사용자 정보", description = "설정, 나의 정보 조회")
 public class SettingController {
     private final UserSettingService userSettingService;
@@ -40,9 +41,10 @@ public class SettingController {
             @ApiResponse(responseCode = "401", description = "사용자를 찾을 수 없음",
                     content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
     })
-    @PutMapping
+    @PutMapping("/user")
     public ResponseEntity<ResponseDto> updateSetting(@RequestBody SettingDto settingDto, HttpSession session) {
         String userKey = (String) session.getAttribute("user" );
+
         userSettingService.updateUserSetting(userKey, settingDto.getUserNickname(), settingDto.getAlarmStatus(), settingDto.getFortuneVisibility());
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("setting successful" ));
     }
@@ -63,5 +65,29 @@ public class SettingController {
         UserInfoDto userInfoDto = userSettingService.getUserInfo(userKey);
         log.info("user found {} {}", userKey, userInfoDto);
         return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", userInfoDto));
+    }
+
+
+
+
+    @Description("firebase Key 업데이트")
+    @Operation(
+        summary = "firebase Key 업데이트 요청",
+        description = "FCM에서 발급받은 푸시 키를 업데이트한다."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "FCM키 업데이트 성공"),
+        @ApiResponse(responseCode = "401", description = "사용자를 찾을 수 없음",
+            content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
+    })
+    @PutMapping("/firebase")
+    public ResponseEntity<ResponseDto> updateFireBaseKey(HttpSession session, @RequestBody FirebaseKeyRequest firebaseKeyRequest) {
+        String userKey = (String) session.getAttribute("user");
+
+        String firebaseKey = firebaseKeyRequest.getFirebaseKey();
+        log.info("update firebase Key {}", firebaseKeyRequest.getFirebaseKey());
+        userSettingService.updateFireBaseKey(userKey, firebaseKey);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("key update successful"));
+
     }
 }

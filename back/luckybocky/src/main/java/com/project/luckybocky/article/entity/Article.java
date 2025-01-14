@@ -9,26 +9,23 @@ import org.hibernate.annotations.Where;
 
 import com.project.luckybocky.article.dto.ArticleResponseDto;
 import com.project.luckybocky.article.dto.ArticleSummaryDto;
+import com.project.luckybocky.article.dto.MyArticleDto;
 import com.project.luckybocky.common.BaseEntity;
 import com.project.luckybocky.fortune.entity.Fortune;
 import com.project.luckybocky.pocket.entity.Pocket;
 import com.project.luckybocky.report.entity.Report;
+import com.project.luckybocky.user.dto.UserInfoDto;
 import com.project.luckybocky.user.entity.User;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -81,9 +78,28 @@ public class Article extends BaseEntity {
 	}
 
 	public ArticleSummaryDto summaryArticle() {
-		return new ArticleSummaryDto(this.articleSeq, this.getFortune().getFortuneName(), this.fortune.getFortuneSeq(),
-			this.userNickname);
+    return new ArticleSummaryDto(this.articleSeq, this.getFortune().getFortuneName(), this.fortune.getFortuneSeq(), this.userNickname);
 	}
+
+	//=====창희 dto 함수 start
+
+	public MyArticleDto getMyArticleDto() {
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		return MyArticleDto
+			.builder()
+			.pocketOwner(this.getPocket().getUser().getUserNickname())
+			.articleOwner(this.getUserNickname())
+			.content(this.getArticleContent())
+			.comment(this.getArticleComment())
+			.fortuneName(this.getFortune().getFortuneName())
+			.fortuneImg(this.getFortune().getFortuneSeq())
+			.createdAt(this.getCreatedAt().format(formatter))
+			.build();
+	}
+	//=====창희 dto 함수 end
+
 
 	public ArticleResponseDto toArticleResponseDto() {
 		return ArticleResponseDto.builder()

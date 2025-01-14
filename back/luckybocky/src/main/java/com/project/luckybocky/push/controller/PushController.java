@@ -61,19 +61,6 @@ public class PushController {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("push success" ));
     }
 
-    @PostMapping("/log")
-    public ResponseEntity<ResponseDto> checkLog(@RequestBody Message message){
-        log.info(" checkLog : {}", message.getMessage());
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success" ));
-    }
-
-    @AllArgsConstructor
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    static class Message{
-        String message;
-    }
 
 
 //    @PostMapping("/test")

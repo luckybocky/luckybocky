@@ -32,7 +32,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 		}
 
 		User user = userOptional.get();
-		log.info("setting user {}", user);
+		log.info("updateUserSetting : {}", user);
 		user.updateUserInfo(userNickname, alarmStatus, fortuneVisibility);
 	}
 
@@ -47,15 +47,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 		User user = userOptional.get();
 		log.info("findByUserKey {}", user);
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		String formattedDate = user.getCreatedAt().format(formatter);
-
-		return UserInfoDto.builder()
-			.userNickname(user.getUserNickname())
-			.alarmStatus(user.isAlarmStatus())
-			.fortuneVisibility(user.isFortuneVisibility())
-			.createdAt(formattedDate)
-			.build();
+		return user.getUserInfo();
 	}
 
 	@Override

@@ -33,16 +33,9 @@ public class MyArticleServiceImpl implements MyArticleService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         for (Article article : articleByUserKey) {
-            myArticles.add(MyArticleDto
-                    .builder()
-                    .pocketOwner(article.getPocket().getUser().getUserNickname())
-                    .articleOwner(article.getUserNickname())
-                    .content(article.getArticleContent())
-                    .comment(article.getArticleComment())
-                    .fortuneName(article.getFortune().getFortuneName())
-                    .fortuneImg(article.getFortune().getFortuneSeq())
-                    .createdAt(article.getCreatedAt().format(formatter))
-                    .build());
+            myArticles.add(
+                article.getMyArticleDto()
+            );
         }
 
         return new MyArticlesDto(myArticles);
