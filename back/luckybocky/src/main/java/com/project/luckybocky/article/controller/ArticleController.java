@@ -53,7 +53,7 @@ public class ArticleController {
 
 		// 현재 로그인한 사용자가 해당 게시글의 주인(복을 받은 사용자)이 아닐 경우
 		if (articleService.getOwnerByArticle(articleSeq) != userService.getUserSeq(userKey)) {
-			throw new ForbiddenUserException("forbidden user");
+			throw new ForbiddenUserException();
 		} else {
 			articleService.deleteArticle(articleSeq);
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
