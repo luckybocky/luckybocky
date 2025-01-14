@@ -1,7 +1,8 @@
 package com.project.luckybocky.article.exception;
 
-public class ArticleNotFoundException extends RuntimeException{
-    public ArticleNotFoundException(String message){
-        super(message);
-    }
+import com.project.luckybocky.exam.exception.CustomException;
+
+public class ArticleNotFoundException extends CustomException {
+	private final int statusCode = 404;
+	private final String message = "Not found article";
 }
