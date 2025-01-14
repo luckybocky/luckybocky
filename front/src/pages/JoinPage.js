@@ -72,7 +72,7 @@ const JoinPage = () => {
             onChange={(e) => setIsAlarm(e.target.checked)}
             className="h-5 w-5"
           />
-          <span className="ml-2 w-[35px]">{isAlarm ? "허용" : "거절"}</span>
+          <span className="ml-2 w-[50px]">{isAlarm ? "허용" : "거절"}</span>
         </div>
       </div>
       {/* 메시지 공개 여부 */}
@@ -85,7 +85,7 @@ const JoinPage = () => {
             onChange={(e) => setIsPublic(e.target.checked)}
             className="h-5 w-5"
           />
-          <span className="ml-2 w-[35px]">{isPublic ? "공개" : "비밀"}</span>
+          <span className="ml-2 w-[50px]">{isPublic ? "공개" : "비밀"}</span>
         </div>
       </div>
       {/* 구분선 추가 */}

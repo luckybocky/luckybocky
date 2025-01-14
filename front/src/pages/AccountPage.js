@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import { IoArrowBack } from "react-icons/io5";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
 import { updateUser, logout } from "../api/AuthApi";
+
+const IoArrowBack = lazy(() =>
+  import("react-icons/io5").then((mod) => ({ default: mod.IoArrowBack }))
+);
 
 const AccountPage = () => {
   const user = AuthStore((state) => state.user);
@@ -77,7 +80,9 @@ const AccountPage = () => {
         className="absolute top-4 right-4 text-3xl z-20"
         onClick={() => navigate(-1)}
       >
-        <IoArrowBack />
+        <Suspense>
+          <IoArrowBack />
+        </Suspense>
       </button>
 
       {/* 계정 설정 화면 */}
@@ -140,7 +145,7 @@ const AccountPage = () => {
             onChange={saveAlarmStatus}
             className="h-5 w-5"
           />
-          <span className="ml-2 w-[35px]">
+          <span className="ml-2 w-[50px]">
             {user.alarmStatus ? "허용" : "거절"}
           </span>
         </div>
@@ -156,7 +161,7 @@ const AccountPage = () => {
             onChange={saveFortuneVisibility}
             className="h-5 w-5"
           />
-          <span className="ml-2 w-[35px]">
+          <span className="ml-2 w-[50px]">
             {user.fortuneVisibility ? "공개" : "비밀"}
           </span>
         </div>

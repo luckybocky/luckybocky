@@ -80,7 +80,7 @@ const MyArticlePage = () => {
       {/* 돌아가기 버튼 */}
       <button
         onClick={() => navigate(-1)}
-        className="fixed bottom-0 w-full max-w-[375px] bg-white text-[#0d1a26] py-4 rounded-t-lg z-20"
+        className="fixed bottom-0 w-full max-w-[600px] bg-white text-[#0d1a26] py-4 rounded-t-lg z-20"
       >
         <span className="flex justify-center pt-1">돌아가기</span>
       </button>

@@ -199,7 +199,6 @@ const MainPage = () => {
                 <BsPencil size={22} className="mr-3" />
               )}
             </Suspense>
-
             <span className={`${isOwner ? "pt-2" : "pt-1"}`}>
               {isOwner ? "내 복주머니 공유하기" : "복 전달하기"}
             </span>
