@@ -1,5 +1,13 @@
 package com.project.luckybocky.article.entity;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import com.project.luckybocky.article.dto.ArticleResponseDto;
 import com.project.luckybocky.article.dto.ArticleSummaryDto;
 import com.project.luckybocky.article.dto.MyArticleDto;
 import com.project.luckybocky.common.BaseEntity;
@@ -70,7 +78,7 @@ public class Article extends BaseEntity {
 	}
 
 	public ArticleSummaryDto summaryArticle() {
-		return new ArticleSummaryDto(this.articleSeq, this.getFortune().getFortuneName(), this.fortune.getFortuneSeq());
+    return new ArticleSummaryDto(this.articleSeq, this.getFortune().getFortuneName(), this.fortune.getFortuneSeq(), this.userNickname);
 	}
 
 	//=====창희 dto 함수 start
@@ -92,4 +100,18 @@ public class Article extends BaseEntity {
 	}
 	//=====창희 dto 함수 end
 
+
+	public ArticleResponseDto toArticleResponseDto() {
+		return ArticleResponseDto.builder()
+			.articleVisibility(this.articleVisibility)
+			.articleSeq(this.articleSeq)
+			.userKey(this.user == null ? null : this.user.getUserKey())
+			.userNickname(this.userNickname)
+			.articleContent(this.articleContent)
+			.articleComment(this.articleComment)
+			.fortuneName(this.fortune.getFortuneName())
+			.fortuneImg(this.fortune.getFortuneSeq())
+			.createdAt(this.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+			.build();
+	}
 }

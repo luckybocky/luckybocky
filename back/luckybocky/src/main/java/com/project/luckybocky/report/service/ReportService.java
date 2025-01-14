@@ -32,10 +32,10 @@ public class ReportService {
 	private final ReportRepository reportRepository;
 
 	public void saveReport(ReportReqDto reportReqDto, HttpSession session) {
-		if(session == null) {
+		if (session == null) {
 			throw new SessionNotFoundException("User session not found, unable to save feedback");
 		}
-		String userKey = (String) session.getAttribute("user");
+		String userKey = (String)session.getAttribute("user");
 
 		Article article = articleRepository.findByArticleSeq(reportReqDto.getArticleSeq())
 			.orElseThrow(() -> new ArticleNotFoundException());
@@ -44,7 +44,7 @@ public class ReportService {
 			.orElseThrow(() -> new UserNotFoundException());  // 유효 신고자인지 확인
 
 		User offender = null;
-		if(article.getUser() != null) {
+		if (article.getUser() != null) {
 			offender = userRepository.findByUserSeq(article.getUser().getUserSeq())
 				.orElseThrow(() -> new UserNotFoundException());
 		}
@@ -66,7 +66,7 @@ public class ReportService {
 
 	public ReportResDto getReport() {
 		List<Report> reports = reportRepository.findAll();
-		if(reports.isEmpty()) {
+		if (reports.isEmpty()) {
 			throw new ReportNotFoundException("Report is nothing");
 		}
 
