@@ -15,7 +15,7 @@ const JoinPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user.userNickname !== null) navigate("/");
+    if (user.createdAt == null || user.userNickname !== null) navigate("/");
   }, [user]);
 
   const joinUser = async () => {
