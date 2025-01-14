@@ -53,15 +53,13 @@ public class PocketController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "복주머니 조회 성공"),
-		@ApiResponse(responseCode = "401", description = "사용자 조회 실패.",
+		@ApiResponse(responseCode = "401", description = "사용자 조회 실패",
 			content = @Content(schema = @Schema(implementation = UserNotFoundException.class))),
-		@ApiResponse(responseCode = "404", description = "1. 복주머니 조회 실패. \t\n 2.",
+		@ApiResponse(responseCode = "404", description = "복주머니 조회 실패",
 			content = @Content(schema = @Schema(implementation = PocketNotFoundException.class)))
 	})
 	@GetMapping("/{url}")
 	public ResponseEntity<DataResponseDto<PocketDto>> getPocket(HttpSession session, @PathVariable String url) {
-		String userKey = (String)session.getAttribute("user");
-
 		PocketDto pocketDto = new PocketDto();
 		PocketInfoDto findPocket = pocketService.getPocketInfo(url);
 		pocketDto.setPocketSeq(findPocket.getPocketSeq());
@@ -86,9 +84,9 @@ public class PocketController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "복주머니 주소 조회 성공"),
-		@ApiResponse(responseCode = "401", description = "사용자 조회 실패.",
+		@ApiResponse(responseCode = "401", description = "사용자 조회 실패",
 			content = @Content(schema = @Schema(implementation = UserNotFoundException.class))),
-		@ApiResponse(responseCode = "404", description = "복주머니 조회 실패.",
+		@ApiResponse(responseCode = "404", description = "복주머니 조회 실패",
 			content = @Content(schema = @Schema(implementation = PocketNotFoundException.class)))
 	})
 	@GetMapping("/address")
@@ -104,7 +102,7 @@ public class PocketController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "복주머니 생성 성공"),
-		@ApiResponse(responseCode = "401", description = "사용자 조회 실패.",
+		@ApiResponse(responseCode = "401", description = "사용자 조회 실패",
 			content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
 	})
 	@PostMapping
