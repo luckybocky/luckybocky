@@ -126,7 +126,7 @@ const MainPage = () => {
             <span className="text-[pink]">{pocket?.userNickname}</span> 님의
             복주머니
           </h1>
-          <p className="text-lg">{decorations.length}개의 복이 왔어요.</p>
+          <p>{decorations.length}개의 복이 왔어요.</p>
         </div>
         {/* <h1 className="text-4xl mb-3">Lucky Bocky!</h1>
       <p className="text-xl mb-6">복 내놔라</p> */}
@@ -154,7 +154,7 @@ const MainPage = () => {
         </div>
 
         {/* 페이지네이션 */}
-        <div className="flex justify-center mb-2 w-full px-10 text-base">
+        <div className="flex justify-center mb-2 w-full px-10">
           <button
             onClick={handlePreviousPage}
             disabled={currentPage === 1}

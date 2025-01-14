@@ -117,7 +117,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
                 !detail.articleVisibility ? "filter blur-lg" : ""
               }`}
             >
-              <div className="text-[black] text-lg mb-1">
+              <div className="text-[black] text-xl mb-1">
                 {"From. " + detail?.userNickname}
               </div>
               <div className="text-[black] h-[200px] overflow-y-auto">
@@ -170,7 +170,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
                     className="bg-white rounded-lg p-6 w-80 shadow-lg text-center"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <h2 className="text-lg text-black mb-4">
+                    <h2 className="text-xl text-black mb-4">
                       메세지는 다시 복구할 수 없어요.
                     </h2>
                     <p className="text-gray-700 mb-6">정말 삭제하시겠어요?</p>
@@ -212,7 +212,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
                   className="bg-white rounded-lg p-6 w-80 shadow-lg text-center"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <h2 className="text-lg text-black mb-4">
+                  <h2 className="text-xl text-black mb-4">
                     답장을 남기시겠어요?
                   </h2>
                   <div className="flex justify-center gap-4">

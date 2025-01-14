@@ -74,15 +74,15 @@ const AccountPage = () => {
     <div className="relative flex flex-col w-full max-w-[600px] min-h-screen bg-[#333] p-2 text-white overflow-hidden">
       {/* 뒤로 가기 버튼 */}
       <button
-        className="absolute top-4 right-4 text-2xl z-20"
+        className="absolute top-4 right-4 text-3xl z-20"
         onClick={() => navigate(-1)}
       >
         <IoArrowBack />
       </button>
 
       {/* 계정 설정 화면 */}
-      <h1 className="text-3xl mb-8 mt-5">계정 설정</h1>
-      <h1 className="text-xl">
+      <h1 className="text-4xl mb-8 mt-5">계정 설정</h1>
+      <h1 className="text-2xl">
         <span className="text-[pink]">{user.userNickname}</span> 님
       </h1>
 
@@ -97,8 +97,8 @@ const AccountPage = () => {
           value={nickname}
           onChange={(e) => {
             const input = e.target.value;
-            if (input.length <= 8) {
-              setNickname(input); // 8자 이하일 때만 상태 업데이트
+            if (input.length <= 6) {
+              setNickname(input); // 6자 이하일 때만 상태 업데이트
             }
           }}
           className="border p-2 rounded-md text-black mr-4 w-full"
@@ -110,19 +110,19 @@ const AccountPage = () => {
             setChangeMode((prev) => !prev);
           }}
           className={`${
-            nickname?.length >= 2 && nickname?.length <= 8
+            nickname?.length >= 2 && nickname?.length <= 6
               ? "bg-blue-500 hover:bg-blue-600"
               : "bg-gray-400 cursor-not-allowed"
           } text-white py-2 rounded-lg w-[50px]`}
-          disabled={nickname?.length < 2 || nickname?.length > 8}
+          disabled={nickname?.length < 2 || nickname?.length > 6}
         >
           {changeMode ? "저장" : "변경"}
         </button>
       </div>
       <div>
-        {changeMode && (nickname?.length < 2 || nickname?.length > 8) && (
+        {changeMode && (nickname?.length < 2 || nickname?.length > 6) && (
           <span className="absolute text-red-500 text-sm mt-1">
-            닉네임은 2~8자 사이여야 합니다.
+            닉네임은 2~6자 사이여야 합니다.
           </span>
         )}
       </div>
@@ -184,7 +184,7 @@ const AccountPage = () => {
             className="bg-white rounded-lg p-6 w-80 shadow-lg text-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-lg text-black mb-4">로그아웃 하시겠어요?</h2>
+            <h2 className="text-xl text-black mb-4">로그아웃 하시겠어요?</h2>
             <div className="flex justify-center gap-4">
               <button
                 className="bg-gray-300 text-black py-2 px-4 rounded-md"

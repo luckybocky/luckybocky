@@ -72,7 +72,7 @@ const Menu = () => {
 
       {/* 메뉴 버튼 */}
       <button
-        className="absolute top-4 right-4 text-2xl z-20"
+        className="absolute top-4 right-4 text-3xl z-20"
         onClick={toggleMenu}
       >
         ☰
@@ -141,11 +141,11 @@ const Menu = () => {
               className="flex hover:underline items-center gap-2"
               onClick={() => navigate("/")}
             >
-              <span className="text-xl my-8">로그인 / 회원가입</span>
+              <span className="text-2xl my-8">로그인 / 회원가입</span>
             </button>
           </ul>
         )}
-        <footer className="border-t border-gray-600 p-4 text-center text-sm">
+        <footer className="border-t border-gray-600 p-4 text-center text-base">
           Lucky Bocky!
         </footer>
       </div>
@@ -159,7 +159,7 @@ const Menu = () => {
             className="bg-white text-[#0d1a26] p-4 rounded-lg w-80"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-lg mb-4">피드백하기</h2>
+            <h2 className="text-xl mb-4">피드백하기</h2>
             <textarea
               className="w-full h-60 p-2 border border-gray-300 rounded-md mb-2 resize-none"
               placeholder="피드백 내용을 입력하세요."

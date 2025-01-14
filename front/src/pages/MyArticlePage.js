@@ -43,7 +43,7 @@ const MyArticlePage = () => {
     <div className="relative flex flex-col items-center w-full p-2 max-w-[600px] min-h-screen bg-[#ba947f] text-white overflow-hidden">
       <Menu />
       {/* 제목 영역 */}
-      <h1 className="text-xl mb-4">메시지 목록</h1>
+      <h1 className="text-2xl mb-4">메시지 목록</h1>
 
       {/* 메시지 리스트 */}
       <div className="w-full px-4 flex-1 space-y-8 pb-16 mt-8">
@@ -58,17 +58,17 @@ const MyArticlePage = () => {
               alt="Fortune"
               className="absolute top-[-45px] left-3/4 transform -translate-x-1/2 w-[100px] h-[100px] object-contain"
             />
-            <div className="mb-1 text-lg">To. {article.pocketOwner}</div>
+            <div className="mb-1 text-xl">To. {article.pocketOwner}</div>
             <div className="mb-2 whitespace-pre-wrap break-words">
               {article.content}
             </div>
-            <div className="text-right text-sm text-[#ccc]">
+            <div className="text-right text-base text-[#ccc]">
               From. {article.articleOwner}
             </div>
             {article.comment && (
               <div>
                 <hr className="border-t-2 border-[gray] mt-1 mb-2" />
-                <div className="mb-1 text-lg">Re.</div>
+                <div className="mb-1 text-xl">Re.</div>
                 <div className="whitespace-pre-wrap break-words">
                   {article.comment}
                 </div>
