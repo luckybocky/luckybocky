@@ -47,7 +47,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 		User user = userOptional.get();
 		log.info("findByUserKey {}", user);
 
-		return user.getUserInfo(user);
+		return user.getUserInfo();
 	}
 
 	@Override

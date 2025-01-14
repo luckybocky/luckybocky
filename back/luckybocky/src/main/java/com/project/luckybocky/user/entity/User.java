@@ -79,15 +79,15 @@ public class User extends BaseEntity {
 
 	//=====창희 dto 함수 start
 
-	public UserInfoDto getUserInfo(User user) {
+	public UserInfoDto getUserInfo() {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		String formattedDate = user.getCreatedAt().format(formatter);
+		String formattedDate = this.getCreatedAt().format(formatter);
 
 		return UserInfoDto.builder()
-			.userNickname(user.getUserNickname())
-			.alarmStatus(user.isAlarmStatus())
-			.fortuneVisibility(user.isFortuneVisibility())
+			.userNickname(this.getUserNickname())
+			.alarmStatus(this.isAlarmStatus())
+			.fortuneVisibility(this.isFortuneVisibility())
 			.createdAt(formattedDate)
 			.build();
 	}

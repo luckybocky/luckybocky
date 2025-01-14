@@ -75,19 +75,19 @@ public class Article extends BaseEntity {
 
 	//=====창희 dto 함수 start
 
-	public MyArticleDto getMyArticleDto(Article article) {
+	public MyArticleDto getMyArticleDto() {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 		return MyArticleDto
 			.builder()
-			.pocketOwner(article.getPocket().getUser().getUserNickname())
-			.articleOwner(article.getUserNickname())
-			.content(article.getArticleContent())
-			.comment(article.getArticleComment())
-			.fortuneName(article.getFortune().getFortuneName())
-			.fortuneImg(article.getFortune().getFortuneSeq())
-			.createdAt(article.getCreatedAt().format(formatter))
+			.pocketOwner(this.getPocket().getUser().getUserNickname())
+			.articleOwner(this.getUserNickname())
+			.content(this.getArticleContent())
+			.comment(this.getArticleComment())
+			.fortuneName(this.getFortune().getFortuneName())
+			.fortuneImg(this.getFortune().getFortuneSeq())
+			.createdAt(this.getCreatedAt().format(formatter))
 			.build();
 	}
 	//=====창희 dto 함수 end

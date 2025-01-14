@@ -34,7 +34,7 @@ public class MyArticleServiceImpl implements MyArticleService {
 
         for (Article article : articleByUserKey) {
             myArticles.add(
-                article.getMyArticleDto(article)
+                article.getMyArticleDto()
             );
         }
 
