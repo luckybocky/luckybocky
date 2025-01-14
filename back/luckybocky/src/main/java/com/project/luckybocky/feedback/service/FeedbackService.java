@@ -37,7 +37,7 @@ public class FeedbackService {
 		String userKey = (String) session.getAttribute("user");
 
 		User user = userRepository.findByUserKey(userKey)
-			.orElseThrow(() -> new UserNotFoundException("User not found with key"));
+			.orElseThrow(() -> new UserNotFoundException());
 
 		try {
 			feedbackRepository.save(

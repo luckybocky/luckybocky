@@ -22,11 +22,11 @@ public class PocketService {
 	private final UserRepository userRepository;
 	private final PocketRepository pocketRepository;
 
-	public String getPocketAddress(String userKey) {
-		User user = userRepository.findByUserKey(userKey)
-			.orElseThrow(() -> new UserNotFoundException("not found user"));
-		Pocket pocket = pocketRepository.findPocketByUser(user)
-			.orElseThrow(() -> new PocketNotFoundException());
+    public String getPocketAddress(String userKey){
+        User user = userRepository.findByUserKey(userKey)
+                .orElseThrow(() -> new UserNotFoundException());
+        Pocket pocket = pocketRepository.findPocketByUser(user)
+                .orElseThrow(() -> new PocketNotFoundException());
 
 		return pocket.getPocketAddress();
 	}
@@ -37,9 +37,9 @@ public class PocketService {
 		return pocket.pocketInfo();
 	}
 
-	public String createPocket(String userKey) {
-		User user = userRepository.findByUserKey(userKey)
-			.orElseThrow(() -> new UserNotFoundException("not found user"));
+    public String createPocket(String userKey) {
+        User user = userRepository.findByUserKey(userKey)
+                .orElseThrow(() -> new UserNotFoundException());
 
 		//uuid로 복주머니 링크 생성 후 저장 & 반환
 		UUID uuid = UUID.randomUUID();
@@ -52,11 +52,11 @@ public class PocketService {
 		return address;
 	}
 
-	public PocketInfoDto getPocketInfoByUser(String userKey) {
-		User user = userRepository.findByUserKey(userKey)
-			.orElseThrow(() -> new UserNotFoundException("not found user"));
-		Pocket pocket = pocketRepository.findFirstByUserOrderByCreatedAtDesc(user)
-			.orElseThrow(() -> new PocketNotFoundException());
+    public PocketInfoDto getPocketInfoByUser(String userKey){
+        User user = userRepository.findByUserKey(userKey)
+                .orElseThrow(() -> new UserNotFoundException());
+        Pocket pocket = pocketRepository.findFirstByUserOrderByCreatedAtDesc(user)
+                .orElseThrow(() -> new PocketNotFoundException());
 		return pocket.pocketInfo();
-	}
+    }
 }

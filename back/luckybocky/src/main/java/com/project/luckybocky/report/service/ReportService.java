@@ -41,12 +41,12 @@ public class ReportService {
 			.orElseThrow(() -> new ArticleNotFoundException());
 
 		User reporter = userRepository.findByUserKey(userKey)
-			.orElseThrow(() -> new UserNotFoundException("Reporter not found with key"));  // 유효 신고자인지 확인
+			.orElseThrow(() -> new UserNotFoundException());  // 유효 신고자인지 확인
 
 		User offender = null;
 		if (article.getUser() != null) {
 			offender = userRepository.findByUserSeq(article.getUser().getUserSeq())
-				.orElseThrow(() -> new UserNotFoundException("Offender not found userSeq"));
+				.orElseThrow(() -> new UserNotFoundException());
 		}
 
 		try {
