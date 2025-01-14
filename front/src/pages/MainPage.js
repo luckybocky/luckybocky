@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import MainImage from "../image/pocket.png";
 import { useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
@@ -8,8 +8,13 @@ import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
 import fortuneImages from "../components/FortuneImages";
 import { loadPocket } from "../api/PocketApi";
-import { IoShareOutline } from "react-icons/io5";
-// import { BsPencil } from "react-icons/bs";
+
+const IoShareOutline = lazy(() =>
+  import("react-icons/io5").then((mod) => ({ default: mod.IoShareOutline }))
+);
+const BsPencil = lazy(() =>
+  import("react-icons/bs").then((mod) => ({ default: mod.BsPencil }))
+);
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -179,10 +184,14 @@ const MainPage = () => {
         }   px-20 rounded-lg w-full max-w-[375px]`}
       >
         <div className="flex items-center justify-center">
-          {isOwner ? (
-            <IoShareOutline size={28} className="mr-2" />
-          ) : // <BsPencil size={22} className="mr-3" />
-          null}
+          <Suspense>
+            {isOwner ? (
+              <IoShareOutline size={28} className="mr-2" />
+            ) : (
+              <BsPencil size={22} className="mr-3" />
+            )}
+          </Suspense>
+
           <span className={`${isOwner ? "pt-2" : "pt-1"}`}>
             {isOwner ? "내 복주머니 공유하기" : "복 전달하기"}
           </span>
