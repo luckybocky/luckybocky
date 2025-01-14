@@ -1,6 +1,8 @@
 package com.project.luckybocky.user.exception;
 
-public class ForbiddenUserException extends RuntimeException{
+import com.project.luckybocky.common.CustomException;
+
+public class ForbiddenUserException extends CustomException {
     public ForbiddenUserException(String message){
         super(message);
     }
