@@ -105,7 +105,7 @@ const MainPage = () => {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center p-2 w-full max-w-[375px] min-h-screen bg-[#ba947f] text-white overflow-hidden">
+    <div className="relative flex flex-col items-center justify-center p-2 w-full max-w-[600px] min-h-screen bg-[#ba947f] text-white overflow-hidden">
       <Menu />
       {/* 메인 화면 */}
       <div className="absolute top-4 left-4">
