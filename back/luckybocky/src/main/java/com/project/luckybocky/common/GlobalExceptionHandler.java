@@ -29,23 +29,23 @@ public class GlobalExceptionHandler {
     //===== 창희 예외 추가 start ======
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ResponseDto> handleUserNotFoundException(UserNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDto(ex.getMessage()));
+        return ResponseEntity.status(ex.getStatusCode()).body(new ResponseDto(ex.getMessage()));
     }
 
 
     @ExceptionHandler(ArticleNotFoundException.class)
     public ResponseEntity<ResponseDto> handleArticleNotFoundException(ArticleNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDto(ex.getMessage()));
+        return ResponseEntity.status(ex.getStatusCode()).body(new ResponseDto(ex.getMessage()));
     }
 
     @ExceptionHandler(PocketNotFoundException.class)
     public ResponseEntity<ResponseDto> handlePocketNotFoundException(PocketNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDto(ex.getMessage()));
+        return ResponseEntity.status(ex.getStatusCode()).body(new ResponseDto(ex.getMessage()));
     }
 
     @ExceptionHandler(FirebaseMessagingException.class)
     public ResponseEntity<ResponseDto> handleFirebaseMessagingException(FirebaseMessagingException ex){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("firebase end error "+ ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("푸시 전송 에러 발생했습니다."));
     }
 
     //===== 창희 예외 추가 end ======
@@ -53,17 +53,17 @@ public class GlobalExceptionHandler {
     //===== 재원 예외 추가 start ======
     @ExceptionHandler(FortuneNotFoundException.class)
     public ResponseEntity<ResponseDto> handleFortuneNotFoundException(FortuneNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDto(ex.getMessage()));
+        return ResponseEntity.status(ex.getStatusCode()).body(new ResponseDto(ex.getMessage()));
     }
 
     @ExceptionHandler(CommentConflictException.class)
     public ResponseEntity<ResponseDto> handleCommentConflictException(CommentConflictException ex){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseDto(ex.getMessage()));
+        return ResponseEntity.status(ex.getStatusCode()).body(new ResponseDto(ex.getMessage()));
     }
 
     @ExceptionHandler(ForbiddenUserException.class)
     public ResponseEntity<ResponseDto> handleForbiddenUserException(ForbiddenUserException ex){
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResponseDto(ex.getMessage()));
+        return ResponseEntity.status(ex.getStatusCode()).body(new ResponseDto(ex.getMessage()));
     }
 
 

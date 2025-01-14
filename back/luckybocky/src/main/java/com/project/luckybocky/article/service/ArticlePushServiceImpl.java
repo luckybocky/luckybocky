@@ -19,7 +19,7 @@ public class ArticlePushServiceImpl implements ArticlePushService{
     public String findPocketOwner(int articleSeq) {
         Article article = myArticleRepository.findByArticleSeq(articleSeq);
 
-        if(article ==null) throw new ArticleNotFoundException("not found article");
+        if(article ==null) throw new ArticleNotFoundException();
 
         return article.getUser().getUserKey();
     }

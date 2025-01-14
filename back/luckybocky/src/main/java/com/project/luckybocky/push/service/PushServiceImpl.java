@@ -40,7 +40,7 @@ public class PushServiceImpl implements PushService {
 
 
         if (userOptional.isEmpty()) {
-            throw new UserNotFoundException("not found user");
+            throw new UserNotFoundException();
         }
 
         PushMessage pushMessage = PushMessage.fromString(type);

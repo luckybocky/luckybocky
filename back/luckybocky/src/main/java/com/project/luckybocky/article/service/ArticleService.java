@@ -35,7 +35,7 @@ public class ArticleService {
 
     public ArticleResponseDto getArticleDetails(String userKey, int articleSeq) {
         Article article = articleRepository.findByArticleSeq(articleSeq)
-                .orElseThrow(() -> new ArticleNotFoundException("not found article"));
+                .orElseThrow(() -> new ArticleNotFoundException());
 
         ArticleResponseDto response = new ArticleResponseDto(article);
 
@@ -74,10 +74,10 @@ public class ArticleService {
 //        }
 
         Fortune fortune = fortuneRepository.findByFortuneSeq(writeArticleDto.getFortuneSeq())
-                .orElseThrow(() -> new FortuneNotFoundException("Invalid fortuneSeq: " + writeArticleDto.getFortuneSeq()));
+                .orElseThrow(() -> new FortuneNotFoundException());
 
         Pocket pocket = pocketRepository.findPocketByPocketSeq(writeArticleDto.getPocketSeq())
-                .orElseThrow(() -> new PocketNotFoundException("Invalid pocketSeq: " + writeArticleDto.getPocketSeq()));
+                .orElseThrow(() -> new PocketNotFoundException());
 
         Article article = Article.builder()
                 .user(user.orElse(null))
@@ -95,9 +95,9 @@ public class ArticleService {
     public ArticleResponseDto updateComment(CommentDto commentDto) {
         int findArticle = commentDto.getArticleSeq();
         Article article = articleRepository.findByArticleSeq(findArticle)
-                .orElseThrow(() -> new ArticleNotFoundException("not found article"));
+                .orElseThrow(() -> new ArticleNotFoundException());
         if (article.getArticleComment() != null) {
-            throw new CommentConflictException("Already exist comment");
+            throw new CommentConflictException();
         }
         article.updateComment(commentDto.getComment());
         articleRepository.save(article);
@@ -107,13 +107,13 @@ public class ArticleService {
 
     public void deleteArticle(int articleSeq) {
         Article findArticle = articleRepository.findByArticleSeq(articleSeq)
-                .orElseThrow(() -> new ArticleNotFoundException("not found article"));
+                .orElseThrow(() -> new ArticleNotFoundException());
         articleRepository.delete(findArticle);
     }
 
     public int getOwnerByArticle(int articleSeq) {
         Article findArticle = articleRepository.findByArticleSeq(articleSeq)
-                .orElseThrow(() -> new ArticleNotFoundException("not found article"));
+                .orElseThrow(() -> new ArticleNotFoundException());
         Pocket pocket = findArticle.getPocket();
         return pocket.getUser().getUserSeq();
     }
@@ -121,7 +121,7 @@ public class ArticleService {
     // 모든 복을 가져오기 (공개여부 체크 X)
     public List<ArticleSummaryDto> getAllArticles(int pocketSeq) {
         Pocket pocket = pocketRepository.findPocketByPocketSeq(pocketSeq)
-                .orElseThrow(() -> new PocketNotFoundException("not found pocket"));
+                .orElseThrow(() -> new PocketNotFoundException());
 
         return pocket.getArticles().stream()
                 .map(Article::summaryArticle)

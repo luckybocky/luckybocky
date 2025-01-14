@@ -20,7 +20,7 @@ public class PocketPushServiceImpl implements PocketPushService{
     public String findPocket(int pocketSeq) {
         Pocket pocket = pocketPushRepository.findByPocketSeq(pocketSeq);
 
-        if(pocket == null) throw new PocketNotFoundException("not found pocket");
+        if(pocket == null) throw new PocketNotFoundException();
         return pocket.getUser().getUserKey();
     }
 }
