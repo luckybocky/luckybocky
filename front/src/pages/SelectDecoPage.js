@@ -25,7 +25,7 @@ const SelectDecoPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full max-w-[375px] min-h-screen bg-[#f5f5f5] text-black mx-auto p-2">
+    <div className="flex flex-col items-center justify-center w-full max-w-[600px] min-h-screen bg-[#f5f5f5] text-black mx-auto p-2">
       <h1 className="text-2xl mb-4">장식을 골라주세요</h1>
       <div className="grid grid-cols-3 gap-4 mb-6">
         {decorations.map((id) => (

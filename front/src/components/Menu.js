@@ -80,7 +80,7 @@ const Menu = () => {
 
       {/* 메뉴 바 */}
       <div
-        className={`absolute top-0 left-28 h-full bg-[#333] text-white shadow-lg transition-transform duration-300 ease-in-out z-20 ${
+        className={`absolute top-0 right-0 h-full bg-[#333] shadow-lg transition-transform duration-300 ease-in-out z-20 ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{ width: "275px" }}

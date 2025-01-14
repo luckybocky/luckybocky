@@ -71,7 +71,7 @@ const AccountPage = () => {
   };
 
   return (
-    <div className="relative flex flex-col w-full max-w-[375px] min-h-screen bg-[#333] p-2 text-white overflow-hidden">
+    <div className="relative flex flex-col w-full max-w-[600px] min-h-screen bg-[#333] p-2 text-white overflow-hidden">
       {/* 뒤로 가기 버튼 */}
       <button
         className="absolute top-4 right-4 text-2xl z-20"

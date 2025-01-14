@@ -55,7 +55,7 @@ const WritePage = () => {
   }, [userNickname]);
 
   return (
-    <div className="flex flex-col justify-center w-full max-w-[375px] min-h-screen bg-[#f5f5f5] text-black mx-auto p-2">
+    <div className="flex flex-col justify-center w-full max-w-[600px] min-h-screen bg-[#f5f5f5] text-black mx-auto p-2">
       <h1 className="text-2xl mb-24 text-center">메시지를 남겨주세요</h1>
       <div className="relative w-full mb-2">
         {/* 이미지 추가 */}

@@ -8,6 +8,8 @@ import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
 import fortuneImages from "../components/FortuneImages";
 import { loadPocket } from "../api/PocketApi";
+import { IoShareOutline } from "react-icons/io5";
+import { BsPencil } from "react-icons/bs";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -105,15 +107,15 @@ const MainPage = () => {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center p-2 w-full max-w-[600px] min-h-screen bg-[#ba947f] text-white overflow-hidden">
+    <div className="relative flex flex-col items-center justify-center p-2 w-full max-w-[600px] min-h-screen bg-[#ba947f] overflow-hidden">
       <Menu />
       {/* 메인 화면 */}
       <div className="absolute top-4 left-4">
-        <h1 className="text-xl mb-1">
+        <h1 className="text-2xl mb-1">
           <span className="text-[pink]">{pocket?.userNickname}</span> 님의
           복주머니
         </h1>
-        <p className="text-base">{decorations.length}개의 복이 왔어요.</p>
+        <p className="text-lg">{decorations.length}개의 복이 왔어요.</p>
       </div>
       {/* <h1 className="text-4xl mb-3">Lucky Bocky!</h1>
       <p className="text-xl mb-6">복 내놔라</p> */}
@@ -170,11 +172,22 @@ const MainPage = () => {
                   },
                 })
         }
-        className="bg-white text-[#0d1a26] py-4 px-20 rounded-lg w-full"
+        className={`${
+          address === myAddress
+            ? "bg-white text-[#0d1a26] pt-3 pb-4"
+            : "bg-blue-500 py-4"
+        }   px-20 rounded-lg w-full max-w-[375px]`}
       >
-        <span className="flex justify-center pt-1">
-          {address === myAddress ? "내 복주머니 공유하기" : "복 전달하기"}
-        </span>
+        <div className="flex items-center justify-center">
+          {address === myAddress ? (
+            <IoShareOutline size={28} className="mr-2" />
+          ) : (
+            <BsPencil size={22} className="mr-3" />
+          )}
+          <span className={`${address === myAddress ? "pt-2" : "pt-1"}`}>
+            {address === myAddress ? "내 복주머니 공유하기" : "복 전달하기"}
+          </span>
+        </div>
       </button>
 
       {/* 복사 성공 알림 */}

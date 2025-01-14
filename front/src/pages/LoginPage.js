@@ -37,12 +37,12 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center text-center bg-[#ba947f] text-white min-h-screen p-2 w-full max-w-[375px]">
+    <div className="relative flex flex-col items-center justify-center text-center bg-[#ba947f] text-white min-h-screen p-2 w-full max-w-[600px]">
       <h1 className="text-4xl mb-2">Lucky Bocky!</h1>
       <p className="text-xl mb-6">복 내놔라</p>
       <img src={MainImage} alt="복주머니 이미지" className="w-72 h-72 mb-6" />
       <button
-        className="w-full flex items-center justify-center gap-2 bg-[#fee500] text-[#3c1e1e] py-4 px-6 rounded-lg"
+        className="max-w-[375px] w-full flex items-center justify-center gap-2 bg-[#fee500] text-[#3c1e1e] py-4 px-6 rounded-lg"
         onClick={handleKakaoLogin}
       >
         <img src={kakaoIcon} alt="카카오 아이콘" className="w-6 h-6" />

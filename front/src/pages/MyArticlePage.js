@@ -40,7 +40,7 @@ const MyArticlePage = () => {
   // ];
 
   return (
-    <div className="relative flex flex-col items-center w-full p-2 max-w-[375px] min-h-screen bg-[#ba947f] text-white overflow-hidden">
+    <div className="relative flex flex-col items-center w-full p-2 max-w-[600px] min-h-screen bg-[#ba947f] text-white overflow-hidden">
       <Menu />
       {/* 제목 영역 */}
       <h1 className="text-xl mb-4">메시지 목록</h1>
