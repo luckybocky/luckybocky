@@ -21,6 +21,7 @@ const MainPage = () => {
   const [copied, setCopied] = useState(false); // URL 복사 알림 상태
   const [pocket, setPocket] = useState(null);
   const [decorations, setDecorations] = useState([]);
+  const [isOwner, setIsOwner] = useState(false);
 
   const myAddress = AuthStore((state) => state.user.address);
   // const fortuneVisibility = AuthStore((state) => state.user.fortuneVisibility);
@@ -60,6 +61,7 @@ const MainPage = () => {
 
   useEffect(() => {
     fetchPocket();
+    setIsOwner(address === myAddress);
   }, [address]);
 
   const decorationsPerPage = 6;
@@ -161,7 +163,7 @@ const MainPage = () => {
 
       <button
         onClick={
-          address === myAddress
+          isOwner
             ? handleCopyURL
             : () =>
                 navigate("/select-deco", {
@@ -173,19 +175,17 @@ const MainPage = () => {
                 })
         }
         className={`${
-          address === myAddress
-            ? "bg-white text-[#0d1a26] pt-3 pb-4"
-            : "bg-blue-500 py-4"
+          isOwner ? "bg-white text-[#0d1a26] pt-3 pb-4" : "bg-blue-500 py-4"
         }   px-20 rounded-lg w-full max-w-[375px]`}
       >
         <div className="flex items-center justify-center">
-          {address === myAddress ? (
+          {isOwner ? (
             <IoShareOutline size={28} className="mr-2" />
           ) : (
             <BsPencil size={22} className="mr-3" />
           )}
-          <span className={`${address === myAddress ? "pt-2" : "pt-1"}`}>
-            {address === myAddress ? "내 복주머니 공유하기" : "복 전달하기"}
+          <span className={`${isOwner ? "pt-2" : "pt-1"}`}>
+            {isOwner ? "내 복주머니 공유하기" : "복 전달하기"}
           </span>
         </div>
       </button>
