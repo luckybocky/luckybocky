@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ResponseDto> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto(ex.getMessage()));
-    }
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<ResponseDto> handleIllegalArgumentException(IllegalArgumentException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto(ex.getMessage()));
+	}
 
 
     //===== 창희 예외 추가 start ======
@@ -66,24 +66,23 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getStatusCode()).body(new ResponseDto(ex.getMessage()));
     }
 
+	//===== 재원 예외 추가 end ======
 
-    //===== 재원 예외 추가 end ======
+	//===== 우재 예외 추가 start ======
+	@ExceptionHandler(SessionNotFoundException.class)
+	public ResponseEntity<ResponseDto> handleSessionNotFoundException(SessionNotFoundException ex) {
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDto(ex.getMessage()));
+	}
 
-    //===== 우재 예외 추가 start ======
-    @ExceptionHandler(SessionNotFoundException.class)
-    public ResponseEntity<ResponseDto> handleSessionNotFoundException(SessionNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseDto(ex.getMessage()));
-    }
+	@ExceptionHandler(NicknameNotFoundException.class)
+	public ResponseEntity<ResponseDto> handleNicknameNotFoundException(NicknameNotFoundException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto(ex.getMessage()));
+	}
 
-    @ExceptionHandler(NicknameNotFoundException.class)
-    public ResponseEntity<ResponseDto> handleNicknameNotFoundException(NicknameNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto(ex.getMessage()));
-    }
-
-    @ExceptionHandler(FeedbackNotFoundException.class)
-    public ResponseEntity<ResponseDto> handleFeedbackNotFoundException(FeedbackNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDto(ex.getMessage()));
-    }
+	@ExceptionHandler(FeedbackNotFoundException.class)
+	public ResponseEntity<ResponseDto> handleFeedbackNotFoundException(FeedbackNotFoundException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDto(ex.getMessage()));
+	}
 
     @ExceptionHandler(ReportNotFoundException.class)
     public ResponseEntity<ResponseDto> handleReportNotFoundException(ReportNotFoundException ex) {
