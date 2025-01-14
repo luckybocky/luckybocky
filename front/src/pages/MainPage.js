@@ -8,8 +8,8 @@ import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
 import fortuneImages from "../components/FortuneImages";
 import { loadPocket } from "../api/PocketApi";
-import { IoShareOutline } from "react-icons/io5";
-import { BsPencil } from "react-icons/bs";
+// import { IoShareOutline } from "react-icons/io5";
+// import { BsPencil } from "react-icons/bs";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -179,11 +179,11 @@ const MainPage = () => {
         }   px-20 rounded-lg w-full max-w-[375px]`}
       >
         <div className="flex items-center justify-center">
-          {isOwner ? (
+          {/* {isOwner ? (
             <IoShareOutline size={28} className="mr-2" />
           ) : (
             <BsPencil size={22} className="mr-3" />
-          )}
+          )} */}
           <span className={`${isOwner ? "pt-2" : "pt-1"}`}>
             {isOwner ? "내 복주머니 공유하기" : "복 전달하기"}
           </span>
