@@ -21,6 +21,6 @@ try {
 } catch (error) {
   console.error("Firebase 초기화 중 오류 발생:", error);
   // 오류 발생 시 사용자에게 알림
-  alert("Firebase 초기화에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+  // alert("Firebase 초기화에 실패했습니다. 잠시 후 다시 시도해 주세요.");
 }
 export { messaging, getToken, onMessage };

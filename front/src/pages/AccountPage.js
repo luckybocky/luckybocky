@@ -17,6 +17,11 @@ const AccountPage = () => {
   const [saved, setSaved] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
+  const [permission, setPermission] = useState(
+    typeof Notification !== "undefined" ? Notification.permission : "default"
+  );
+  const [notice, setNotice] = useState(false); // 브라우저 알림 체크
+
   useEffect(() => {
     if (!user.createdAt) navigate("/");
     if (nickname === "") setNickname(user.userNickname);
@@ -36,13 +41,30 @@ const AccountPage = () => {
   };
 
   const saveAlarmStatus = () => {
-    setUser({
-      ...user,
-      alarmStatus: !user.alarmStatus,
-    });
+    try {
+      if (typeof Notification === "undefined") {
+        // 알림 API를 지원하지 않을 때 처리
+        console.error("이 브라우저에서는 알림을 허용하지 않습니다.");
+        setNotice(true);
+        setTimeout(() => setNotice(false), 3000);
+        return;
+      }
 
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+      if (permission === "granted") {
+        setUser({
+          ...user,
+          alarmStatus: !user.alarmStatus,
+        });
+
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      } else {
+        setNotice(true);
+        setTimeout(() => setNotice(false), 3000);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
   const saveFortuneVisibility = () => {
     setUser({
@@ -150,6 +172,13 @@ const AccountPage = () => {
           </span>
         </div>
       </div>
+
+      {/* 알림이 브라우저에서 거부되어있을때 알려주기위함 */}
+      {notice && (
+        <div className="fixed bottom-16 bg-red-500 text-white py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
+          <p className="whitespace-nowrap">브라우저 알림설정을 확인해주세요</p>
+        </div>
+      )}
 
       {/* 메시지 공개 여부 */}
       <div className="flex items-center">

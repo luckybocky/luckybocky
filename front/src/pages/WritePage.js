@@ -45,7 +45,7 @@ const WritePage = () => {
 
     //=====12-31 창희 추가 start=====
     //복주머니에 복을 넣을때
-    sendArticlePush(pocketSeq);
+    // sendArticlePush(pocketSeq);
     //=====12-31 창희 추가 end=====
     setSaveModalOpen(false);
   };
