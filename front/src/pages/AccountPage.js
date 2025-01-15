@@ -24,8 +24,10 @@ const AccountPage = () => {
 
   useEffect(() => {
     if (!user.createdAt) navigate("/");
-    if (nickname === "") setNickname(user.userNickname);
-    AuthService.update();
+    else {
+      if (nickname === "") setNickname(user.userNickname);
+      AuthService.update();
+    }
   }, [user]);
 
   const navigate = useNavigate();
@@ -83,7 +85,6 @@ const AccountPage = () => {
   const confirmLogout = async () => {
     setLogoutModalOpen(false);
     await AuthService.logout();
-    navigate("/");
   };
 
   return (

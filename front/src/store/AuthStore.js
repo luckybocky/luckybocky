@@ -2,21 +2,21 @@ import { create } from "zustand";
 
 const AuthStore = create((set) => ({
   user: {
-    userNickname: null,
-    alarmStatus: null,
-    fortuneVisibility: null,
-    createdAt: null,
-    address: null,
+    userNickname: "",
+    alarmStatus: false,
+    fortuneVisibility: false,
+    createdAt: "",
+    address: "",
   },
   setUser: (user) => set({ user }),
   resetUser: () =>
     set({
       user: {
-        userNickname: null,
-        alarmStatus: null,
-        fortuneVisibility: null,
-        createdAt: null,
-        address: null,
+        userNickname: "",
+        alarmStatus: false,
+        fortuneVisibility: false,
+        createdAt: "",
+        address: "",
       },
     }),
 }));
