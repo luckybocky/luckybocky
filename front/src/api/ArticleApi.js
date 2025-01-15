@@ -18,8 +18,9 @@ export const writeArticle = async (payload) => {
       content: payload.message,
       fortuneSeq: payload.decorationId,
       visibility: payload.visibility,
+      url: `${window.location.origin}${window.location.pathname}`,
     };
-
+    console.log(setArticle);
     await ApiClient.post("article", setArticle);
   } catch (error) {
     console.debug("write Article error", error);

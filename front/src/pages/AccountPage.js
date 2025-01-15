@@ -17,6 +17,9 @@ const AccountPage = () => {
   const [saved, setSaved] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
+  const [permission, setPermission] = useState(Notification.permission);
+  const [notice, setNotice] = useState(false); // 브라우저 알림 체크
+
   useEffect(() => {
     if (!user.createdAt) navigate("/");
     if (nickname === "") setNickname(user.userNickname);
@@ -36,13 +39,22 @@ const AccountPage = () => {
   };
 
   const saveAlarmStatus = () => {
-    setUser({
-      ...user,
-      alarmStatus: !user.alarmStatus,
-    });
-
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    try {
+      if (permission === "granted") {
+        setUser({
+          ...user,
+          alarmStatus: !user.alarmStatus,
+        });
+        
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      } else {
+        setNotice(true);
+        setTimeout(() => setNotice(false), 3000);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
   const saveFortuneVisibility = () => {
     setUser({
@@ -150,6 +162,14 @@ const AccountPage = () => {
           </span>
         </div>
       </div>
+
+      {/* 알림이 브라우저에서 거부되어있을때 알려주기위함 */}
+      {notice && (
+        // <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md transition-opacity duration-500">
+        <div className="absolute bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md">
+          <p>브라우저가 알림을 거부, 지원하지 않습니다.</p>
+        </div>
+      )}
 
       {/* 메시지 공개 여부 */}
       <div className="flex items-center">

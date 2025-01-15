@@ -19,7 +19,8 @@ const isIos = () => {
 };
 // 서비스 워커 등록
 try {
-  if ("serviceWorker" in navigator && !isIos()) {
+  // if ("serviceWorker" in navigator && !isIos()) {
+  if ("serviceWorker" in navigator) {
     navigator.serviceWorker
       .register("/firebase-messaging-sw.js") // 서비스 워커 경로
       .then((registration) => {
@@ -38,13 +39,7 @@ try {
   console.error("Service Worker 등록 중 예기치 못한 오류 발생:", error);
 }
 
-//=====12-31 창희 추가 start=====
-//main페이지에 들어오면 로그인이 성공했다고 판단하기에, 푸시를 위한 파이어베이스키 업데이트
-// console.log("12-31 창희 추가");
-
 setupOnMessageListener();
-
-//=====12-31 창희 추가 end=====
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

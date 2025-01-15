@@ -79,7 +79,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
 
     //=====01-03 창희 추가 start=====
     //리복할때
-    sendCommentPush(articleSeq);
+    // sendCommentPush(articleSeq);
     //=====01-03 창희 추가 end=====
   };
 
