@@ -28,6 +28,7 @@ const Menu = () => {
   const [feedback, setFeedback] = useState("");
   const [rating, setRating] = useState(0);
   const [feedbackAlarm, setFeedbackAlarm] = useState(false);
+  const [confirmCloseModal, setConfirmCloseModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -35,9 +36,16 @@ const Menu = () => {
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
-  const closeModals = () => {
+  const closeModal = () => {
+    if (feedback === "") confirmClose();
+    else setConfirmCloseModal(true);
+  };
+
+  const confirmClose = () => {
+    setConfirmCloseModal(false);
     setFeedbackModalOpen(false);
     setRating(0);
+    setFeedback("");
   };
 
   const sendFeedback = () => {
@@ -60,19 +68,6 @@ const Menu = () => {
     setTimeout(() => setFeedbackAlarm(false), 2000);
   };
 
-  // const sendReport = () => {
-  //   if (report === "") {
-  //     alert("신고 내용을 입력해주세요.");
-  //     return;
-  //   } else {
-  //     saveReport(1, 0, report);
-  //     alert("감사합니다. 신고 완료되었습니다.");
-  //   }
-
-  //   setReport("");
-  //   setReportModalOpen(false);
-  // };
-
   return (
     <div>
       {/* 오버레이 */}
@@ -88,7 +83,6 @@ const Menu = () => {
         className="absolute top-4 right-4 text-3xl z-20"
         onClick={toggleMenu}
       >
-        {/* ☰ */}
         <Suspense>
           <IoMenuSharp />
         </Suspense>
@@ -148,15 +142,9 @@ const Menu = () => {
               </Suspense>
               <span>피드백하기</span>
             </button>
-            {/* <button
-            className="flex hover:underline items-center gap-2"
-            onClick={() => setReportModalOpen(true)}
-          >
-            <AiOutlineAlert className="mb-1" />
-            <span className="">신고하기</span>
-          </button> */}
           </ul>
         )}
+
         {!myAddress && (
           <ul className="py-3 px-6 space-y-5">
             <button
@@ -167,20 +155,16 @@ const Menu = () => {
             </button>
           </ul>
         )}
+
         <footer className="border-t border-gray-600 p-4 text-center text-base">
           Lucky Bocky!
         </footer>
       </div>
+
       {/* 피드백 모달 */}
       {feedbackModalOpen && (
-        <div
-          className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-60"
-          onClick={closeModals}
-        >
-          <div
-            className="bg-white text-[#0d1a26] p-4 rounded-lg w-80"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-60">
+          <div className="bg-white text-[#0d1a26] p-4 rounded-lg w-80">
             <h2 className="text-xl mb-4">피드백하기</h2>
             <textarea
               className="w-full h-60 p-2 border border-gray-300 rounded-md mb-2 resize-none"
@@ -205,7 +189,7 @@ const Menu = () => {
               <div className="flex gap-2">
                 <button
                   className="bg-gray-300 text-black py-2 px-4 rounded-lg"
-                  onClick={closeModals}
+                  onClick={closeModal}
                 >
                   취소
                 </button>
@@ -221,44 +205,30 @@ const Menu = () => {
         </div>
       )}
 
-      {/* 신고 모달 */}
-      {/* {reportModalOpen && (
-        <div
-          className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-60"
-          onClick={closeModals}
-        >
-          <div
-            className="bg-white text-[#0d1a26] p-4 rounded-lg w-80"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-lg mb-4">신고하기</h2>
-            <input
-              className="w-full p-2 border border-gray-300 rounded-md mb-4"
-              placeholder="제목을 입력하세요."
-            />
-            <textarea
-              className="w-full h-48 p-2 border border-gray-300 rounded-md mb-2 resize-none"
-              placeholder="신고 내용을 입력하세요."
-              value={report}
-              onChange={(e) => setReport(e.target.value)}
-            ></textarea>
-            <div className="flex justify-end gap-2">
+      {confirmCloseModal && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-80 shadow-lg text-center">
+            <h2 className="text-xl text-black mb-4">
+              작성한 내용이 사라집니다.
+            </h2>
+            <p className="text-gray-700 mb-6">정말 닫으시겠어요?</p>
+            <div className="flex justify-center gap-4">
               <button
-                className="bg-gray-300 text-black py-2 px-4 rounded-lg"
-                onClick={closeModals}
+                className="bg-gray-300 text-black py-2 px-4 rounded-md"
+                onClick={() => setConfirmCloseModal(false)}
               >
                 취소
               </button>
               <button
-                className="bg-[#0d1a26] text-white py-2 px-4 rounded-lg"
-                onClick={sendReport}
+                className="bg-red-500 text-white py-2 px-4 rounded-md"
+                onClick={confirmClose}
               >
-                보내기
+                닫기
               </button>
             </div>
           </div>
         </div>
-      )} */}
+      )}
 
       {/*피드백 성공 알림 */}
       {feedbackAlarm && (
