@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import MainImage from "../image/pocket.png";
 import { useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
@@ -8,8 +8,13 @@ import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
 import fortuneImages from "../components/FortuneImages";
 import { loadPocket } from "../api/PocketApi";
-import { IoShareOutline } from "react-icons/io5";
-// import { BsPencil } from "react-icons/bs";
+
+const IoShareOutline = lazy(() =>
+  import("react-icons/io5").then((mod) => ({ default: mod.IoShareOutline }))
+);
+const BsPencil = lazy(() =>
+  import("react-icons/bs").then((mod) => ({ default: mod.BsPencil }))
+);
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -22,6 +27,7 @@ const MainPage = () => {
   const [pocket, setPocket] = useState(null);
   const [decorations, setDecorations] = useState([]);
   const [isOwner, setIsOwner] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false); // 로드 상태
 
   const myAddress = AuthStore((state) => state.user.address);
   // const fortuneVisibility = AuthStore((state) => state.user.fortuneVisibility);
@@ -56,6 +62,8 @@ const MainPage = () => {
       setDecorations(updatedPocket); // 위치가 할당된 데이터 저장
     } catch (error) {
       navigate("/error");
+    } finally {
+      setIsLoaded(true);
     }
   };
 
@@ -109,106 +117,115 @@ const MainPage = () => {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center p-2 w-full max-w-[600px] min-h-screen bg-[#ba947f] overflow-hidden">
-      <Menu />
-      {/* 메인 화면 */}
-      <div className="absolute top-4 left-4">
-        <h1 className="text-2xl mb-1">
-          <span className="text-[pink]">{pocket?.userNickname}</span> 님의
-          복주머니
-        </h1>
-        <p className="text-lg">{decorations.length}개의 복이 왔어요.</p>
-      </div>
-      {/* <h1 className="text-4xl mb-3">Lucky Bocky!</h1>
+    isLoaded && (
+      <div className="relative flex flex-col items-center justify-center p-2 w-full max-w-[600px] min-h-screen bg-[#ba947f] overflow-hidden">
+        <Menu />
+        {/* 메인 화면 */}
+        <div className="absolute top-4 left-4">
+          <h1 className="text-2xl mb-1">
+            <span className="text-[pink]">{pocket?.userNickname}</span> 님의
+            복주머니
+          </h1>
+          <p>{decorations.length}개의 복이 왔어요.</p>
+        </div>
+        {/* <h1 className="text-4xl mb-3">Lucky Bocky!</h1>
       <p className="text-xl mb-6">복 내놔라</p> */}
 
-      <div className="relative">
-        <img src={MainImage} alt="복주머니 이미지" className="w-80 h-80 mb-6" />
-        {/* 장식물 배치 */}
-        {currentDecorations.map((decoration) => (
+        <div className="relative">
+          <img
+            src={MainImage}
+            alt="복주머니 이미지"
+            className="w-80 h-80 mb-6"
+          />
+          {/* 장식물 배치 */}
+          {currentDecorations.map((decoration) => (
+            <button
+              key={decoration.id}
+              className={`absolute ${decoration.position}`}
+              onClick={() => setSelectArticle(decoration.id)}
+            >
+              <img
+                src={fortuneImages[decoration.image]}
+                alt="장식물"
+                className="w-28 h-28 cursor-pointer"
+              />
+            </button>
+          ))}
+        </div>
+
+        {/* 페이지네이션 */}
+        <div className="flex justify-center mb-2 w-full px-10">
           <button
-            key={decoration.id}
-            className={`absolute ${decoration.position}`}
-            onClick={() => setSelectArticle(decoration.id)}
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            className="px-2 rounded disabled:opacity-50"
           >
-            <img
-              src={fortuneImages[decoration.image]}
-              alt="장식물"
-              className="w-28 h-28 cursor-pointer"
-            />
+            {"<<"}
           </button>
-        ))}
-      </div>
-
-      {/* 페이지네이션 */}
-      <div className="flex justify-center mb-2 w-full px-10 text-base">
-        <button
-          onClick={handlePreviousPage}
-          disabled={currentPage === 1}
-          className="px-2 rounded disabled:opacity-50"
-        >
-          {"<<"}
-        </button>
-        <p>
-          {currentPage} / {totalPages}
-        </p>
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-          className="px-2 rounded disabled:opacity-50"
-        >
-          {">>"}
-        </button>
-      </div>
-
-      <button
-        onClick={
-          isOwner
-            ? handleCopyURL
-            : () =>
-                navigate("/select-deco", {
-                  state: {
-                    address,
-                    // fortuneVisibility,
-                    pocketSeq: pocket.pocketSeq,
-                  },
-                })
-        }
-        className={`${
-          isOwner ? "bg-white text-[#0d1a26] pt-3 pb-4" : "bg-blue-500 py-4"
-        }   px-20 rounded-lg w-full max-w-[375px]`}
-      >
-        <div className="flex items-center justify-center">
-          {isOwner ? (
-            <IoShareOutline size={28} className="mr-2" />
-          ) : // <BsPencil size={22} className="mr-3" />
-          null}
-          <span className={`${isOwner ? "pt-2" : "pt-1"}`}>
-            {isOwner ? "내 복주머니 공유하기" : "복 전달하기"}
-          </span>
+          <p>
+            {currentPage} / {totalPages}
+          </p>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className="px-2 rounded disabled:opacity-50"
+          >
+            {">>"}
+          </button>
         </div>
-      </button>
 
-      {/* 복사 성공 알림 */}
-      {copied && (
-        <div className="fixed bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md">
-          URL 복사 완료!
-        </div>
-      )}
+        <button
+          onClick={
+            isOwner
+              ? handleCopyURL
+              : () =>
+                  navigate("/select-deco", {
+                    state: {
+                      address,
+                      // fortuneVisibility,
+                      pocketSeq: pocket.pocketSeq,
+                    },
+                  })
+          }
+          className={`${
+            isOwner ? "bg-white text-[#0d1a26] pt-3 pb-4" : "bg-blue-500 py-4"
+          }   px-20 rounded-lg w-full max-w-[375px]`}
+        >
+          <div className="flex items-center justify-center">
+            <Suspense>
+              {isOwner ? (
+                <IoShareOutline size={28} className="mr-2" />
+              ) : (
+                <BsPencil size={22} className="mr-3" />
+              )}
+            </Suspense>
+            <span className={`${isOwner ? "pt-2" : "pt-1"}`}>
+              {isOwner ? "내 복주머니 공유하기" : "복 전달하기"}
+            </span>
+          </div>
+        </button>
 
-      {/* 모달 */}
-      {selectArticle && (
-        <Article
-          onClose={() => setSelectArticle(null)}
-          articleSeq={selectArticle}
-          onDelete={fetchPocket}
-          myAddress={myAddress}
-          address={address}
-        />
-      )}
+        {/* 복사 성공 알림 */}
+        {copied && (
+          <div className="fixed bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md">
+            URL 복사 완료!
+          </div>
+        )}
 
-      <Footer />
-    </div>
+        {/* 모달 */}
+        {selectArticle && (
+          <Article
+            onClose={() => setSelectArticle(null)}
+            articleSeq={selectArticle}
+            onDelete={fetchPocket}
+            myAddress={myAddress}
+            address={address}
+          />
+        )}
+
+        <Footer />
+      </div>
+    )
   );
 };
 

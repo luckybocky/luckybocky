@@ -56,7 +56,7 @@ const WritePage = () => {
 
   return (
     <div className="flex flex-col justify-center w-full max-w-[600px] min-h-screen bg-[#f5f5f5] text-black mx-auto p-2">
-      <h1 className="text-2xl mb-24 text-center">메시지를 남겨주세요</h1>
+      <h1 className="text-3xl mb-24 text-center">메시지를 남겨주세요</h1>
       <div className="relative w-full mb-2">
         {/* 이미지 추가 */}
         <img
@@ -112,7 +112,7 @@ const WritePage = () => {
             className="bg-white rounded-lg p-6 w-80 shadow-lg text-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-lg text-black mb-4">
+            <h2 className="text-xl text-black mb-4">
               이대로 복을 전달하시겠어요?
             </h2>
             <div className="flex justify-center gap-4">

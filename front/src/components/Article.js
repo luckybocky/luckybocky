@@ -1,16 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { saveComment } from "../api/CommentApi";
 import { saveReport } from "../api/ReportApi";
 import { sendCommentPush } from "../api/FireBaseApi";
-import {
-  AiOutlineMail,
-  AiOutlineAlert,
-  AiOutlineDelete,
-  AiOutlineClose,
-  AiOutlineLock,
-} from "react-icons/ai";
 import { loadArticle, deleteArticle } from "../api/ArticleApi";
 import fortuneImages from "../components/FortuneImages";
+
+const AiOutlineMail = lazy(() =>
+  import("react-icons/ai").then((module) => ({ default: module.AiOutlineMail }))
+);
+const AiOutlineAlert = lazy(() =>
+  import("react-icons/ai").then((module) => ({
+    default: module.AiOutlineAlert,
+  }))
+);
+const AiOutlineDelete = lazy(() =>
+  import("react-icons/ai").then((module) => ({
+    default: module.AiOutlineDelete,
+  }))
+);
+const AiOutlineClose = lazy(() =>
+  import("react-icons/ai").then((module) => ({
+    default: module.AiOutlineClose,
+  }))
+);
+const AiOutlineLock = lazy(() =>
+  import("react-icons/ai").then((module) => ({ default: module.AiOutlineLock }))
+);
 
 const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
   const [reportModalOpen, setReportModalOpen] = useState(false);
@@ -107,7 +122,9 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
               className="bg-blue-500 text-white py-1 px-3 rounded-md"
               onClick={onClose}
             >
-              <AiOutlineClose size={24} />
+              <Suspense>
+                <AiOutlineClose size={24} />
+              </Suspense>
             </button>
           </div>
 
@@ -117,7 +134,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
                 !detail.articleVisibility ? "filter blur-lg" : ""
               }`}
             >
-              <div className="text-[black] text-lg mb-1">
+              <div className="text-[black] text-xl mb-1">
                 {"From. " + detail?.userNickname}
               </div>
               <div className="text-[black] h-[200px] overflow-y-auto">
@@ -137,7 +154,9 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
             {/* 자물쇠 아이콘 추가 */}
             {!detail.articleVisibility && (
               <div className="absolute flex-col rounded-md inset-0 bg-gray-800 bg-opacity-60 flex items-center justify-center z-50">
-                <AiOutlineLock size={160} className="text-white" />
+                <Suspense>
+                  <AiOutlineLock size={160} className="text-white" />
+                </Suspense>
                 <div className="text-2xl">비밀글입니다.</div>
               </div>
             )}
@@ -153,14 +172,18 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
                 className="bg-yellow-500 text-white py-1 px-3 rounded-md"
                 onClick={() => setReportModalOpen(true)}
               >
-                <AiOutlineAlert size={24} />
+                <Suspense>
+                  <AiOutlineAlert size={24} />
+                </Suspense>
               </button>
               {myAddress === address && (
                 <button
                   className="bg-red-500 text-white py-1 px-3 rounded-md"
                   onClick={() => setDeleteModalOpen(true)}
                 >
-                  <AiOutlineDelete size={24} />
+                  <Suspense>
+                    <AiOutlineDelete size={24} />
+                  </Suspense>
                 </button>
               )}
 
@@ -170,7 +193,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
                     className="bg-white rounded-lg p-6 w-80 shadow-lg text-center"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <h2 className="text-lg text-black mb-4">
+                    <h2 className="text-xl text-black mb-4">
                       메세지는 다시 복구할 수 없어요.
                     </h2>
                     <p className="text-gray-700 mb-6">정말 삭제하시겠어요?</p>
@@ -202,7 +225,9 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
                 }}
                 disabled={!message}
               >
-                <AiOutlineMail size={24} />
+                <Suspense>
+                  <AiOutlineMail size={24} />
+                </Suspense>
               </button>
             )}
 
@@ -212,7 +237,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
                   className="bg-white rounded-lg p-6 w-80 shadow-lg text-center"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <h2 className="text-lg text-black mb-4">
+                  <h2 className="text-xl text-black mb-4">
                     답장을 남기시겠어요?
                   </h2>
                   <div className="flex justify-center gap-4">

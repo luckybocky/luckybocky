@@ -1,13 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  IoSettingsOutline,
-  IoMailOutline,
-  IoChatbubblesOutline,
-} from "react-icons/io5";
 import PocketIcon from "../image/pocketIcon.svg";
 import { saveFeedback } from "../api/FeedbackApi";
 import AuthStore from "../store/AuthStore";
+
+const IoMenuSharp = lazy(() =>
+  import("react-icons/sl").then((mod) => ({ default: mod.SlMenu }))
+);
+
+const IoSettingsOutline = lazy(() =>
+  import("react-icons/io5").then((mod) => ({ default: mod.IoSettingsOutline }))
+);
+
+const IoMailOutline = lazy(() =>
+  import("react-icons/io5").then((mod) => ({ default: mod.IoMailOutline }))
+);
+
+const IoChatbubblesOutline = lazy(() =>
+  import("react-icons/io5").then((mod) => ({
+    default: mod.IoChatbubblesOutline,
+  }))
+);
 
 const Menu = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -72,10 +85,13 @@ const Menu = () => {
 
       {/* 메뉴 버튼 */}
       <button
-        className="absolute top-4 right-4 text-2xl z-20"
+        className="absolute top-4 right-4 text-3xl z-20"
         onClick={toggleMenu}
       >
-        ☰
+        {/* ☰ */}
+        <Suspense>
+          <IoMenuSharp />
+        </Suspense>
       </button>
 
       {/* 메뉴 바 */}
@@ -91,7 +107,9 @@ const Menu = () => {
               onClick={() => navigate("/account")}
               className="flex hover:underline items-center gap-2"
             >
-              <IoSettingsOutline />
+              <Suspense>
+                <IoSettingsOutline size={24} />
+              </Suspense>
               <span className="mt-1">계정 설정</span>
             </button>
             <button
@@ -104,7 +122,7 @@ const Menu = () => {
               <img
                 src={PocketIcon}
                 alt="pocketIcon"
-                width="18"
+                width="24"
                 className="mb-1"
               ></img>
               <span>내 복주머니 보러가기</span>
@@ -116,14 +134,18 @@ const Menu = () => {
                 toggleMenu();
               }}
             >
-              <IoMailOutline className="mb-1" />
+              <Suspense>
+                <IoMailOutline className="mb-1" size={24} />
+              </Suspense>
               <span>내가 보낸 메시지</span>
             </button>
             <button
               className="flex hover:underline items-center gap-2"
               onClick={() => setFeedbackModalOpen(true)}
             >
-              <IoChatbubblesOutline className="mb-1" />
+              <Suspense>
+                <IoChatbubblesOutline className="mb-1" size={24} />
+              </Suspense>
               <span>피드백하기</span>
             </button>
             {/* <button
@@ -141,11 +163,11 @@ const Menu = () => {
               className="flex hover:underline items-center gap-2"
               onClick={() => navigate("/")}
             >
-              <span className="text-xl my-8">로그인 / 회원가입</span>
+              <span className="text-2xl my-8">로그인 / 회원가입</span>
             </button>
           </ul>
         )}
-        <footer className="border-t border-gray-600 p-4 text-center text-sm">
+        <footer className="border-t border-gray-600 p-4 text-center text-base">
           Lucky Bocky!
         </footer>
       </div>
@@ -159,7 +181,7 @@ const Menu = () => {
             className="bg-white text-[#0d1a26] p-4 rounded-lg w-80"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-lg mb-4">피드백하기</h2>
+            <h2 className="text-xl mb-4">피드백하기</h2>
             <textarea
               className="w-full h-60 p-2 border border-gray-300 rounded-md mb-2 resize-none"
               placeholder="피드백 내용을 입력하세요."

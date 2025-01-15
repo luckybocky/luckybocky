@@ -15,7 +15,7 @@ const JoinPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user.userNickname !== null) navigate("/");
+    if (user.createdAt == null || user.userNickname !== null) navigate("/");
   }, [user]);
 
   const joinUser = async () => {
@@ -34,8 +34,8 @@ const JoinPage = () => {
   return (
     <div className="relative flex flex-col w-full max-w-[600px] min-h-screen bg-[#333] p-2 text-white overflow-hidden">
       {/* 계정 설정 화면 */}
-      <h1 className="text-3xl mb-8 mt-5">회원 가입</h1>
-      <h1 className="text-xl">안녕하세요!!</h1>
+      <h1 className="text-4xl mb-8 mt-5">회원 가입</h1>
+      <h1 className="text-2xl">안녕하세요!!</h1>
       {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 mt-3 mb-10" />
       {/* 닉네임 변경 */}
@@ -46,17 +46,17 @@ const JoinPage = () => {
           value={nickname}
           onChange={(e) => {
             const input = e.target.value;
-            if (input.length <= 8) {
-              setNickname(input); // 8자 이하일 때만 상태 업데이트
+            if (input.length <= 6) {
+              setNickname(input); // 6자 이하일 때만 상태 업데이트
             }
           }}
           className="border p-2 rounded-md text-black mr-4 w-full"
         />
       </div>
       <div>
-        {(nickname?.length < 2 || nickname?.length > 8) && (
-          <span className="absolute text-red-500 text-sm mt-1">
-            닉네임은 2~8자 사이여야 합니다.
+        {(nickname?.length < 2 || nickname?.length > 6) && (
+          <span className="absolute text-red-500 text-base mt-1">
+            닉네임은 2~6자 사이여야 합니다.
           </span>
         )}
       </div>
@@ -72,7 +72,7 @@ const JoinPage = () => {
             onChange={(e) => setIsAlarm(e.target.checked)}
             className="h-5 w-5"
           />
-          <span className="ml-2 w-[35px]">{isAlarm ? "허용" : "거절"}</span>
+          <span className="ml-2 w-[50px]">{isAlarm ? "허용" : "거절"}</span>
         </div>
       </div>
       {/* 메시지 공개 여부 */}
@@ -85,19 +85,19 @@ const JoinPage = () => {
             onChange={(e) => setIsPublic(e.target.checked)}
             className="h-5 w-5"
           />
-          <span className="ml-2 w-[35px]">{isPublic ? "공개" : "비밀"}</span>
+          <span className="ml-2 w-[50px]">{isPublic ? "공개" : "비밀"}</span>
         </div>
       </div>
       {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 mt-16 mb-12" />
       <button
         className={`${
-          nickname?.length >= 2 && nickname?.length <= 8
+          nickname?.length >= 2 && nickname?.length <= 6
             ? "bg-white"
             : "bg-gray-400"
-        } text-[#0d1a26] py-4 rounded-lg text-xl`}
+        } text-[#0d1a26] py-4 rounded-lg text-2xl`}
         onClick={joinUser}
-        disabled={nickname?.length < 2 || nickname?.length > 8}
+        disabled={nickname?.length < 2 || nickname?.length > 6}
       >
         <span className="flex justify-center pt-1">시작하기</span>
       </button>
