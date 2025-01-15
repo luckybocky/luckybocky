@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class PushDto {
-	private String type;
 	private int contentSeq;
+	private String fromUser;
 	private String url;
 }

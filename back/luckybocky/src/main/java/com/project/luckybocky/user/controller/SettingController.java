@@ -51,7 +51,9 @@ public class SettingController {
 
 		userSettingService.updateUserSetting(userKey, settingDto.getUserNickname(), settingDto.getAlarmStatus(),
 			settingDto.getFortuneVisibility());
-		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("setting successful"));
+
+		log.info("사용자 정보 업데이트 {}", userKey);
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 	}
 
 	@Description("내 정보 조회")
@@ -60,15 +62,15 @@ public class SettingController {
 		description = "닉네임, 알림여부, 복공개 여부, 가입일을 조회한다"
 	)
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "사용자 조회 성공"),
-		@ApiResponse(responseCode = "401", description = "사용자를 찾을 수 없음",
+		@ApiResponse(responseCode = "200", description = "1. 사용자 조회 성공"),
+		@ApiResponse(responseCode = "401", description = "1. 사용자를 찾을 수 없음",
 			content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
 	})
 	@GetMapping("/user")
 	public ResponseEntity<DataResponseDto<UserInfoDto>> loadUserInfo(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
 		UserInfoDto userInfoDto = userSettingService.getUserInfo(userKey);
-		log.info("user found {} {}", userKey, userInfoDto);
+		log.info("사용자 조회 {}", userKey);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", userInfoDto));
 	}
 
@@ -78,8 +80,8 @@ public class SettingController {
 		description = "FCM에서 발급받은 푸시 키를 업데이트한다."
 	)
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "FCM키 업데이트 성공"),
-		@ApiResponse(responseCode = "401", description = "사용자를 찾을 수 없음",
+		@ApiResponse(responseCode = "200", description = "1. 파이어베이스 키 업데이트 성공"),
+		@ApiResponse(responseCode = "401", description = "2. 사용자를 찾을 수 없음",
 			content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
 	})
 	@PutMapping("/firebase")
@@ -88,9 +90,9 @@ public class SettingController {
 		String userKey = (String)session.getAttribute("user");
 
 		String firebaseKey = firebaseKeyRequest.getFirebaseKey();
-		log.info("update firebase Key {}", firebaseKeyRequest.getFirebaseKey());
+		log.info("파이어베이스키를 업데이트 합니다. {} : 키 길이({})", userKey, firebaseKeyRequest.getFirebaseKey().length());
 		userSettingService.updateFireBaseKey(userKey, firebaseKey);
-		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("key update successful"));
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 
 	}
 }

@@ -4,5 +4,6 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.project.luckybocky.push.dto.PushDto;
 
 public interface PushService {
-	void sendPush(String fromUser, PushDto pushDto) throws FirebaseMessagingException;
+	void sendPocketPush(PushDto pushDto) throws FirebaseMessagingException;
+	void sendArticlePush(PushDto pushDto) throws FirebaseMessagingException;
 }

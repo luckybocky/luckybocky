@@ -1,7 +1,7 @@
 package com.project.luckybocky.pocket.service;
 
-import com.project.luckybocky.pocket.dto.PocketInfoDto;
+import com.project.luckybocky.user.entity.User;
 
 public interface PocketPushService {
-    String findPocket(int pocketSeq);
+    User findPocketOwner(int pocketSeq);
 }
