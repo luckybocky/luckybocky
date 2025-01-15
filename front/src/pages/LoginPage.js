@@ -13,8 +13,6 @@ const LoginPage = () => {
   const user = AuthStore((state) => state.user);
 
   useEffect(() => {
-    sendLog("login");
-
     if (user.createdAt != null) {
       requestFcmToken();
       navigate(`/${user.address}`);
