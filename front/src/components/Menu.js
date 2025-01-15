@@ -1,23 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  IoSettingsOutline,
-  IoMailOutline,
-  IoChatbubblesOutline,
-} from "react-icons/io5";
-import { AiOutlineAlert } from "react-icons/ai";
 import PocketIcon from "../image/pocketIcon.svg";
 import { saveFeedback } from "../api/FeedbackApi";
-import { saveReport } from "../api/ReportApi";
 import AuthStore from "../store/AuthStore";
+
+const IoMenuSharp = lazy(() =>
+  import("react-icons/sl").then((mod) => ({ default: mod.SlMenu }))
+);
+
+const IoSettingsOutline = lazy(() =>
+  import("react-icons/io5").then((mod) => ({ default: mod.IoSettingsOutline }))
+);
+
+const IoMailOutline = lazy(() =>
+  import("react-icons/io5").then((mod) => ({ default: mod.IoMailOutline }))
+);
+
+const IoChatbubblesOutline = lazy(() =>
+  import("react-icons/io5").then((mod) => ({
+    default: mod.IoChatbubblesOutline,
+  }))
+);
 
 const Menu = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
-  const [reportModalOpen, setReportModalOpen] = useState(false);
   const [feedback, setFeedback] = useState("");
-  const [report, setReport] = useState("");
   const [rating, setRating] = useState(0);
+  const [feedbackAlarm, setFeedbackAlarm] = useState(false);
 
   const navigate = useNavigate();
 
@@ -27,7 +37,6 @@ const Menu = () => {
 
   const closeModals = () => {
     setFeedbackModalOpen(false);
-    setReportModalOpen(false);
     setRating(0);
   };
 
@@ -37,25 +46,32 @@ const Menu = () => {
     } else if (rating === 0) {
       alert("별점을 선택해주세요.");
     } else {
-      saveFeedback(feedback, rating);
-      setFeedbackModalOpen(false);
-      setRating(0);
-      setFeedback("");
+      confirmFeedback();
     }
   };
 
-  const sendReport = () => {
-    if (report === "") {
-      alert("신고 내용을 입력해주세요.");
-      return;
-    } else {
-      saveReport(1, 0, report);
-      alert("감사합니다. 신고 완료되었습니다.");
-    }
+  const confirmFeedback = () => {
+    saveFeedback(feedback, rating);
+    setFeedbackModalOpen(false);
+    setRating(0);
+    setFeedback("");
 
-    setReport("");
-    setReportModalOpen(false);
+    setFeedbackAlarm(true);
+    setTimeout(() => setFeedbackAlarm(false), 2000);
   };
+
+  // const sendReport = () => {
+  //   if (report === "") {
+  //     alert("신고 내용을 입력해주세요.");
+  //     return;
+  //   } else {
+  //     saveReport(1, 0, report);
+  //     alert("감사합니다. 신고 완료되었습니다.");
+  //   }
+
+  //   setReport("");
+  //   setReportModalOpen(false);
+  // };
 
   return (
     <div>
@@ -69,68 +85,89 @@ const Menu = () => {
 
       {/* 메뉴 버튼 */}
       <button
-        className="absolute top-4 right-4 text-2xl z-20"
+        className="absolute top-4 right-4 text-3xl z-20"
         onClick={toggleMenu}
       >
-        ☰
+        {/* ☰ */}
+        <Suspense>
+          <IoMenuSharp />
+        </Suspense>
       </button>
 
       {/* 메뉴 바 */}
       <div
-        className={`absolute top-0 left-28 h-full bg-[#333] text-white shadow-lg transition-transform duration-300 ease-in-out z-20 ${
+        className={`absolute top-0 right-0 h-full bg-[#333] shadow-lg transition-transform duration-300 ease-in-out z-20 ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{ width: "275px" }}
       >
-        <ul className="py-3 px-6 space-y-5">
-          <button
-            onClick={() => navigate("/account")}
-            className="flex hover:underline items-center gap-2"
-          >
-            <IoSettingsOutline />
-            <span className="mt-1">계정 설정</span>
-          </button>
-          <button
-            onClick={() => {
-              navigate(`/${myAddress}`);
-              toggleMenu();
-            }}
-            className="flex hover:underline items-center gap-2"
-          >
-            <img
-              src={PocketIcon}
-              alt="pocketIcon"
-              width="18"
-              className="mb-1"
-            ></img>
-            <span>내 복주머니 보러가기</span>
-          </button>
-          <button
-            className="flex hover:underline items-center gap-2"
-            onClick={() => {
-              navigate("/my-message");
-              toggleMenu();
-            }}
-          >
-            <IoMailOutline className="mb-1" />
-            <span>내가 보낸 메시지</span>
-          </button>
-          <button
-            className="flex hover:underline items-center gap-2"
-            onClick={() => setFeedbackModalOpen(true)}
-          >
-            <IoChatbubblesOutline className="mb-1" />
-            <span>피드백하기</span>
-          </button>
-          <button
+        {myAddress && (
+          <ul className="py-3 px-6 space-y-5">
+            <button
+              onClick={() => navigate("/account")}
+              className="flex hover:underline items-center gap-2"
+            >
+              <Suspense>
+                <IoSettingsOutline size={24} />
+              </Suspense>
+              <span className="mt-1">계정 설정</span>
+            </button>
+            <button
+              onClick={() => {
+                navigate(`/${myAddress}`);
+                toggleMenu();
+              }}
+              className="flex hover:underline items-center gap-2"
+            >
+              <img
+                src={PocketIcon}
+                alt="pocketIcon"
+                width="24"
+                className="mb-1"
+              ></img>
+              <span>내 복주머니 보러가기</span>
+            </button>
+            <button
+              className="flex hover:underline items-center gap-2"
+              onClick={() => {
+                navigate("/my-message");
+                toggleMenu();
+              }}
+            >
+              <Suspense>
+                <IoMailOutline className="mb-1" size={24} />
+              </Suspense>
+              <span>내가 보낸 메시지</span>
+            </button>
+            <button
+              className="flex hover:underline items-center gap-2"
+              onClick={() => setFeedbackModalOpen(true)}
+            >
+              <Suspense>
+                <IoChatbubblesOutline className="mb-1" size={24} />
+              </Suspense>
+              <span>피드백하기</span>
+            </button>
+            {/* <button
             className="flex hover:underline items-center gap-2"
             onClick={() => setReportModalOpen(true)}
           >
             <AiOutlineAlert className="mb-1" />
             <span className="">신고하기</span>
-          </button>
-        </ul>
-        <footer className="border-t border-gray-600 p-4 text-center text-sm">
+          </button> */}
+          </ul>
+        )}
+        {!myAddress && (
+          <ul className="py-3 px-6 space-y-5">
+            <button
+              className="flex hover:underline items-center gap-2"
+              onClick={() => navigate("/")}
+            >
+              <span className="text-2xl my-8">로그인 / 회원가입</span>
+            </button>
+          </ul>
+        )}
+        <footer className="border-t border-gray-600 p-4 text-center text-base">
           Lucky Bocky!
         </footer>
       </div>
@@ -144,7 +181,7 @@ const Menu = () => {
             className="bg-white text-[#0d1a26] p-4 rounded-lg w-80"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-lg mb-4">피드백하기</h2>
+            <h2 className="text-xl mb-4">피드백하기</h2>
             <textarea
               className="w-full h-60 p-2 border border-gray-300 rounded-md mb-2 resize-none"
               placeholder="피드백 내용을 입력하세요."
@@ -185,7 +222,7 @@ const Menu = () => {
       )}
 
       {/* 신고 모달 */}
-      {reportModalOpen && (
+      {/* {reportModalOpen && (
         <div
           className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-60"
           onClick={closeModals}
@@ -220,6 +257,13 @@ const Menu = () => {
               </button>
             </div>
           </div>
+        </div>
+      )} */}
+
+      {/*피드백 성공 알림 */}
+      {feedbackAlarm && (
+        <div className="fixed bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md z-30 transform -translate-x-1/2">
+          피드백 전달 완료!
         </div>
       )}
     </div>

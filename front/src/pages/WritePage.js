@@ -17,7 +17,8 @@ const WritePage = () => {
 
   const [nickname, setNickname] = useState("");
   const [message, setMessage] = useState("");
-  const [visibility, setVisibility] = useState(false);
+  const [visibility, setVisibility] = useState(true);
+  const [saveModalOpen, setSaveModalOpen] = useState(false);
 
   const handleSubmit = async () => {
     if (!nickname || !message) {
@@ -25,6 +26,10 @@ const WritePage = () => {
       return;
     }
 
+    setSaveModalOpen(true);
+  };
+
+  const confirmWrite = async () => {
     const payload = {
       pocketSeq,
       pocketAddress,
@@ -42,6 +47,7 @@ const WritePage = () => {
     //복주머니에 복을 넣을때
     // sendArticlePush(pocketSeq);
     //=====12-31 창희 추가 end=====
+    setSaveModalOpen(false);
   };
 
   useEffect(() => {
@@ -49,8 +55,8 @@ const WritePage = () => {
   }, [userNickname]);
 
   return (
-    <div className="flex flex-col justify-center w-full max-w-[375px] min-h-screen bg-[#f5f5f5] text-black mx-auto p-2">
-      <h1 className="text-2xl mb-24 text-center">메시지를 남겨주세요</h1>
+    <div className="flex flex-col justify-center w-full max-w-[600px] min-h-screen bg-[#f5f5f5] text-black mx-auto p-2">
+      <h1 className="text-3xl mb-24 text-center">메시지를 남겨주세요</h1>
       <div className="relative w-full mb-2">
         {/* 이미지 추가 */}
         <img
@@ -62,7 +68,7 @@ const WritePage = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="메시지를 입력하세요"
-          className="w-full h-60 p-2 border rounded-md resize-none"
+          className="w-full h-60 p-2 pt-4 border rounded-md resize-none"
         />
       </div>
       <div className="w-full mb-4">
@@ -78,8 +84,8 @@ const WritePage = () => {
         <label className="flex items-center pl-1">
           <input
             type="checkbox"
-            checked={visibility}
-            onChange={(e) => setVisibility(e.target.checked)}
+            checked={!visibility}
+            onChange={(e) => setVisibility(!e.target.checked)}
             className="mr-2 h-5 w-5"
           />
           비밀글
@@ -99,6 +105,33 @@ const WritePage = () => {
           </button>
         </div>
       </div>
+
+      {saveModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div
+            className="bg-white rounded-lg p-6 w-80 shadow-lg text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-xl text-black mb-4">
+              이대로 복을 전달하시겠어요?
+            </h2>
+            <div className="flex justify-center gap-4">
+              <button
+                className="bg-gray-300 text-black py-2 px-4 rounded-md"
+                onClick={() => setSaveModalOpen(false)}
+              >
+                취소
+              </button>
+              <button
+                className="bg-blue-500 text-white py-2 px-4 rounded-md"
+                onClick={confirmWrite}
+              >
+                저장
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
