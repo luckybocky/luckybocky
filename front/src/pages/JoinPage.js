@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
-import { updateUser } from "../api/AuthApi";
+import Authservice from "../api/AuthService.ts";
 
 const JoinPage = () => {
   const user = AuthStore((state) => state.user);
@@ -26,7 +26,7 @@ const JoinPage = () => {
       fortuneVisibility: isPublic,
     });
 
-    await updateUser();
+    await Authservice.update();
 
     navigate(`/${user.address}`);
   };

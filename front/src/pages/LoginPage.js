@@ -4,7 +4,6 @@ import kakaoIcon from "../image/kakao-icon.png";
 import { useNavigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
-import { sendLog } from "../api/FireBaseApi";
 
 import { requestFcmToken } from "../api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
 const LoginPage = () => {
@@ -27,7 +26,6 @@ const LoginPage = () => {
 
   const handleKakaoLogin = () => {
     const currentPath = window.location.pathname;
-    console.log(currentPath);
 
     const loginLink = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&state=${currentPath}`;
 

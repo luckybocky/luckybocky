@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
-import { myArticle } from "../api/ArticleApi";
+import ArticleService from "../api/ArticleService.ts";
 import fortuneImages from "../components/FortuneImages";
 import AuthStore from "../store/AuthStore";
 
@@ -17,7 +17,7 @@ const MyArticlePage = () => {
   }, [user]);
 
   const init = async () => {
-    const result = await myArticle();
+    const result = await ArticleService.getMyList();
     setArticles(result);
   };
 

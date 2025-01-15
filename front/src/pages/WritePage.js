@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { writeArticle } from "../api/ArticleApi";
-import { sendArticlePush } from "../api/FireBaseApi";
+import ArticleService from "../api/ArticleService.ts";
 import AuthStore from "../store/AuthStore";
 import fortuneImages from "../components/FortuneImages";
 
@@ -31,15 +30,15 @@ const WritePage = () => {
 
   const confirmWrite = async () => {
     const payload = {
-      pocketSeq,
-      pocketAddress,
-      visibility,
-      decorationId,
-      nickname,
-      message,
+      pocketSeq: pocketSeq,
+      nickname: nickname,
+      content: message,
+      fortuneSeq: decorationId,
+      visibility: visibility,
+      url: `${window.location.origin}${window.location.pathname}`,
     };
 
-    await writeArticle(payload);
+    await ArticleService.save(payload);
 
     navigate("/" + pocketAddress);
 

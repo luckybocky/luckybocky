@@ -1,8 +1,5 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
-import { saveComment } from "../api/CommentApi";
-import { saveReport } from "../api/ReportApi";
-import { sendCommentPush } from "../api/FireBaseApi";
-import { loadArticle, deleteArticle } from "../api/ArticleApi";
+import ArticleService from "../api/ArticleService.ts";
 import fortuneImages from "../components/FortuneImages";
 
 const AiOutlineMail = lazy(() =>
@@ -31,7 +28,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [report, setReport] = useState("");
   const [reportType, setReportType] = useState(0);
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState("");
   const [detail, setDetail] = useState({
     articleVisibility: false,
     articleSeq: 0,
@@ -50,19 +47,20 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
   const [confirmCloseModal, setConfirmCloseModal] = useState(false);
 
   const confirmDelete = async () => {
-    await deleteArticle(articleSeq);
+    await ArticleService.deleteBySeq(articleSeq);
     onClose();
     onDelete();
   };
 
   const confirmComment = async () => {
     await sendComment();
+    setMessage("");
     fetchArticle();
     setCommentModalOpen(false);
   };
 
   const fetchArticle = async () => {
-    const result = await loadArticle(articleSeq);
+    const result = await ArticleService.getBySeq(articleSeq);
     setDetail(result);
     setIsLoaded(true);
   };
@@ -76,24 +74,29 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
       alert("답장을 입력해주세요 :)");
       return;
     }
-    await saveComment(articleSeq, message);
 
-    //=====01-03 창희 추가 start=====
-    //리복할때
-    // sendCommentPush(articleSeq);
-    //=====01-03 창희 추가 end=====
+    const payload = {
+      articleSeq,
+      comment: message,
+      url: `${window.location.origin}${window.location.pathname}`,
+    };
+
+    await ArticleService.saveComment(payload);
   };
 
   const sendReport = () => {
-    console.log("Sending seq:", articleSeq); // sendReport 호출 시 seq 값 확인
-
-    if (reportType == 0) {
+    if (reportType === 0) {
       alert("신고 유형을 선택해주세요.");
     } else if (report === "") {
       alert("신고 내용을 입력해주세요.");
     } else {
-      // alert(`${articleSeq}, ${reportType}, ${report}`)
-      saveReport(articleSeq, reportType, report);
+      const payload = {
+        articleSeq,
+        reportType: reportType,
+        reportContent: report,
+      };
+
+      ArticleService.saveReport(payload);
       setReported(true);
       setTimeout(() => setReported(false), 2000);
       setReport("");

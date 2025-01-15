@@ -7,7 +7,7 @@ import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
 import fortuneImages from "../components/FortuneImages";
-import { loadPocket } from "../api/PocketApi";
+import PocketService from "../api/PocketService.ts";
 
 const IoShareOutline = lazy(() =>
   import("react-icons/io5").then((mod) => ({ default: mod.IoShareOutline }))
@@ -43,7 +43,7 @@ const MainPage = () => {
 
   const fetchPocket = async () => {
     try {
-      const data = await loadPocket(address);
+      const data = await PocketService.getByAddress(address);
       setPocket(data);
 
       const articlesArray = data.articles || [];
@@ -56,8 +56,6 @@ const MainPage = () => {
           image: decoration.fortuneImg,
         };
       });
-
-      console.log(data);
 
       setDecorations(updatedPocket); // 위치가 할당된 데이터 저장
     } catch (error) {

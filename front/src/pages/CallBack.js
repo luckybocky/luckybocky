@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { callback } from "../api/AuthApi";
+import AuthService from "../api/AuthService.ts";
 
 const CallBack = () => {
   const navigate = useNavigate();
@@ -14,9 +14,7 @@ const CallBack = () => {
       if (isCalled.current) return; // 이미 실행된 경우 중단
       isCalled.current = true;
 
-      const result = await callback(code);
-      console.log(result);
-      console.log(redirectPath);
+      const result = await AuthService.login(code);
       if (result === 2) navigate(redirectPath);
       else if (result === 1) navigate("/join");
     };

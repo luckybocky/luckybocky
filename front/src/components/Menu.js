@@ -1,7 +1,7 @@
 import React, { useState, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import PocketIcon from "../image/pocketIcon.svg";
-import { saveFeedback } from "../api/FeedbackApi";
+import FeedbackService from "../api/FeedbackService.ts";
 import AuthStore from "../store/AuthStore";
 
 const IoMenuSharp = lazy(() =>
@@ -59,7 +59,12 @@ const Menu = () => {
   };
 
   const confirmFeedback = () => {
-    saveFeedback(feedback, rating);
+    const payload = {
+      feedbackContent: feedback,
+      feedbackRate: rating,
+    };
+
+    FeedbackService.save(payload);
     setFeedbackModalOpen(false);
     setRating(0);
     setFeedback("");

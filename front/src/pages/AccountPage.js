@@ -2,7 +2,7 @@ import React, { useState, useEffect, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
-import { updateUser, logout } from "../api/AuthApi";
+import AuthService from "../api/AuthService.ts";
 
 const IoArrowBack = lazy(() =>
   import("react-icons/io5").then((mod) => ({ default: mod.IoArrowBack }))
@@ -25,7 +25,7 @@ const AccountPage = () => {
   useEffect(() => {
     if (!user.createdAt) navigate("/");
     if (nickname === "") setNickname(user.userNickname);
-    updateUser();
+    AuthService.update();
   }, [user]);
 
   const navigate = useNavigate();
@@ -82,17 +82,8 @@ const AccountPage = () => {
 
   const confirmLogout = async () => {
     setLogoutModalOpen(false);
+    await AuthService.logout();
     navigate("/");
-    const setUser = AuthStore.getState().setUser;
-    setUser({
-      userNickname: null,
-      alarmStatus: null,
-      fortuneVisibility: null,
-      createdAt: null,
-      address: null,
-    });
-
-    await logout();
   };
 
   return (
