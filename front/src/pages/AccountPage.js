@@ -17,7 +17,9 @@ const AccountPage = () => {
   const [saved, setSaved] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
-  const [permission, setPermission] = useState(Notification.permission);
+  const [permission, setPermission] = useState(
+    typeof Notification !== "undefined" ? Notification.permission : "default"
+  );
   const [notice, setNotice] = useState(false); // 브라우저 알림 체크
 
   useEffect(() => {
@@ -40,12 +42,20 @@ const AccountPage = () => {
 
   const saveAlarmStatus = () => {
     try {
+      if (typeof Notification === "undefined") {
+        // 알림 API를 지원하지 않을 때 처리
+        console.error("이 브라우저에서는 알림을 허용하지 않습니다.");
+        setNotice(true);
+        setTimeout(() => setNotice(false), 3000);
+        return;
+      }
+
       if (permission === "granted") {
         setUser({
           ...user,
           alarmStatus: !user.alarmStatus,
         });
-        
+
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
       } else {
@@ -165,9 +175,8 @@ const AccountPage = () => {
 
       {/* 알림이 브라우저에서 거부되어있을때 알려주기위함 */}
       {notice && (
-        // <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md transition-opacity duration-500">
-        <div className="absolute bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md">
-          <p>브라우저가 알림을 거부, 지원하지 않습니다.</p>
+        <div className="fixed bottom-16 bg-red-500 text-white py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
+          <p className="whitespace-nowrap">브라우저 알림설정을 확인해주세요</p>
         </div>
       )}
 
