@@ -1,5 +1,7 @@
 package com.project.luckybocky.article.service;
 
+import com.project.luckybocky.user.entity.User;
+
 public interface ArticlePushService {
-    String findPocketOwner(int articleSeq);
+    User findArticleOwner(int articleSeq);
 }

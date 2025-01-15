@@ -32,7 +32,6 @@ public class UserSettingServiceImpl implements UserSettingService {
 		}
 
 		User user = userOptional.get();
-		log.info("updateUserSetting : {}", user);
 		user.updateUserInfo(userNickname, alarmStatus, fortuneVisibility);
 	}
 

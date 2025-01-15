@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import com.project.luckybocky.article.dto.ArticleResponseDto;
 import com.project.luckybocky.article.dto.WriteArticleDto;
 import com.project.luckybocky.article.exception.ArticleNotFoundException;
@@ -17,6 +18,8 @@ import com.project.luckybocky.article.service.ArticleService;
 import com.project.luckybocky.common.DataResponseDto;
 import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.fortune.exception.FortuneNotFoundException;
+import com.project.luckybocky.push.dto.PushDto;
+import com.project.luckybocky.push.service.PushService;
 import com.project.luckybocky.user.exception.ForbiddenUserException;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 import com.project.luckybocky.user.service.UserService;
@@ -28,13 +31,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/article")
 @RequiredArgsConstructor
+@Slf4j
 public class ArticleController {
 	private final ArticleService articleService;
 	private final UserService userService;
+	private final PushService pushService;
 
 	@Operation(
 		summary = "복 상세 조회",
@@ -58,14 +64,24 @@ public class ArticleController {
 		description = "복주머니에 복을 단다."
 	)
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "복 달기 성공"),
+		@ApiResponse(responseCode = "200", description = "1. 복 달기 성공 \t\n 2. 복주머니 푸시 알림 성공" ),
 		@ApiResponse(responseCode = "404", description = "1. 포춘 조회 실패 \t\n 2. 복주머니 조회 실패",
-			content = @Content(schema = @Schema(implementation = FortuneNotFoundException.class)))
+			content = @Content(schema = @Schema(implementation = FortuneNotFoundException.class))),
+		@ApiResponse(responseCode = "500", description = "1. 복주머니 푸시 전송 실패",
+			content = @Content(schema = @Schema(implementation = FirebaseMessagingException.class)))
 	})
 	@PostMapping
-	public ResponseEntity<ResponseDto> writeArticle(HttpSession session, @RequestBody WriteArticleDto writeArticleDto) {
+	public ResponseEntity<ResponseDto> writeArticle(HttpSession session, @RequestBody WriteArticleDto writeArticleDto) throws
+		FirebaseMessagingException {
 		String userKey = (String)session.getAttribute("user");
 		articleService.createArticle(userKey, writeArticleDto);
+
+		//push 알림추가
+		PushDto pushDto = new PushDto(writeArticleDto.getPocketSeq(), writeArticleDto.getNickname(),writeArticleDto.getUrl());
+		log.info("{} 님의 복 푸시 시도 (복주머니 번호 : {})", pushDto.getFromUser(), pushDto.getContentSeq());
+		pushService.sendPocketPush(pushDto);
+
+
 		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 	}
 

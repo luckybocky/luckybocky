@@ -34,13 +34,14 @@ public class MyArticleController {
             description = "다른 사용자의 복주머니에 넣은 복을 조회한다"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "사용자 조회 성공"),
-            @ApiResponse(responseCode = "401", description = "사용자를 찾을 수 없음",
+            @ApiResponse(responseCode = "200", description = "1. 사용자 조회 성공"),
+            @ApiResponse(responseCode = "401", description = "1. 사용자를 찾을 수 없음",
                     content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
     })
     @GetMapping
     public ResponseEntity<DataResponseDto<MyArticlesDto>> myArticle(HttpSession session) {
         String userKey = (String) session.getAttribute("user" );
+        log.info("내가 보낸 복을 조회 합니다. {}", userKey);
         MyArticlesDto myArticles = myArticleService.findMyArticles(userKey);
         return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", myArticles));
     }

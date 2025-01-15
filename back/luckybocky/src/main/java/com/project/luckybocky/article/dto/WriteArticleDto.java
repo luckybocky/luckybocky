@@ -22,4 +22,7 @@ public class WriteArticleDto {
 	private int fortuneSeq;
 	@Schema(description = "게시글 공개여부")
 	private boolean visibility;
+
+	@Schema(description = "푸시 클릭 시 이동할 url")
+	private String url;
 }
