@@ -48,7 +48,7 @@ const LoginPage = () => {
       >
         <picture>
           <source srcSet={kakaoIconW} type="image/webp" />
-          <img src={kakaoIcon} alt="카카오 아이콘" className="w-6 h-6" />
+          <img src={kakaoIcon} alt="카카오 아이콘" className="w-8 h-8" />
         </picture>
         <span className="mx-8 pt-1">카카오계정으로 계속하기</span>
       </button>
