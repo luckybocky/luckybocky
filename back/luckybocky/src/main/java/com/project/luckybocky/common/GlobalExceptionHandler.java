@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FirebaseMessagingException.class)
     public ResponseEntity<ResponseDto> handleFirebaseMessagingException(FirebaseMessagingException ex){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("푸시 전송 에러 발생했습니다."));
+        return ResponseEntity.status(HttpStatus.GONE).body(new ResponseDto("푸시 전송 에러 발생했습니다.(파이어베이스키가 유효하지 않습니다."));
     }
 
     //===== 창희 예외 추가 end ======
