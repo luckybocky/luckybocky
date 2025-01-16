@@ -1,6 +1,7 @@
 package com.project.luckybocky.user.service;
 
 import com.project.luckybocky.user.dto.UserInfoDto;
+import com.project.luckybocky.user.dto.UserLoginDto;
 import com.project.luckybocky.user.entity.User;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 import com.project.luckybocky.user.repository.UserSettingRepository;
@@ -36,17 +37,21 @@ public class UserSettingServiceImpl implements UserSettingService {
 	}
 
 	@Override
-	public UserInfoDto getUserInfo(String userKey) {
+	public UserLoginDto getUserLogin(String userKey) {
 		Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
+		//로그인이 되어있지 않는경우
 		if (userOptional.isEmpty()) {
+			// return User.getNonMemberInfo();
+			log.info("사용자 조회 null");
 			throw new UserNotFoundException();
 		}
 
 		User user = userOptional.get();
-		log.info("findByUserKey {}", user);
 
-		return user.getUserInfo();
+		log.info("사용자 조회 {}", user.getMemberInfo());
+
+		return user.getMemberInfo();
 	}
 
 	@Override
@@ -54,9 +59,11 @@ public class UserSettingServiceImpl implements UserSettingService {
 		Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
 		if (userOptional.isEmpty()) {
+			log.info("사용자를 찾을 수 없어, 파이어베이스 키를 업데이트 할 수 없습니다.");
 			throw new UserNotFoundException();
 		}
 
+		log.info("파이어베이스키를 업데이트 합니다. {} : 키 길이({})", userKey, firebaseKey.length());
 		User user = userOptional.get();
 		user.setFirebaseKey(firebaseKey);
 	}

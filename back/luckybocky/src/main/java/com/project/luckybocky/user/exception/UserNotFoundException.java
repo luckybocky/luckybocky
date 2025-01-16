@@ -1,12 +1,8 @@
 package com.project.luckybocky.user.exception;
 
-import org.springframework.http.HttpStatus;
-
 import com.project.luckybocky.common.CustomException;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class UserNotFoundException extends CustomException {

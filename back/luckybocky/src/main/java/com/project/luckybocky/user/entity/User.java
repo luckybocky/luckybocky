@@ -6,6 +6,7 @@ import com.project.luckybocky.feedback.entity.Feedback;
 import com.project.luckybocky.pocket.entity.Pocket;
 import com.project.luckybocky.report.entity.Report;
 import com.project.luckybocky.user.dto.UserInfoDto;
+import com.project.luckybocky.user.dto.UserLoginDto;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -91,6 +92,17 @@ public class User extends BaseEntity {
 			.createdAt(formattedDate)
 			.build();
 	}
+
+
+	public UserLoginDto getMemberInfo(){
+		UserInfoDto userInfoDto = getUserInfo();
+		return new UserLoginDto(userInfoDto, true);
+	}
+
+	public static UserLoginDto getNonMemberInfo(){
+		return new UserLoginDto(null, false);
+	}
+
 	//=====창희 dto 함수 end
 
 }
