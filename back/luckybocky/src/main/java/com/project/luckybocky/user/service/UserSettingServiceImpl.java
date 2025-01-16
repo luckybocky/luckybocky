@@ -42,14 +42,13 @@ public class UserSettingServiceImpl implements UserSettingService {
 
 		//로그인이 되어있지 않는경우
 		if (userOptional.isEmpty()) {
-			// return User.getNonMemberInfo();
-			log.info("사용자 조회 null");
-			throw new UserNotFoundException();
+			log.info("비회원 입니다. 정보를 조회할 수 없습니다.");
+			return User.getNonMemberInfo();
 		}
 
 		User user = userOptional.get();
 
-		log.info("사용자 조회 {}", user.getMemberInfo());
+		log.info("회원정보를 조회합니다. {}", user.getMemberInfo());
 
 		return user.getMemberInfo();
 	}
