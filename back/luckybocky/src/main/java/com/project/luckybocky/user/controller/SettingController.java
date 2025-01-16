@@ -14,6 +14,7 @@ import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.user.dto.FirebaseKeyRequest;
 import com.project.luckybocky.user.dto.SettingDto;
 import com.project.luckybocky.user.dto.UserInfoDto;
+import com.project.luckybocky.user.dto.UserLoginDto;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 import com.project.luckybocky.user.service.UserSettingService;
 
@@ -67,11 +68,11 @@ public class SettingController {
 			content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
 	})
 	@GetMapping("/user")
-	public ResponseEntity<DataResponseDto<UserInfoDto>> loadUserInfo(HttpSession session) {
+	public ResponseEntity<DataResponseDto<UserLoginDto>> loadUserInfo(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
-		UserInfoDto userInfoDto = userSettingService.getUserInfo(userKey);
-		log.info("사용자 조회 {}", userKey);
-		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", userInfoDto));
+
+		UserLoginDto userLoginDto = userSettingService.getUserLogin(userKey);
+		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", userLoginDto));
 	}
 
 	@Description("firebase Key 업데이트")
@@ -90,7 +91,7 @@ public class SettingController {
 		String userKey = (String)session.getAttribute("user");
 
 		String firebaseKey = firebaseKeyRequest.getFirebaseKey();
-		log.info("파이어베이스키를 업데이트 합니다. {} : 키 길이({})", userKey, firebaseKeyRequest.getFirebaseKey().length());
+
 		userSettingService.updateFireBaseKey(userKey, firebaseKey);
 		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 
