@@ -23,11 +23,17 @@ public class PocketPushServiceImpl implements PocketPushService {
 	public User findPocketOwner(int pocketSeq) {
 		Pocket pocket = pocketPushRepository.findByPocketSeq(pocketSeq);
 
-		if (pocket == null)
+		if (pocket == null){
+			log.info("{}의 복주머니를 찾을 수 없습니다.",pocketSeq);
 			throw new PocketNotFoundException();
+		}
 
-		if (pocket.getUser() == null)
+
+		if (pocket.getUser() == null){
+			log.info("{}의 복주머니 주인을 찾을 수 없습니다.",pocketSeq);
 			throw new UserNotFoundException();
+		}
+
 
 		return pocket.getUser();
 	}

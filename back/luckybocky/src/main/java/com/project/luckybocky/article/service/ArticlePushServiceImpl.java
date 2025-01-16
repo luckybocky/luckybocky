@@ -23,11 +23,17 @@ public class ArticlePushServiceImpl implements ArticlePushService {
 	public User findArticleOwner(int articleSeq) {
 		Article article = myArticleRepository.findByArticleSeq(articleSeq);
 
-		if (article == null)
+		if (article == null){
+			log.info("{}의 복을 찾을 수 없습니다.",articleSeq);
 			throw new ArticleNotFoundException();
+		}
 
-		if(article.getUser() == null)
+
+		if(article.getUser() == null){
+			log.info("{}의 복 주인을 찾을 수 없습니다.",articleSeq);
 			throw new UserNotFoundException();
+		}
+
 
 		return article.getUser();
 	}
