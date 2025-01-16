@@ -5,7 +5,7 @@ import PocketService from "./PocketService.ts";
 class AuthService {
   /**
    * 유저 정보 가져오기
-   * @returns {Promise<number>}
+   * @returns {Promise<number>} - 0: 로그인 안됨, 1: 닉네임 없음, 2: 로그인 됨
    */
   static async check(): Promise<number | undefined> {
     try {
@@ -14,22 +14,26 @@ class AuthService {
       const response = await ApiClient.get("auth/user");
       const data = response.data.data;
 
-      const address = await PocketService.getMyAddress();
+      if (data.login) {
+        const address = await PocketService.getMyAddress();
 
-      setUser({
-        userNickname: data.userNickname,
-        alarmStatus: data.alarmStatus,
-        fortuneVisibility: data.fortuneVisibility,
-        createdAt: data.createdAt,
-        address: address,
-      });
+        setUser({
+          userNickname: data.userInfo.userNickname,
+          alarmStatus: data.userInfo.alarmStatus,
+          fortuneVisibility: data.userInfo.fortuneVisibility,
+          createdAt: data.userInfo.createdAt,
+          address: address,
+        });
 
-      //닉네임이 없는 경우(설정 페이지로 이동)
-      if (data.userNickname === null) {
-        return 1;
+        //닉네임이 없는 경우(설정 페이지로 이동)
+        if (data.userInfo.userNickname === null) {
+          return 1;
+        }
+
+        return 2;
       }
 
-      return 2;
+      return 0;
     } catch (error) {
       console.error("Error in check", error);
     }
