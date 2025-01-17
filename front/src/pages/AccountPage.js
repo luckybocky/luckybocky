@@ -1,13 +1,18 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
+
 import AuthStore from "../store/AuthStore";
-import Footer from "../components/Footer";
+
 import AuthService from "../api/AuthService.ts";
+
+import Footer from "../components/Footer";
 import Util from "../components/Util.js";
 
 const IoArrowBack = Util.loadIcon("IoArrowBack").io5;
 
 const AccountPage = () => {
+  const navigate = useNavigate();
+
   const user = AuthStore((state) => state.user);
   const setUser = AuthStore((state) => state.setUser);
 
@@ -15,18 +20,10 @@ const AccountPage = () => {
   const [changeMode, setChangeMode] = useState(false);
   const [saved, setSaved] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
-
-  const [permission, setPermission] = useState(
-    typeof Notification !== "undefined" ? Notification.permission : "default"
-  );
   const [notice, setNotice] = useState(false); // 브라우저 알림 체크
 
-  useEffect(() => {
-    if (nickname === "") setNickname(user.userNickname);
-    AuthService.update();
-  }, [user]);
-
-  const navigate = useNavigate();
+  const permission =
+    typeof Notification !== "undefined" ? Notification.permission : "default";
 
   const saveNickname = () => {
     setUser({
@@ -64,6 +61,7 @@ const AccountPage = () => {
       console.error(error);
     }
   };
+
   const saveFortuneVisibility = () => {
     setUser({
       ...user,
@@ -83,16 +81,24 @@ const AccountPage = () => {
     await AuthService.logout();
   };
 
+  useEffect(() => {
+    setNickname(user.userNickname);
+  }, []);
+
+  useEffect(() => {
+    AuthService.update();
+  }, [user]);
+
   // 로그인되지 않은 사용자는 리다이렉트 - Navigate를 활용해 렌더링조차 하지 않고 뒤로 보냄
   if (!user.createdAt) {
     return <Navigate to="/" replace />;
   }
 
   return (
-    <div className="relative flex flex-col w-full max-w-[600px] min-h-screen bg-[#333] p-2 text-white overflow-hidden">
+    <div className="relative flex flex-col w-full max-w-[600px] bg-[#333] p-2">
       {/* 뒤로 가기 버튼 */}
       <button
-        className="absolute top-4 right-4 text-3xl z-20"
+        className="absolute top-4 right-4 text-3xl"
         onClick={() => navigate(-1)}
       >
         <Suspense>
@@ -100,7 +106,6 @@ const AccountPage = () => {
         </Suspense>
       </button>
 
-      {/* 계정 설정 화면 */}
       <h1 className="text-4xl mb-8 mt-5">계정 설정</h1>
       <h1 className="text-2xl">
         <span className="text-[pink]">{user.userNickname}</span> 님
@@ -121,7 +126,7 @@ const AccountPage = () => {
               setNickname(input); // 6자 이하일 때만 상태 업데이트
             }
           }}
-          className="border p-2 rounded-md text-black mr-4 w-full"
+          className="border p-2 rounded-md text-[#3c1e1e] mr-4 w-full"
           disabled={!changeMode}
         />
         <button
@@ -147,13 +152,12 @@ const AccountPage = () => {
         )}
       </div>
 
-      {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 mt-16 mb-10" />
 
       {/* 알림 설정 여부 */}
-      <div className="flex items-center mb-8">
+      <div className="flex mb-8">
         <label className="mr-4">알림 설정 여부</label>
-        <div className="flex items-center absolute right-10">
+        <div className="absolute flex items-center right-10">
           <input
             type="checkbox"
             checked={user.alarmStatus}
@@ -168,15 +172,15 @@ const AccountPage = () => {
 
       {/* 알림이 브라우저에서 거부되어있을때 알려주기위함 */}
       {notice && (
-        <div className="fixed bottom-16 bg-red-500 text-white py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
+        <div className="fixed bottom-16 bg-red-500 py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
           <p className="whitespace-nowrap">브라우저 알림설정을 확인해주세요</p>
         </div>
       )}
 
       {/* 메시지 공개 여부 */}
-      <div className="flex items-center">
+      <div className="flex">
         <label className="mr-4">메시지 공개 여부</label>
-        <div className="flex items-center absolute right-10">
+        <div className="absolute flex items-center right-10">
           <input
             type="checkbox"
             checked={user.fortuneVisibility}
@@ -189,38 +193,41 @@ const AccountPage = () => {
         </div>
       </div>
 
-      {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 my-16" />
+
       <div>
         <button onClick={logoutButton}>로그아웃</button>
       </div>
+
       <div className="flex justify-center">
         <Footer />
       </div>
 
       {/* 변경 성공 알림 */}
       {saved && (
-        <div className="fixed bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
+        <div className="fixed bottom-16 bg-green-500 py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
           변경 완료!
         </div>
       )}
 
       {logoutModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
           <div
-            className="bg-white rounded-lg p-6 w-80 shadow-lg text-center"
+            className="bg-white rounded-lg shadow-lg text-center p-6 w-80"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-xl text-black mb-4">로그아웃 하시겠어요?</h2>
+            <h2 className="text-xl text-[#3c1e1e] mb-4">
+              로그아웃 하시겠어요?
+            </h2>
             <div className="flex justify-center gap-4">
               <button
-                className="bg-gray-300 text-black py-2 px-4 rounded-md"
+                className="bg-gray-300 text-black rounded-md py-2 px-4"
                 onClick={() => setLogoutModalOpen(false)}
               >
                 취소
               </button>
               <button
-                className="bg-red-500 text-white py-2 px-4 rounded-md"
+                className="bg-red-500 rounded-md py-2 px-4"
                 onClick={confirmLogout}
               >
                 로그아웃
