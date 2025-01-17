@@ -95,10 +95,10 @@ const Menu = () => {
 
       {/* 메뉴 바 */}
       <div
-        className={`absolute top-0 right-0 h-full bg-[#333] shadow-lg transition-transform duration-300 ease-in-out z-20 ${
+        className={`absolute top-0 right-0 h-full bg-[#333] transition-transform duration-300 ease-in-out z-20 ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
-        style={{ width: "275px" }}
+        style={{ width: "270px" }}
       >
         {myAddress && (
           <ul className="py-3 px-6 space-y-5">
