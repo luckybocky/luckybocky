@@ -1,12 +1,11 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
 import AuthService from "../api/AuthService.ts";
+import Util from "../components/Util.js";
 
-const IoArrowBack = lazy(() =>
-  import("react-icons/io5").then((mod) => ({ default: mod.IoArrowBack }))
-);
+const IoArrowBack = Util.loadIcon("IoArrowBack").io5;
 
 const AccountPage = () => {
   const user = AuthStore((state) => state.user);

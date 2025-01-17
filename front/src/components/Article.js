@@ -1,28 +1,13 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import ArticleService from "../api/ArticleService.ts";
 import fortuneImages from "../components/FortuneImages";
+import Util from "./Util";
 
-const AiOutlineMail = lazy(() =>
-  import("react-icons/ai").then((module) => ({ default: module.AiOutlineMail }))
-);
-const AiOutlineAlert = lazy(() =>
-  import("react-icons/ai").then((module) => ({
-    default: module.AiOutlineAlert,
-  }))
-);
-const AiOutlineDelete = lazy(() =>
-  import("react-icons/ai").then((module) => ({
-    default: module.AiOutlineDelete,
-  }))
-);
-const AiOutlineClose = lazy(() =>
-  import("react-icons/ai").then((module) => ({
-    default: module.AiOutlineClose,
-  }))
-);
-const AiOutlineLock = lazy(() =>
-  import("react-icons/ai").then((module) => ({ default: module.AiOutlineLock }))
-);
+const AiOutlineMail = Util.loadIcon("AiOutlineMail").ai;
+const AiOutlineAlert = Util.loadIcon("AiOutlineAlert").ai;
+const AiOutlineDelete = Util.loadIcon("AiOutlineDelete").ai;
+const AiOutlineClose = Util.loadIcon("AiOutlineClose").ai;
+const AiOutlineLock = Util.loadIcon("AiOutlineLock").ai;
 
 const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
   const [reportModalOpen, setReportModalOpen] = useState(false);

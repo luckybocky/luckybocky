@@ -1,26 +1,14 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import PocketIcon from "../image/pocketIcon.svg";
 import FeedbackService from "../api/FeedbackService.ts";
 import AuthStore from "../store/AuthStore";
+import Util from "./Util";
 
-const IoMenuSharp = lazy(() =>
-  import("react-icons/sl").then((mod) => ({ default: mod.SlMenu }))
-);
-
-const IoSettingsOutline = lazy(() =>
-  import("react-icons/io5").then((mod) => ({ default: mod.IoSettingsOutline }))
-);
-
-const IoMailOutline = lazy(() =>
-  import("react-icons/io5").then((mod) => ({ default: mod.IoMailOutline }))
-);
-
-const IoChatbubblesOutline = lazy(() =>
-  import("react-icons/io5").then((mod) => ({
-    default: mod.IoChatbubblesOutline,
-  }))
-);
+const IoMenuSharp = Util.loadIcon("SlMenu").sl;
+const IoSettingsOutline = Util.loadIcon("IoSettingsOutline").io5;
+const IoMailOutline = Util.loadIcon("IoMailOutline").io5;
+const IoChatbubblesOutline = Util.loadIcon("IoChatbubblesOutline").io5;
 
 const Menu = () => {
   const [menuOpen, setMenuOpen] = useState(false);
