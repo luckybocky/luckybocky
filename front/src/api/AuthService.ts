@@ -5,7 +5,7 @@ import PocketService from "./PocketService.ts";
 class AuthService {
   /**
    * 유저 정보 가져오기
-   * @returns {Promise<number>} - 0: 로그인 안됨, 1: 닉네임 없음, 2: 로그인 됨
+   * @returns {Promise<number>} 0: 로그인 안됨, 1: 닉네임 없음, 2: 로그인 됨
    */
   static async check(): Promise<number | undefined> {
     try {
@@ -41,8 +41,8 @@ class AuthService {
 
   /**
    * 콜백 후 로그인,유저 정보 받아오기
-   * @param {string} code - 로그인 코드
-   * @returns {Promise<number>}
+   * @param {string} code 로그인 코드
+   * @returns {Promise<number>} 0: 로그인 안됨, 1: 닉네임 없음, 2: 로그인 됨
    */
   static async login(code: string): Promise<number | undefined> {
     if (code) {

@@ -3,6 +3,8 @@ import { Navigate } from "react-router-dom";
 
 import AuthStore from "../store/AuthStore";
 
+import { requestFcmToken } from "../api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
+
 import MainImageP from "../image/landing.png";
 import MainImageW from "../image/landing.webp";
 import kakaoIcon from "../image/kakao-icon.png";
@@ -10,16 +12,8 @@ import kakaoIconW from "../image/kakao-icon.webp";
 
 import Footer from "../components/Footer";
 
-import { requestFcmToken } from "../api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
-
 const LoginPage = () => {
   const user = AuthStore((state) => state.user);
-
-  useEffect(() => {
-    if (user.createdAt !== "") {
-      requestFcmToken();
-    }
-  }, [user]);
 
   // 카카오 소셜 로그인 / 로그아웃
   const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
@@ -35,12 +29,18 @@ const LoginPage = () => {
     window.location.href = loginLink;
   };
 
+  useEffect(() => {
+    if (user.createdAt !== "") {
+      requestFcmToken();
+    }
+  }, [user]);
+
   if (user.createdAt) {
     return <Navigate to={`/${user.address}`} replace />;
   }
 
   return (
-    <div className="flex flex-col items-center justify-center bg-[#ba947f] p-2 w-full max-w-[600px]">
+    <div className="relative flex flex-col items-center justify-center bg-[#ba947f] p-2 w-full max-w-[600px]">
       <h1 className="text-5xl mb-2">Lucky Bocky!</h1>
       <p className="text-2xl mb-6">복 내놔라</p>
 
