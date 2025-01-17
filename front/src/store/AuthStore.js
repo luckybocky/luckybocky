@@ -8,6 +8,7 @@ const AuthStore = create((set) => ({
     createdAt: "",
     address: "",
   },
+
   setUser: (user) => set({ user }),
   resetUser: () =>
     set({

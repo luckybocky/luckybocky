@@ -1,8 +1,12 @@
 import React, { useState, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import PocketIcon from "../image/pocketIcon.svg";
-import FeedbackService from "../api/FeedbackService.ts";
+
 import AuthStore from "../store/AuthStore";
+
+import FeedbackService from "../api/FeedbackService.ts";
+
+import PocketIcon from "../image/pocketIcon.svg";
+
 import Util from "./Util";
 
 const IoMenuSharp = Util.loadIcon("SlMenu").sl;
@@ -11,16 +15,16 @@ const IoMailOutline = Util.loadIcon("IoMailOutline").io5;
 const IoChatbubblesOutline = Util.loadIcon("IoChatbubblesOutline").io5;
 
 const Menu = () => {
+  const navigate = useNavigate();
+
+  const myAddress = AuthStore((state) => state.user.address);
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [rating, setRating] = useState(0);
   const [feedbackAlarm, setFeedbackAlarm] = useState(false);
   const [confirmCloseModal, setConfirmCloseModal] = useState(false);
-
-  const navigate = useNavigate();
-
-  const myAddress = AuthStore((state) => state.user.address);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
@@ -66,16 +70,13 @@ const Menu = () => {
       {/* 오버레이 */}
       {menuOpen && (
         <div
-          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-10"
+          className="fixed inset-0 bg-black bg-opacity-60 z-10"
           onClick={toggleMenu}
         ></div>
       )}
 
       {/* 메뉴 버튼 */}
-      <button
-        className="absolute top-4 right-4 text-3xl z-20"
-        onClick={toggleMenu}
-      >
+      <button className="absolute top-4 right-4 text-3xl" onClick={toggleMenu}>
         <Suspense>
           <IoMenuSharp />
         </Suspense>
@@ -89,7 +90,7 @@ const Menu = () => {
         style={{ width: "270px" }}
       >
         {myAddress && (
-          <ul className="py-3 px-6 space-y-5">
+          <ul className="space-y-5 py-3 px-6">
             <button
               onClick={() => navigate("/account")}
               className="flex hover:underline items-center gap-2"
@@ -99,6 +100,7 @@ const Menu = () => {
               </Suspense>
               <span className="mt-1">계정 설정</span>
             </button>
+
             <button
               onClick={() => {
                 navigate(`/${myAddress}`);
@@ -114,6 +116,7 @@ const Menu = () => {
               ></img>
               <span>내 복주머니 보러가기</span>
             </button>
+
             <button
               className="flex hover:underline items-center gap-2"
               onClick={() => {
@@ -126,6 +129,7 @@ const Menu = () => {
               </Suspense>
               <span>내가 보낸 메시지</span>
             </button>
+
             <button
               className="flex hover:underline items-center gap-2"
               onClick={() => setFeedbackModalOpen(true)}
@@ -139,7 +143,7 @@ const Menu = () => {
         )}
 
         {!myAddress && (
-          <ul className="py-3 px-6 space-y-5">
+          <ul className="space-y-5 py-3 px-6">
             <button
               className="flex hover:underline items-center gap-2"
               onClick={() => navigate("/")}
@@ -157,14 +161,16 @@ const Menu = () => {
       {/* 피드백 모달 */}
       {feedbackModalOpen && (
         <div className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-60">
-          <div className="bg-white text-[#0d1a26] p-4 rounded-lg w-80">
+          <div className="bg-white text-[#3c1e1e] rounded-lg w-80 p-4">
             <h2 className="text-xl mb-4">피드백하기</h2>
+
             <textarea
-              className="w-full h-60 p-2 border border-gray-300 rounded-md mb-2 resize-none"
+              className="border border-gray-300 rounded-md w-full h-60 p-2 mb-2 resize-none"
               placeholder="피드백 내용을 입력하세요."
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
             ></textarea>
+
             <div className="flex justify-between">
               <div className="flex gap-1 pl-1">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -181,13 +187,13 @@ const Menu = () => {
               </div>
               <div className="flex gap-2">
                 <button
-                  className="bg-gray-300 text-black py-2 px-4 rounded-lg"
+                  className="bg-gray-300 text-black rounded-lg py-2 px-4"
                   onClick={closeModal}
                 >
                   취소
                 </button>
                 <button
-                  className="bg-[#0d1a26] text-white py-2 px-4 rounded-lg"
+                  className="bg-[#0d1a26] text-white rounded-lg py-2 px-4 "
                   onClick={sendFeedback}
                 >
                   보내기
@@ -200,20 +206,20 @@ const Menu = () => {
 
       {confirmCloseModal && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 w-80 shadow-lg text-center">
-            <h2 className="text-xl text-black mb-4">
+          <div className="flex flex-col items-center bg-white rounded-lg shadow-lg w-80 p-6">
+            <h2 className="text-xl text-[#3c1e1e] mb-4">
               작성한 내용이 사라집니다.
             </h2>
             <p className="text-gray-700 mb-6">정말 닫으시겠어요?</p>
-            <div className="flex justify-center gap-4">
+            <div className="flex gap-4">
               <button
-                className="bg-gray-300 text-black py-2 px-4 rounded-md"
+                className="bg-gray-300 text-black rounded-md py-2 px-4"
                 onClick={() => setConfirmCloseModal(false)}
               >
                 취소
               </button>
               <button
-                className="bg-red-500 text-white py-2 px-4 rounded-md"
+                className="bg-red-500 text-white rounded-md py-2 px-4"
                 onClick={confirmClose}
               >
                 닫기
@@ -225,7 +231,7 @@ const Menu = () => {
 
       {/*피드백 성공 알림 */}
       {feedbackAlarm && (
-        <div className="fixed bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md z-30 transform -translate-x-1/2">
+        <div className="fixed bottom-16 bg-green-500 rounded-lg shadow-md py-2 px-4 z-30 transform -translate-x-1/2">
           피드백 전달 완료!
         </div>
       )}
