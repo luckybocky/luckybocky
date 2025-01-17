@@ -1,5 +1,5 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
 import AuthService from "../api/AuthService.ts";
@@ -23,11 +23,8 @@ const AccountPage = () => {
   const [notice, setNotice] = useState(false); // 브라우저 알림 체크
 
   useEffect(() => {
-    if (!user.createdAt) navigate("/");
-    else {
-      if (nickname === "") setNickname(user.userNickname);
-      AuthService.update();
-    }
+    if (nickname === "") setNickname(user.userNickname);
+    AuthService.update();
   }, [user]);
 
   const navigate = useNavigate();
@@ -86,6 +83,11 @@ const AccountPage = () => {
     setLogoutModalOpen(false);
     await AuthService.logout();
   };
+
+  // 로그인되지 않은 사용자는 리다이렉트 - Navigate를 활용해 렌더링조차 하지 않고 뒤로 보냄
+  if (!user.createdAt) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="relative flex flex-col w-full max-w-[600px] min-h-screen bg-[#333] p-2 text-white overflow-hidden">

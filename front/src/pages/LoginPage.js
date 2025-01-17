@@ -3,22 +3,19 @@ import MainImage from "../image/landing.png";
 import kakaoIcon from "../image/kakao-icon.png";
 import MainImageW from "../image/landing.webp";
 import kakaoIconW from "../image/kakao-icon.webp";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
 
 import { requestFcmToken } from "../api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
 const LoginPage = () => {
-  const navigate = useNavigate();
-
   const user = AuthStore((state) => state.user);
 
   useEffect(() => {
     if (user.createdAt != null) {
       requestFcmToken();
-      navigate(`/${user.address}`);
     }
-  }, [user, navigate]);
+  }, [user]);
 
   // 카카오 소셜 로그인 / 로그아웃
   const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
@@ -33,6 +30,10 @@ const LoginPage = () => {
 
     window.location.href = loginLink;
   };
+
+  if (user.createdAt) {
+    return <Navigate to={`/${user.address}`} replace />;
+  }
 
   return (
     <div className="relative flex flex-col items-center justify-center text-center bg-[#ba947f] text-white min-h-screen p-2 w-full max-w-[600px]">

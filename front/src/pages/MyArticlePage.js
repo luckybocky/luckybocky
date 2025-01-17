@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import Menu from "../components/Menu";
 import ArticleService from "../api/ArticleService.ts";
 import fortuneImages from "../components/FortuneImages";
@@ -11,10 +11,6 @@ const MyArticlePage = () => {
   const [articles, setArticles] = useState([]);
 
   const user = AuthStore((state) => state.user);
-
-  useEffect(() => {
-    if (!user.createdAt) navigate("/");
-  }, [user]);
 
   const init = async () => {
     const result = await ArticleService.getMyList();
@@ -38,6 +34,10 @@ const MyArticlePage = () => {
   //       "메시지 예시 3fffffffffffffffffffffffffffffffffffffffffffffffffffff",
   //   },
   // ];
+
+  if (!user.createdAt) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="relative flex flex-col items-center w-full p-2 max-w-[600px] min-h-screen bg-[#ba947f] text-white overflow-hidden">

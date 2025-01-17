@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
 import Authservice from "../api/AuthService.ts";
@@ -14,10 +14,6 @@ const JoinPage = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user.createdAt == null || user.userNickname !== null) navigate("/");
-  }, [user]);
-
   const joinUser = async () => {
     await setUser({
       ...user,
@@ -30,6 +26,10 @@ const JoinPage = () => {
 
     navigate(`/${user.address}`);
   };
+
+  if (user.createdAt == null || user.userNickname !== null) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="relative flex flex-col w-full max-w-[600px] min-h-screen bg-[#333] p-2 text-white overflow-hidden">
