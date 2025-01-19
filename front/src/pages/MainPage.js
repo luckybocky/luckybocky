@@ -1,5 +1,6 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import MainImage from "../image/pocket.png";
+import MainImageW from "../image/pocket.webp";
 import { useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
 import Article from "../components/Article";
@@ -7,7 +8,7 @@ import AuthStore from "../store/AuthStore";
 import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
 import fortuneImages from "../components/FortuneImages";
-import { loadPocket } from "../api/PocketApi";
+import PocketService from "../api/PocketService.ts";
 
 const IoShareOutline = lazy(() =>
   import("react-icons/io5").then((mod) => ({ default: mod.IoShareOutline }))
@@ -43,7 +44,7 @@ const MainPage = () => {
 
   const fetchPocket = async () => {
     try {
-      const data = await loadPocket(address);
+      const data = await PocketService.getByAddress(address);
       setPocket(data);
 
       const articlesArray = data.articles || [];
@@ -56,8 +57,6 @@ const MainPage = () => {
           image: decoration.fortuneImg,
         };
       });
-
-      console.log(data);
 
       setDecorations(updatedPocket); // 위치가 할당된 데이터 저장
     } catch (error) {
@@ -132,11 +131,14 @@ const MainPage = () => {
       <p className="text-xl mb-6">복 내놔라</p> */}
 
         <div className="relative">
-          <img
-            src={MainImage}
-            alt="복주머니 이미지"
-            className="w-80 h-80 mb-6"
-          />
+          <picture>
+            <source srcSet={MainImageW} type="image/webp" />
+            <img
+              src={MainImage}
+              alt="복주머니 이미지"
+              className="w-80 h-80 mb-6"
+            />
+          </picture>
           {/* 장식물 배치 */}
           {currentDecorations.map((decoration) => (
             <button
@@ -144,11 +146,17 @@ const MainPage = () => {
               className={`absolute ${decoration.position}`}
               onClick={() => setSelectArticle(decoration.id)}
             >
-              <img
-                src={fortuneImages[decoration.image]}
-                alt="장식물"
-                className="w-28 h-28 cursor-pointer"
-              />
+              <picture>
+                <source
+                  srcSet={fortuneImages[decoration.image].src}
+                  type="image/webp"
+                />
+                <img
+                  src={fortuneImages[decoration.image].fallback}
+                  alt="장식물"
+                  className="w-28 h-28 cursor-pointer"
+                />
+              </picture>
             </button>
           ))}
         </div>

@@ -1,21 +1,16 @@
 {
   "short_name": "LuckyBocky",
-  "name": "LuckyBocky!!",
+  "name": "LuckyBocky",
   "icons": [
     {
-      "src": "pocket.png",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "pocket.webp",
+      "sizes": "512x512 192x192 64x64 32x32 24x24 16x16",
+      "type": "image/webp"
     },
     {
       "src": "pocket.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "pocket.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512 192x192 64x64 32x32 24x24 16x16",
+      "type": "image/png"
     }
   ],
   "start_url": ".",
