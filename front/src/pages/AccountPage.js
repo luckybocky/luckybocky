@@ -163,8 +163,8 @@ const AccountPage = () => {
 
       {/* 알림 설정 여부 */}
       <div className="flex mb-6">
-        <label className="md:w-8/12 mr-4">알림 설정 여부</label>
-        <div className="flex justify-between items-center md:w-4/12">
+        <label className="w-full md:w-8/12 mr-4">알림 설정 여부</label>
+        <div className="flex justify-between items-center gap-2">
           <div className="relative w-11 h-5">
             <input
               type="checkbox"
@@ -189,8 +189,8 @@ const AccountPage = () => {
 
       {/* 메시지 공개 여부 */}
       <div className="flex">
-        <label className="md:w-8/12 mr-4">메시지 공개 여부</label>
-        <div className="flex justify-between items-center md:w-4/12">
+        <label className="w-full md:w-8/12 mr-4">메시지 공개 여부</label>
+        <div className="flex justify-between items-center gap-2">
           <div className="relative w-11 h-5">
             <input
               type="checkbox"
