@@ -24,11 +24,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/pocket", produces = "application/json; charset=UTF8")
 @Tag(name = "pocket", description = "복주머니 API")
+@Slf4j
 public class PocketController {
 	private final PocketService pocketService;
 	private final ArticleService articleService;
@@ -75,6 +77,8 @@ public class PocketController {
 		//            }
 		//        }
 
+		log.info("주소(url)로 복주머니 조회 - 주소: {}, 번호: {}, 복주머니 주인: {}", url, pocketDto.getPocketSeq(),
+			pocketDto.getUserNickname());
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", pocketDto));
 	}
 
@@ -93,6 +97,7 @@ public class PocketController {
 	public ResponseEntity<DataResponseDto> getPocketAddress(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
 		String address = pocketService.getPocketAddress(userKey);
+		log.info("복주머니 주소(url) 조회 - 주소: {}", address);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("success", address));
 	}
 
@@ -109,6 +114,7 @@ public class PocketController {
 	public ResponseEntity<DataResponseDto> createPocket(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
 		String address = pocketService.createPocket(userKey);
+		log.info("복주머니 생성 - 주소: {}", address);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("success", address));
 	}
 }

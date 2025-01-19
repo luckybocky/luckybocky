@@ -55,8 +55,10 @@ public class ArticleController {
 	public ResponseEntity<DataResponseDto<ArticleResponseDto>> getArticleDetails(HttpSession session,
 		@RequestParam int articleSeq) {
 		String userKey = (String)session.getAttribute("user");
-		ArticleResponseDto articleResponseDto = articleService.getArticleDetails(userKey, articleSeq);
-		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", articleResponseDto));
+		ArticleResponseDto dto = articleService.getArticleDetails(userKey, articleSeq);
+		log.info("복 상세조회 - 번호: {}, 작성자: {}, 내용: {}, 리복: {}, 복 이름: {}", dto.getArticleSeq(), dto.getUserNickname(),
+			dto.getArticleContent(), dto.getArticleComment(), dto.getFortuneName());
+		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", dto));
 	}
 
 	@Operation(
@@ -64,23 +66,24 @@ public class ArticleController {
 		description = "복주머니에 복을 단다."
 	)
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "1. 복 달기 성공 \t\n 2. 복주머니 푸시 알림 성공" ),
+		@ApiResponse(responseCode = "200", description = "1. 복 달기 성공 \t\n 2. 복주머니 푸시 알림 성공"),
 		@ApiResponse(responseCode = "404", description = "1. 포춘 조회 실패 \t\n 2. 복주머니 조회 실패",
 			content = @Content(schema = @Schema(implementation = FortuneNotFoundException.class))),
 		@ApiResponse(responseCode = "500", description = "1. 복주머니 푸시 전송 실패",
 			content = @Content(schema = @Schema(implementation = FirebaseMessagingException.class)))
 	})
 	@PostMapping
-	public ResponseEntity<ResponseDto> writeArticle(HttpSession session, @RequestBody WriteArticleDto writeArticleDto) throws
+	public ResponseEntity<ResponseDto> writeArticle(HttpSession session,
+		@RequestBody WriteArticleDto writeArticleDto) throws
 		FirebaseMessagingException {
 		String userKey = (String)session.getAttribute("user");
 		articleService.createArticle(userKey, writeArticleDto);
 
 		//push 알림추가
-		PushDto pushDto = new PushDto(writeArticleDto.getPocketSeq(), writeArticleDto.getNickname(),writeArticleDto.getUrl());
+		PushDto pushDto = new PushDto(writeArticleDto.getPocketSeq(), writeArticleDto.getNickname(),
+			writeArticleDto.getUrl());
 		log.info("{} 님의 복 푸시 시도 (복주머니 번호 : {})", pushDto.getFromUser(), pushDto.getContentSeq());
 		pushService.sendPocketPush(pushDto);
-
 
 		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 	}
@@ -107,6 +110,7 @@ public class ArticleController {
 			throw new ForbiddenUserException();
 		} else {
 			articleService.deleteArticle(articleSeq);
+			log.info("복 삭제 - 번호: {}", articleSeq);
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 		}
 	}
