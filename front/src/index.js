@@ -7,7 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 
-import { setupOnMessageListener } from "./api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
+import FirebaseService from "./api/FirebaseService.ts";
 
 // iOS 환경 감지 함수
 const isIos = () => {
@@ -39,7 +39,7 @@ try {
   console.error("Service Worker 등록 중 예기치 못한 오류 발생:", error);
 }
 
-setupOnMessageListener();
+FirebaseService.setupOnMessageListener();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

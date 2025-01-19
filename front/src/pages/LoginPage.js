@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Navigate } from "react-router-dom";
 
 import AuthStore from "../store/AuthStore";
 
-import { requestFcmToken } from "../api/FireBaseApi"; //12-31 창희 추가, 파이어베이스 api들고오기
-
+import bgImageP from "../image/bgImage.png";
+import bgImageW from "../image/bgImage.webp";
 import MainImageP from "../image/landing.png";
 import MainImageW from "../image/landing.webp";
 import kakaoIcon from "../image/kakao-icon.png";
@@ -29,20 +29,24 @@ const LoginPage = () => {
     window.location.href = loginLink;
   };
 
-  useEffect(() => {
-    if (user.createdAt !== "") {
-      requestFcmToken();
-    }
-  }, [user]);
-
   if (user.createdAt) {
     return <Navigate to={`/${user.address}`} replace />;
   }
 
   return (
-    <div className="relative flex flex-col items-center justify-center bg-[#ba947f] p-2 w-full max-w-[600px]">
-      <h1 className="text-5xl mb-2">Lucky Bocky!</h1>
-      <p className="text-2xl mb-6">복 내놔라</p>
+    <div className="relative flex flex-col items-center justify-center p-2 w-full max-w-[600px] z-20">
+      <picture>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/15 to-transparent -z-10"></div>
+        <source srcSet={bgImageW} type="image/webp" />
+        <img
+          src={bgImageP}
+          alt="Background"
+          className="absolute inset-0 w-full h-full object-fill -z-20"
+        />
+      </picture>
+
+      <h1 className="text-5xl mb-12">LUCKY BOCKY!</h1>
+      {/* <p className="text-2xl mb-6 ">복 내놔라</p> */}
 
       <picture>
         <source srcSet={MainImageW} type="image/webp" />

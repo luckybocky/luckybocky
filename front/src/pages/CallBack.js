@@ -26,7 +26,12 @@ const CallBack = () => {
     init();
   }, []);
 
-  return <h1 className="flex items-center text-4xl">로그인 중 입니다...</h1>;
+  return (
+    <div className="flex flex-col justify-center items-center">
+      <h1 className="text-4xl mb-1">로그인 중 입니다...</h1>
+      <p className="text-xl">알림 권한을 확인해주세요.</p>
+    </div>
+  );
 };
 
 export default CallBack;

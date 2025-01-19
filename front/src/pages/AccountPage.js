@@ -4,6 +4,7 @@ import { useNavigate, Navigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 
 import AuthService from "../api/AuthService.ts";
+import FirebaseService from "../api/FirebaseService.ts";
 
 import Footer from "../components/Footer";
 import Util from "../components/Util.js";
@@ -22,9 +23,6 @@ const AccountPage = () => {
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [notice, setNotice] = useState(false); // 브라우저 알림 체크
 
-  const permission =
-    typeof Notification !== "undefined" ? Notification.permission : "default";
-
   const saveNickname = () => {
     setUser({
       ...user,
@@ -35,13 +33,20 @@ const AccountPage = () => {
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const saveAlarmStatus = () => {
+  const saveAlarmStatus = async () => {
+    const permission = Notification?.permission;
+
     try {
-      if (typeof Notification === "undefined") {
+      if (permission === "undefined") {
         // 알림 API를 지원하지 않을 때 처리
         console.error("이 브라우저에서는 알림을 허용하지 않습니다.");
         setNotice(true);
         setTimeout(() => setNotice(false), 3000);
+        return;
+      }
+
+      if (permission === "default") {
+        FirebaseService.requestToken();
         return;
       }
 
@@ -108,7 +113,8 @@ const AccountPage = () => {
 
       <h1 className="text-4xl mb-8 mt-5">계정 설정</h1>
       <h1 className="text-2xl">
-        <span className="text-[pink]">{user.userNickname}</span> 님, 새해 복 많이 받으세요 🙂
+        <span className="text-[pink]">{user.userNickname}</span> 님, 새해 복
+        많이 받으세요 🙂
       </h1>
 
       {/* 구분선 추가 */}
@@ -153,19 +159,20 @@ const AccountPage = () => {
       </div>
 
       {/* 구분선 추가 */}
-      <hr className="border-t-2 border-gray-600 mt-10 mb-10" />
+      <hr className="border-t-2 border-gray-600 my-10" />
 
       {/* 알림 설정 여부 */}
       <div className="flex mb-6">
-        <label className="w-full md:w-8/12 mr-4">알림 설정 여부</label>
-        <div className="flex justify-between items-center w-full md:w-4/12">
+        <label className="md:w-8/12 mr-4">알림 설정 여부</label>
+        <div className="flex justify-between items-center md:w-4/12">
           <div className="relative w-11 h-5">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={user.alarmStatus}
               onChange={saveAlarmStatus}
-              className="peer appearance-none w-11 h-5 bg-slate-100 rounded-full checked:bg-blue-500 cursor-pointer transition-colors duration-300" />
-            <label className="absolute top-0 left-0 w-5 h-5 bg-white rounded-full border border-slate-300 shadow-sm transition-transform duration-300 peer-checked:translate-x-6 peer-checked:border-blue-600 cursor-pointer"></label>
+              className="peer appearance-none w-11 h-5 bg-slate-100 rounded-full checked:bg-blue-500 cursor-pointer transition-colors duration-300"
+            />
+            <label className="absolute top-0 left-0 w-5 h-5 bg-white rounded-full border border-slate-300 shadow-sm transition-transform duration-300 peer-checked:translate-x-6 peer-checked:border-blue-600 cursor-pointer" />
           </div>
           <span className="ml-2 w-[100px]">
             {user.alarmStatus ? "알림 허용" : "알림 거절"}
@@ -176,21 +183,22 @@ const AccountPage = () => {
       {/* 알림이 브라우저에서 거부되어있을때 알려주기위함 */}
       {notice && (
         <div className="fixed bottom-16 bg-red-500 py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
-          <p className="whitespace-nowrap">브라우저 알림설정을 확인해주세요</p>
+          <p className="whitespace-nowrap">브라우저 알림 설정을 확인해주세요</p>
         </div>
       )}
 
       {/* 메시지 공개 여부 */}
       <div className="flex">
-        <label className="w-full md:w-8/12 mr-4">메시지 공개 여부</label>
-        <div className="flex justify-between items-center w-full md:w-4/12">
+        <label className="md:w-8/12 mr-4">메시지 공개 여부</label>
+        <div className="flex justify-between items-center md:w-4/12">
           <div className="relative w-11 h-5">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={user.fortuneVisibility}
               onChange={saveFortuneVisibility}
-              className="peer appearance-none w-11 h-5 bg-slate-100 rounded-full checked:bg-blue-500 cursor-pointer transition-colors duration-300" />
-            <label className="absolute top-0 left-0 w-5 h-5 bg-white rounded-full border border-slate-300 shadow-sm transition-transform duration-300 peer-checked:translate-x-6 peer-checked:border-blue-600 cursor-pointer"></label>
+              className="peer appearance-none w-11 h-5 bg-slate-100 rounded-full checked:bg-blue-500 cursor-pointer transition-colors duration-300"
+            />
+            <label className="absolute top-0 left-0 w-5 h-5 bg-white rounded-full border border-slate-300 shadow-sm transition-transform duration-300 peer-checked:translate-x-6 peer-checked:border-blue-600 cursor-pointer" />
           </div>
           <span className="ml-2 w-[100px]">
             {user.fortuneVisibility ? "전체 공개" : "나만 보기"}

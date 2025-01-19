@@ -17,7 +17,7 @@ const MyArticlePage = () => {
 
   const init = async () => {
     const result = await ArticleService.getMyList();
-    setArticles(result);
+    setArticles(result.reverse());
   };
 
   useEffect(() => {
