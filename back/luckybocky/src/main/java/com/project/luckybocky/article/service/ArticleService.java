@@ -21,15 +21,22 @@ import com.project.luckybocky.fortune.repository.FortuneRepository;
 import com.project.luckybocky.pocket.entity.Pocket;
 import com.project.luckybocky.pocket.exception.PocketNotFoundException;
 import com.project.luckybocky.pocket.repository.PocketRepository;
+import com.project.luckybocky.push.dto.PushDto;
+import com.project.luckybocky.push.enums.PushMessage;
+import com.project.luckybocky.push.service.PushService;
 import com.project.luckybocky.user.entity.User;
 import com.project.luckybocky.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class ArticleService {
+	private final PushService pushService;
+
 	private final ArticleRepository articleRepository;
 	private final PocketRepository pocketRepository;
 	private final UserRepository userRepository;
@@ -92,6 +99,18 @@ public class ArticleService {
 			.build();
 
 		articleRepository.save(article);
+
+		//push 알림추가(이후 비동기로 진행하면 더 좋을 듯)
+		PushMessage pushMessage = PushMessage.ARTICLE;
+
+		PushDto pushDto = PushDto.builder()
+			.toUser(pocket.getUser())
+			.address(pocket.getPocketAddress())
+			.title(pushMessage.getTitle())
+			.content(writeArticleDto.getNickname() + pushMessage.getBody())
+			.build();
+
+		pushService.sendPush(pushDto);
 	}
 
 	public ArticleResponseDto updateComment(CommentDto commentDto) {
@@ -103,6 +122,18 @@ public class ArticleService {
 		}
 		article.updateComment(commentDto.getComment());
 		articleRepository.save(article);
+
+		//push 알림추가(이후 비동기로 진행하면 더 좋을 듯)
+		PushMessage pushMessage = PushMessage.COMMENT;
+
+		PushDto pushDto = PushDto.builder()
+			.toUser(article.getUser())
+			.address(article.getPocket().getPocketAddress())
+			.title(pushMessage.getTitle())
+			.content(article.getPocket().getUser().getUserNickname() + pushMessage.getBody())
+			.build();
+
+		pushService.sendPush(pushDto);
 
 		return article.toArticleResponseDto();
 	}
