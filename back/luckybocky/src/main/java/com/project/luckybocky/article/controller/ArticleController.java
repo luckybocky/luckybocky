@@ -51,8 +51,10 @@ public class ArticleController {
 	public ResponseEntity<DataResponseDto<ArticleResponseDto>> getArticleDetails(HttpSession session,
 		@RequestParam int articleSeq) {
 		String userKey = (String)session.getAttribute("user");
-		ArticleResponseDto articleResponseDto = articleService.getArticleDetails(userKey, articleSeq);
-		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", articleResponseDto));
+		ArticleResponseDto dto = articleService.getArticleDetails(userKey, articleSeq);
+		log.info("복 상세조회 - 번호: {}, 작성자: {}, 내용: {}, 리복: {}, 복 이름: {}", dto.getArticleSeq(), dto.getUserNickname(),
+			dto.getArticleContent(), dto.getArticleComment(), dto.getFortuneName());
+		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", dto));
 	}
 
 	@Operation(
@@ -95,6 +97,7 @@ public class ArticleController {
 			throw new ForbiddenUserException();
 		} else {
 			articleService.deleteArticle(articleSeq);
+			log.info("복 삭제 - 번호: {}", articleSeq);
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 		}
 	}
