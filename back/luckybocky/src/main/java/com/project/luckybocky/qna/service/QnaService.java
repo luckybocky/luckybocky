@@ -36,6 +36,7 @@ public class QnaService {
 
 		try {
 			qnaRepository.save(Qna.makeQuestion(user, qnaUserReqDto));
+			log.info("{} 시용자가 질문을 등록했습니다.", user.getUserKey());
 		} catch (Exception e) {
 			throw new QnaSaveException(e.getMessage());
 		}
@@ -47,7 +48,9 @@ public class QnaService {
 
 		try {
 			qna.setAnswer(qnaDto.getAnswer());
+			log.info("{}번 질문에 대한 답변 등록에 성공했습니다.", qnaDto.getQnaSeq());
 		} catch (Exception e) {
+			log.error("{}번 질문에 대한 답변 등록에 실패했습니다.", qnaDto.getQnaSeq());
 			throw new QnaSaveException(e.getMessage());
 		}
 	}
@@ -56,6 +59,7 @@ public class QnaService {
 		Page<Qna> qnaList = qnaRepository.findAllByisDeletedIsFalse(pageable);
 		Page<QnaDto> qnaDtoList = QnaDto.toQnaPageDto(qnaList);
 
+		log.info("질문 목록 로딩 성공");
 		return QnaListResDto.toQnaResDto(qnaDtoList);
 	}
 
@@ -73,16 +77,16 @@ public class QnaService {
 			.orElseThrow(UserNotFoundException::new);
 
 		if (currentUser.getRole() == 1) {
-			log.info("권한: 관리자");
+			log.info("<관리자>에 대한 접근 요청을 반환합니다.");
 			return admin;
 		} else if (qna.getSecretStatus()) {
 			if (qna.getUser().getUserKey().equals(currentUser.getUserKey())) {
-				log.info("권한: 게시글 작성자");
+				log.info("<게시글 작성자>에 대한 접근 요청을 반환합니다.");
 				return authorizedUser;
 			}
 		}
 
-		log.info("권한: 일반 사용자");
+		log.info("<일반 사용자>에 대한 접근 요청을 반환합니다.");
 		return user;
 	}
 
@@ -96,6 +100,7 @@ public class QnaService {
 
 		Page<QnaDto> qnaDtoList = QnaDto.toQnaPageDto(qnaList);
 
+		log.info("{} 시용자가 질문 목록을 조회했습니다.", user.getUserKey());
 		return QnaListResDto.toQnaResDto(qnaDtoList);
 	}
 }
