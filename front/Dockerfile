@@ -16,7 +16,7 @@ COPY ./ .
 RUN npm run build
 
 # Nginx를 사용하여 React 애플리케이션 서빙
-FROM nginx:alpine
+FROM kiweeteam/nginx-brotli:latest
 
 # 빌드된 파일을 Nginx 컨테이너에 복사
 COPY --from=build /app/build /usr/share/nginx/html

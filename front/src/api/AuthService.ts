@@ -1,11 +1,12 @@
 import ApiClient from "./ApiClient";
 import AuthStore from "../store/AuthStore";
 import PocketService from "./PocketService.ts";
+import FirebaseService from "./FirebaseService.ts";
 
 class AuthService {
   /**
    * 유저 정보 가져오기
-   * @returns {Promise<number>} - 0: 로그인 안됨, 1: 닉네임 없음, 2: 로그인 됨
+   * @returns {Promise<number>} 0: 로그인 안됨, 1: 닉네임 없음, 2: 로그인 됨
    */
   static async check(): Promise<number | undefined> {
     try {
@@ -41,8 +42,8 @@ class AuthService {
 
   /**
    * 콜백 후 로그인,유저 정보 받아오기
-   * @param {string} code - 로그인 코드
-   * @returns {Promise<number>}
+   * @param {string} code 로그인 코드
+   * @returns {Promise<number>} 0: 로그인 안됨, 1: 닉네임 없음, 2: 로그인 됨
    */
   static async login(code: string): Promise<number | undefined> {
     if (code) {
@@ -50,6 +51,28 @@ class AuthService {
         await ApiClient.get(`auth/callback?code=${code}`);
 
         const result = await AuthService.check();
+
+        try {
+          const user = AuthStore.getState().user;
+          const setUser = AuthStore.getState().setUser;
+
+          //알람 허용인 경우
+          if (user.alarmStatus) {
+            const permission = await FirebaseService.requestToken();
+
+            if (!permission) {
+              alert("브라우저 설정에 따라 알림이 거부됩니다.");
+              setUser({
+                ...user,
+                alarmStatus: !user.alarmStatus,
+              });
+
+              await this.update();
+            }
+          }
+        } catch (error) {
+          console.error("알림 권한 변경 실패", error);
+        }
 
         return result;
       } catch (error) {

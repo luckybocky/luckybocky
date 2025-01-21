@@ -1,26 +1,29 @@
-import React, { useEffect, useState, lazy, Suspense } from "react";
-import MainImage from "../image/pocket.png";
-import MainImageW from "../image/pocket.webp";
+import React, { useEffect, useState, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import Menu from "../components/Menu";
-import Article from "../components/Article";
-import AuthStore from "../store/AuthStore";
-import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
-import fortuneImages from "../components/FortuneImages";
+
+import AuthStore from "../store/AuthStore";
+
 import PocketService from "../api/PocketService.ts";
 
-const IoShareOutline = lazy(() =>
-  import("react-icons/io5").then((mod) => ({ default: mod.IoShareOutline }))
-);
-const BsPencil = lazy(() =>
-  import("react-icons/bs").then((mod) => ({ default: mod.BsPencil }))
-);
+import bgImageP from "../image/bgImage2.png";
+import bgImageW from "../image/bgImage2.webp";
+import MainImageP from "../image/pocket.png";
+import MainImageW from "../image/pocket.webp";
+
+import fortuneImages from "../components/FortuneImages";
+import Menu from "../components/Menu";
+import Article from "../components/Article";
+import Footer from "../components/Footer";
+import Util from "../components/Util.js";
+
+const IoShareOutline = Util.loadIcon("IoShareOutline").io5;
+const BsPencil = Util.loadIcon("BsPencil").bs;
 
 const MainPage = () => {
   const navigate = useNavigate();
 
-  const { address } = useParams();
+  const myAddress = AuthStore((state) => state.user.address);
 
   const [selectArticle, setSelectArticle] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,17 +33,24 @@ const MainPage = () => {
   const [isOwner, setIsOwner] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false); // 로드 상태
 
-  const myAddress = AuthStore((state) => state.user.address);
-  // const fortuneVisibility = AuthStore((state) => state.user.fortuneVisibility);
-
+  const { address } = useParams();
   const positions = [
-    { id: 1, position: "top-[25%] left-[0%]" }, // 상단 왼쪽
-    { id: 2, position: "top-[30%] left-[32%]" }, // 상단 오른쪽 -> 가운데
-    { id: 3, position: "top-[25%] left-[64%]" }, // 중단 왼쪽 -> 상단 오른쪽
-    { id: 4, position: "top-[55%] left-[0%]" }, // 중단 오른쪽 -> 하단 왼쪽
-    { id: 5, position: "top-[60%] left-[32%]" }, // 하단 왼쪽 -> 가운데
-    { id: 6, position: "top-[55%] left-[64%]" }, // 하단 오른쪽
+    { id: 1, position: "top-[40%] left-[8%]" }, // 상단 왼쪽
+    { id: 2, position: "top-[45%] left-[35%]" }, // 상단 오른쪽 -> 가운데
+    { id: 3, position: "top-[40%] left-[62%]" }, // 중단 왼쪽 -> 상단 오른쪽
+    { id: 4, position: "top-[60%] left-[8%]" }, // 중단 오른쪽 -> 하단 왼쪽
+    { id: 5, position: "top-[65%] left-[35%]" }, // 하단 왼쪽 -> 가운데
+    { id: 6, position: "top-[60%] left-[62%]" }, // 하단 오른쪽
   ];
+  const decorationsPerPage = 6;
+  const totalPages = Math.max(
+    Math.ceil(decorations.length / decorationsPerPage),
+    1
+  );
+  const currentDecorations = decorations.slice(
+    (currentPage - 1) * decorationsPerPage,
+    currentPage * decorationsPerPage
+  );
 
   const fetchPocket = async () => {
     window.sessionStorage.setItem("pocketAddress", window.location.pathname);
@@ -48,7 +58,7 @@ const MainPage = () => {
       const data = await PocketService.getByAddress(address);
       setPocket(data);
 
-      const articlesArray = data.articles || [];
+      const articlesArray = data.articles.reverse() || [];
 
       const updatedPocket = articlesArray.map((decoration, idx) => {
         const decorationIdx = idx % 6; // 순환 인덱스
@@ -66,21 +76,6 @@ const MainPage = () => {
       setIsLoaded(true);
     }
   };
-
-  useEffect(() => {
-    fetchPocket();
-    setIsOwner(address === myAddress);
-  }, [address]);
-
-  const decorationsPerPage = 6;
-  const totalPages = Math.max(
-    Math.ceil(decorations.length / decorationsPerPage),
-    1
-  );
-  const currentDecorations = decorations.slice(
-    (currentPage - 1) * decorationsPerPage,
-    currentPage * decorationsPerPage
-  );
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
@@ -116,17 +111,34 @@ const MainPage = () => {
     }
   };
 
+  useEffect(() => {
+    fetchPocket();
+    setIsOwner(address === myAddress);
+  }, [address]);
+
   return (
     isLoaded && (
-      <div className="relative flex flex-col items-center justify-center p-2 w-full max-w-[600px] min-h-screen bg-[#ba947f] overflow-hidden">
+      <div className="relative flex flex-col items-center justify-center w-full max-w-[600px] p-2 overflow-hidden z-20">
+        <picture>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/15 to-transparent -z-10"></div>
+          <source srcSet={bgImageW} type="image/webp" />
+          <img
+            src={bgImageP}
+            alt="Background"
+            className="absolute inset-0 w-full h-full object-fill -z-20"
+          />
+        </picture>
+
         <Menu />
         {/* 메인 화면 */}
-        <div className="absolute top-4 left-4">
-          <h1 className="text-2xl mb-1">
-            <span className="text-[pink]">{pocket?.userNickname}</span> 님의
+        <div className="absolute top-0 left-0 pb-2">
+          <h1 className="text-2xl mb-1 ml-4 mt-4 ">
+            <span className="text-[pink] ">{pocket?.userNickname}</span> 님의
             복주머니
           </h1>
-          <p>{decorations.length}개의 복이 왔어요.</p>
+          <p className="ml-4 text-base">
+            {decorations.length}개의 복이 왔어요.
+          </p>
         </div>
         {/* <h1 className="text-4xl mb-3">Lucky Bocky!</h1>
       <p className="text-xl mb-6">복 내놔라</p> */}
@@ -135,7 +147,7 @@ const MainPage = () => {
           <picture>
             <source srcSet={MainImageW} type="image/webp" />
             <img
-              src={MainImage}
+              src={MainImageP}
               alt="복주머니 이미지"
               className="w-80 h-80 mb-6"
             />
@@ -155,7 +167,7 @@ const MainPage = () => {
                 <img
                   src={fortuneImages[decoration.image].fallback}
                   alt="장식물"
-                  className="w-28 h-28 cursor-pointer"
+                  className="w-24 h-24 cursor-pointer"
                 />
               </picture>
             </button>
@@ -163,7 +175,7 @@ const MainPage = () => {
         </div>
 
         {/* 페이지네이션 */}
-        <div className="flex justify-center mb-2 w-full px-10">
+        <div className="flex justify-center w-full mb-2 px-10">
           <button
             onClick={handlePreviousPage}
             disabled={currentPage === 1}
@@ -197,7 +209,7 @@ const MainPage = () => {
                   })
           }
           className={`${
-            isOwner ? "bg-white text-[#0d1a26] pt-3 pb-4" : "bg-blue-500 py-4"
+            isOwner ? "bg-white text-[#0d1a26] pt-3 pb-4" : "bg-[#156082] py-4"
           }   px-20 rounded-lg w-full max-w-[375px]`}
         >
           <div className="flex items-center justify-center">

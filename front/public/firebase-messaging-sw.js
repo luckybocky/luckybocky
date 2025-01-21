@@ -15,10 +15,9 @@ fetch("/firebase-config.json")
       // 백그라운드 메시지 처리
       messaging.onBackgroundMessage((payload) => {
         console.log("backgorund push");
-        const notificationTitle =
-          "백그라운드 푸시" + payload.notification.title;
+        const notificationTitle = payload.data.title;
         const notificationOptions = {
-          body: payload.notification.body,
+          body: payload.data.body,
           // 알림 클릭 시 이동할 URL 설정
           data: {
             url: payload.data.url, // 데이터로 URL을 넘겨받는다
