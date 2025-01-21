@@ -1,5 +1,5 @@
 import React, { useState, lazy, Suspense } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import PocketIcon from "../image/pocketIcon.svg";
 import FeedbackService from "../api/FeedbackService.ts";
 import AuthStore from "../store/AuthStore";
@@ -22,6 +22,18 @@ const IoChatbubblesOutline = lazy(() =>
   }))
 );
 
+const IoPersonCircleOutline = lazy(() =>
+  import("react-icons/io5").then((mod) => ({
+    default: mod.IoPersonCircleOutline,
+  }))
+);
+
+const IoHelpCircleOutline = lazy(() =>
+  import("react-icons/io5").then((mod) => ({
+    default: mod.IoHelpCircleOutline,
+  }))
+);
+
 const Menu = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
@@ -29,6 +41,9 @@ const Menu = () => {
   const [rating, setRating] = useState(0);
   const [feedbackAlarm, setFeedbackAlarm] = useState(false);
   const [confirmCloseModal, setConfirmCloseModal] = useState(false);
+
+  const location = useLocation();
+  const isQnaPage = location.pathname.startsWith("/qna");
 
   const navigate = useNavigate();
 
@@ -85,7 +100,10 @@ const Menu = () => {
 
       {/* 메뉴 버튼 */}
       <button
-        className="absolute top-4 right-4 text-3xl z-20"
+        className="absolute top-4 right-4 text-2xl z-20"
+        style={{
+          color: isQnaPage ? "#0d1a26" : undefined, // CSS 변수로 동적 색상 지정
+        }}
         onClick={toggleMenu}
       >
         <Suspense>
@@ -156,12 +174,27 @@ const Menu = () => {
               className="flex hover:underline items-center gap-2"
               onClick={() => navigate("/")}
             >
-              <span className="text-2xl my-8">로그인 / 회원가입</span>
+              <IoPersonCircleOutline size={24} />
+              <span className="mt-1">로그인 / 회원가입</span>
             </button>
           </ul>
         )}
+        <div className="border-t border-gray-600">
+          <ul className="py-3 px-6 space-y-5">
+            <button
+              className="flex hover:underline items-center gap-2"
+              onClick={() => {
+                navigate("/qna");
+                toggleMenu();
+              }}
+            >
+              <IoHelpCircleOutline size={24} />
+              <span className="mt-1">문의하기</span>
+            </button>
+          </ul>
+        </div>
 
-        <footer className="border-t border-gray-600 p-4 text-center text-base">
+        <footer className="border-t border-gray-600 p-4 text-center">
           Lucky Bocky!
         </footer>
       </div>

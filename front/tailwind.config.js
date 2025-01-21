@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ["JalnanW,Jalnan"],
+        JalnanGothic: ["JalnanGothic"]
       },
     },
   },
