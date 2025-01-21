@@ -169,7 +169,10 @@ const Menu = () => {
             <button
               className="flex hover:underline items-center gap-2"
               onClick={() => {
-                navigate("/qna");
+                if(window.sessionStorage.getItem("flag") !== null) {
+                  window.sessionStorage.removeItem("flag");
+                }
+                navigate("/qna", {state: false});
                 toggleMenu();
               }}
             >

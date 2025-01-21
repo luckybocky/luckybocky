@@ -54,7 +54,7 @@ const QnaBoardPage = () => {
     const newFlag = !flag;
     setFlag(newFlag);
     sessionStorage.setItem("flag", JSON.stringify(newFlag));
-  }
+  };
 
   const sendQuestion = () => {
     if (title === "") {
@@ -80,26 +80,28 @@ const QnaBoardPage = () => {
 
   const checkAccess = async (payload) => {
     const response = await QnaService.checkAccess(payload.qnaSeq);
-    if (response === 400 || response === 300 || payload.question.secretStatus === false) {
-      navigate(`/qna/${payload.qnaSeq}`, { state: {question: payload.question, code: response} });
+    if (
+      response === 400 ||
+      response === 300 ||
+      payload.question.secretStatus === false
+    ) {
+      navigate(`/qna/${payload.qnaSeq}`, {
+        state: { question: payload.question, code: response },
+      });
     } else {
       setAccessAlarm(true);
       setTimeout(() => setAccessAlarm(false), 2000);
     }
   };
 
-  const fetchQuestions = async (currentPage, flag) => {
-    if (currentPage === undefined) {
-      // 첫 페이지를 가리킬 때 undefined
-      currentPage = 1;
-    }
+  const fetchQuestions = async () => {
     const params = {
       page: currentPage - 1,
       size: itemsPerPage,
       sort: "createdAt,desc",
     };
 
-    let response = null;  // 상세 페이지
+    let response = null; // 상세 페이지
     if (flag === false) {
       response = await QnaService.getQuestions(params);
     } else if (flag === true) {
@@ -111,7 +113,7 @@ const QnaBoardPage = () => {
   };
 
   useEffect(() => {
-    fetchQuestions(currentPage, flag);
+    fetchQuestions();
   }, [currentPage, flag]);
 
   useEffect(() => {
@@ -122,7 +124,7 @@ const QnaBoardPage = () => {
   }, []);
 
   return (
-    <div className="relative flex flex-col items-center w-full p-2 max-w-[375px] min-h-screen bg-[#FEFAF6] text-white overflow-hidden">
+    <div className="relative flex flex-col items-center w-full p-2 max-w-[600px] min-h-screen bg-[#FEFAF6] text-white overflow-hidden">
       <Menu />
       {/* 제목 영역 */}
       <h1 className="text-xl mt-2 mb-2 text-[#0d1a26]">QnA</h1>
@@ -134,12 +136,56 @@ const QnaBoardPage = () => {
         >
           작성하기
         </button>
-        <button
-          className="bg-[#CEAB93] h-9 p-3 rounded-lg flex items-center justify-center"
-          onClick={() => checkFlag()}
-        >
-          {flag === false ? "내 QnA" : "전체 QnA" }
-        </button>
+        {/* <div className="flex items-center space-x-4">
+          <label className="flex items-center cursor-pointer">
+            <input
+              type="radio"
+              name="qnaFilter"
+              value="myQna"
+              checked={!flag}
+              onChange={() => checkFlag(false)}
+              className="w-5 h-5 text-[#CEAB93] focus:ring-[#CEAB93]"
+            />
+            <span className="ml-2 text-[#0d1a26] font-JalnanGothic text-xs">
+              전체 QnA
+            </span>
+          </label>
+
+          <label className="flex items-center cursor-pointer">
+            <input
+              type="radio"
+              name="qnaFilter"
+              value="allQna"
+              checked={flag}
+              onChange={() => checkFlag(true)}
+              className="w-5 h-5 text-[#CEAB93] focus:ring-[#CEAB93]"
+            />
+            <span className="ml-2 text-[#0d1a26] font-JalnanGothic text-xs">
+              내 QnA
+            </span>
+          </label>
+        </div> */}
+        <div className="flex items-center">
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={flag}
+              onChange={() => checkFlag(!flag)}
+              className="sr-only peer"
+            />
+            <div
+              className="w-12 h-6 bg-gray-300 rounded-full peer peer-checked:bg-[#CEAB93] 
+             transition-colors duration-300 outline outline-2 outline-transparent focus:outline-[#CEAB93]"
+            ></div>
+            <span
+              className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow peer-checked:translate-x-6 
+                 transition-transform duration-300 focus:outline-none"
+            ></span>
+          </label>
+          <span className="ml-4 text-[#0d1a26] font-JalnanGothic">
+            {flag ? "내 QnA" : "전체 QnA"}
+          </span>
+        </div>
       </div>
       {/* 메시지 리스트 */}
       <div className="w-full">
@@ -193,7 +239,7 @@ const QnaBoardPage = () => {
       </div>
 
       {/* 페이지네이션 */}
-      <div className="fixed top-[508px] justify-center mt-6 text-black">
+      <div className="justify-center mt-6 text-black">
         {startPage > 1 && (
           <button
             className="px-3 py-1 mx-1 bg-gray-300 rounded"
@@ -228,7 +274,7 @@ const QnaBoardPage = () => {
       {/* 돌아가기 버튼 */}
       <button
         onClick={() => navigate(window.sessionStorage.getItem("pocketAddress"))}
-        className="fixed bottom-0 w-full max-w-[375px] bg-[#E3CAA5] text-[#0d1a26] py-4 rounded-t-lg z-20"
+        className="fixed bottom-0 w-full max-w-[600px] bg-[#E3CAA5] text-[#0d1a26] py-4 rounded-t-lg z-20"
       >
         <span className="flex justify-center pt-1">돌아가기</span>
       </button>
@@ -244,7 +290,7 @@ const QnaBoardPage = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <textarea
-              className="w-full p-2 border border-gray-300 rounded-md resize-none whitespace-nowrap overflow-hidden"
+              className="w-full p-2 border border-gray-300 rounded-md resize-none whitespace-nowrap"
               placeholder="제목을 입력하세요."
               rows={1}
               onChange={(e) => setTitle(e.target.value)}
@@ -302,7 +348,7 @@ const QnaBoardPage = () => {
       {/*QnA 접근 블로킹 알림 */}
       {accessAlarm && (
         <div className="fixed bottom-16 bg-red-500 text-white py-2 px-4 rounded-lg shadow-md z-30">
-          로그인 상태를 확인하세요!
+          비공개 글입니다!
         </div>
       )}
     </div>
