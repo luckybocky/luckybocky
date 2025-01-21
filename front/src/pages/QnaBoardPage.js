@@ -108,9 +108,6 @@ const QnaBoardPage = () => {
       response = await QnaService.getMyQuestion(params);
     }
 
-    console.log("Flag" + flag);
-    console.log("fetch" + response);
-
     setQuestions(response.content);
     setTotalPages(response.page.totalPages);
   };
@@ -121,8 +118,6 @@ const QnaBoardPage = () => {
 
   useEffect(() => {
     const savedFlag = sessionStorage.getItem("flag");
-
-    console.log("받아오기" + savedFlag);
 
     if (savedFlag !== null) {
       setFlag(JSON.parse(savedFlag));
