@@ -33,7 +33,6 @@ const WritePage = () => {
   };
 
   const confirmWrite = async () => {
-    console.log(isSubmitting);
     if (isSubmitting) return;
 
     setIsSubmitting(true);
