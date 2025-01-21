@@ -8,8 +8,8 @@ const QnaDetailPage = () => {
   const location = useLocation();
   const [answer, setAnswer] = useState("");
   const [tempAlarm, setTempAlarm] = useState(false);
-  const [question, setQuestion] = useState(location.state.question);
-  const code = location.state.code;
+  const [question, setQuestion] = useState(location.state?.question || null);
+  const code = location.state?.code || 200;
 
   const activateAlarm = () => {
     setTempAlarm(true);
@@ -30,25 +30,31 @@ const QnaDetailPage = () => {
   };
 
   return (
-    <div className="relative flex flex-col items-center w-full p-2 max-w-[375px] min-h-screen bg-[#FEFAF6] text-white overflow-hidden">
+    <div className="relative flex flex-col items-center w-full p-2 max-w-[600px] min-h-screen bg-[#FEFAF6] text-white overflow-hidden">
       <Menu />
       {/* 제목 영역 */}
       <h1 className="text-xl mt-2 mb-2 text-[#0d1a26]">QnA</h1>
       {/* 상단 메뉴 영역 */}
-      <div className="w-full grid grid-cols-2 px-4 space-x-4 mt-3 mb-3 text-sm">
-        <button
-          className="bg-[#AD8B73] h-9 p-3 rounded-lg flex items-center justify-center"
-          onClick={() => activateAlarm()}
-        >
-          수정하기
-        </button>
-        <button
-          className="bg-[#CEAB93] h-9 p-3 rounded-lg flex items-center justify-center"
-          onClick={() => activateAlarm()}
-        >
-          삭제하기
-        </button>
-      </div>
+      {question && (code === 300 || code === 400) ? (
+        <div className="w-full grid grid-cols-2 px-4 space-x-4 mt-3 mb-3 text-sm">
+          <button
+            className="bg-[#AD8B73] h-9 p-3 rounded-lg flex items-center justify-center"
+            onClick={() => activateAlarm()}
+          >
+            수정하기
+          </button>
+          <button
+            className="bg-[#CEAB93] h-9 p-3 rounded-lg flex items-center justify-center"
+            onClick={() => activateAlarm()}
+          >
+            삭제하기
+          </button>
+        </div>
+      ) : (
+        <div className="w-full px-4">
+          <div className="h-9 p-3 mt-3 mb-3"></div>
+        </div>
+      )}
       {/* QnA */}
       <div className="w-full text-[#0d1a26] font-JalnanGothic">
         {question ? (
@@ -110,7 +116,7 @@ const QnaDetailPage = () => {
       {/* 돌아가기 버튼 */}
       <button
         onClick={() => navigate(-1)}
-        className="fixed bottom-0 w-full max-w-[375px] bg-[#E3CAA5] text-[#0d1a26] py-4 rounded-t-lg z-20"
+        className="fixed bottom-0 w-full max-w-[600px] bg-[#E3CAA5] text-[#0d1a26] py-4 rounded-t-lg z-20"
       >
         <span className="flex justify-center pt-1">돌아가기</span>
       </button>
