@@ -1,6 +1,13 @@
 package com.project.luckybocky.push.dto;
 
-import lombok.*;
+import com.project.luckybocky.user.entity.User;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -9,7 +16,9 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class PushDto {
-	private int contentSeq;
-	private String fromUser;
-	private String url;
+	// private int contentSeq;
+	private User toUser;
+	private String address;
+	private String title;
+	private String content;
 }
