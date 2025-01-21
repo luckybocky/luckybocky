@@ -16,6 +16,7 @@ const WritePage = () => {
   const [message, setMessage] = useState("");
   const [visibility, setVisibility] = useState(true);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const location = useLocation();
   const decorationId = location.state?.decorationId;
@@ -32,6 +33,11 @@ const WritePage = () => {
   };
 
   const confirmWrite = async () => {
+    console.log(isSubmitting);
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
     const payload = {
       pocketSeq: pocketSeq,
       nickname: nickname,
@@ -51,6 +57,8 @@ const WritePage = () => {
     setNickname(userNickname);
   }, []);
 
+  useEffect(() => {}, [isSubmitting]);
+
   return (
     <div className="flex flex-col justify-center w-full max-w-[600px] bg-[#f5f5f5] text-[#3c1e1e] p-4">
       <h1 className="text-3xl text-center mb-24">메시지를 남겨주세요</h1>
@@ -66,21 +74,41 @@ const WritePage = () => {
         </picture>
         <textarea
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => {
+            const input = e.target.value;
+            if (input.length <= 500) {
+              setMessage(e.target.value); // 500자 이하일 때만 상태 업데이트
+            }
+          }}
           placeholder="메시지를 입력하세요"
           className="w-full h-60 border rounded-md p-2 pt-4 resize-none "
         />
       </div>
 
-      <input
-        type="text"
-        placeholder="닉네임을 입력하세요"
-        value={nickname}
-        onChange={(e) => setNickname(e.target.value)}
-        className="border rounded-md p-2 mb-4"
-      />
+      <div className="flex flex-col">
+        <input
+          type="text"
+          placeholder="닉네임을 입력하세요"
+          value={nickname}
+          onChange={(e) => {
+            const input = e.target.value;
+            if (input.length <= 6) {
+              setNickname(input); // 6자 이하일 때만 상태 업데이트
+            }
+          }}
+          className="border rounded-md p-2"
+        />
 
-      <div className="flex justify-between">
+        <div>
+          {(nickname?.length < 2 || nickname?.length > 6) && (
+            <span className="absolute text-red-500 text-sm mt-1 pl-1">
+              닉네임은 2~6자 사이여야 합니다.
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="flex justify-between mt-8">
         <label className="flex items-center pl-1">
           <input
             type="checkbox"

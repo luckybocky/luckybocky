@@ -9,6 +9,8 @@ const QnaDetailPage = () => {
   const [answer, setAnswer] = useState("");
   const [tempAlarm, setTempAlarm] = useState(false);
   const [question, setQuestion] = useState(location.state?.question || null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const code = location.state?.code || 200;
 
   const activateAlarm = () => {
@@ -16,7 +18,10 @@ const QnaDetailPage = () => {
     setTimeout(() => setTempAlarm(false), 1000);
   };
 
-  const sendAnswer = () => {
+  const sendAnswer = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const payload = {
       qnaSeq: question.qnaSeq,
       title: question.title,
@@ -25,7 +30,9 @@ const QnaDetailPage = () => {
       secretStatus: question.secretStatus,
       userNickname: question.userNickname,
     };
-    QnaService.saveAnswer(payload);
+    await QnaService.saveAnswer(payload);
+
+    setIsSubmitting(false);
     setQuestion(payload);
   };
 

@@ -28,6 +28,7 @@ const Menu = () => {
   const [rating, setRating] = useState(0);
   const [feedbackAlarm, setFeedbackAlarm] = useState(false);
   const [confirmCloseModal, setConfirmCloseModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isQnaPage = location.pathname.startsWith("/qna");
 
@@ -55,16 +56,20 @@ const Menu = () => {
     }
   };
 
-  const confirmFeedback = () => {
+  const confirmFeedback = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const payload = {
       feedbackContent: feedback,
       feedbackRate: rating,
     };
 
-    FeedbackService.save(payload);
+    await FeedbackService.save(payload);
     setFeedbackModalOpen(false);
     setRating(0);
     setFeedback("");
+    setIsSubmitting(false);
 
     setFeedbackAlarm(true);
     setTimeout(() => setFeedbackAlarm(false), 2000);
@@ -172,10 +177,10 @@ const Menu = () => {
             <button
               className="flex hover:underline items-center gap-2"
               onClick={() => {
-                if(window.sessionStorage.getItem("flag") !== null) {
+                if (window.sessionStorage.getItem("flag") !== null) {
                   window.sessionStorage.removeItem("flag");
                 }
-                navigate("/qna", {state: false});
+                navigate("/qna", { state: false });
                 toggleMenu();
               }}
             >

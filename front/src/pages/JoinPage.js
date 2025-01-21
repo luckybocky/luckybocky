@@ -18,8 +18,12 @@ const JoinPage = () => {
   const [isPublic, setIsPublic] = useState(false); // 공개 여부
   const [isAlarm, setIsAlarm] = useState(false); // 알람 여부
   const [notice, setNotice] = useState(false); // 브라우저 알림 체크
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const joinUser = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     await setUser({
       ...user,
       userNickname: nickname,
@@ -29,6 +33,7 @@ const JoinPage = () => {
 
     await Authservice.update();
 
+    setIsSubmitting(false);
     navigate(`/${user.address}`);
   };
 

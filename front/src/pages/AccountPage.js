@@ -22,6 +22,7 @@ const AccountPage = () => {
   const [saved, setSaved] = useState(false);
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [notice, setNotice] = useState(false); // 브라우저 알림 체크
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const saveNickname = () => {
     setUser({
@@ -51,6 +52,8 @@ const AccountPage = () => {
       }
 
       if (permission === "granted") {
+        if (isSubmitting) return;
+
         setUser({
           ...user,
           alarmStatus: !user.alarmStatus,
@@ -68,6 +71,8 @@ const AccountPage = () => {
   };
 
   const saveFortuneVisibility = () => {
+    if (isSubmitting) return;
+
     setUser({
       ...user,
       fortuneVisibility: !user.fortuneVisibility,
@@ -90,8 +95,17 @@ const AccountPage = () => {
     setNickname(user.userNickname);
   }, []);
 
+  const updateUser = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    await AuthService.update();
+
+    setIsSubmitting(false);
+  };
+
   useEffect(() => {
-    AuthService.update();
+    updateUser();
   }, [user]);
 
   // 로그인되지 않은 사용자는 리다이렉트 - Navigate를 활용해 렌더링조차 하지 않고 뒤로 보냄
@@ -136,8 +150,10 @@ const AccountPage = () => {
         />
         <button
           onClick={() => {
-            if (changeMode) saveNickname();
-            setChangeMode((prev) => !prev);
+            if (!isSubmitting) {
+              if (changeMode) saveNickname();
+              setChangeMode((prev) => !prev);
+            }
           }}
           className={`${
             nickname?.length >= 2 && nickname?.length <= 6

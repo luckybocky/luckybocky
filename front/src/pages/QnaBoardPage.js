@@ -20,6 +20,7 @@ const QnaBoardPage = () => {
   const [questions, setQuestions] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const itemsPerPage = 5;
   const startPage = Math.floor((currentPage - 1) / 3) * 3 + 1;
@@ -67,6 +68,9 @@ const QnaBoardPage = () => {
   };
 
   const confirmQuestion = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const payload = {
       title,
       content,
@@ -74,6 +78,8 @@ const QnaBoardPage = () => {
     };
 
     await QnaService.saveQuestion(payload); // 질문 저장
+
+    setIsSubmitting(false);
     closeModals(); // 모달 닫기
     fetchQuestions(currentPage, flag);
   };

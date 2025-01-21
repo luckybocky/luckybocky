@@ -32,18 +32,28 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
   const [reported, setReported] = useState(false); // 신고 알림 상태
   const [isLoaded, setIsLoaded] = useState(false); // 로드 상태
   const [confirmCloseModal, setConfirmCloseModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const confirmDelete = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     await ArticleService.deleteBySeq(articleSeq);
     onClose();
     onDelete();
+    setIsSubmitting(false);
   };
 
   const confirmComment = async () => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
     await sendComment();
     setMessage("");
     fetchArticle();
     setCommentModalOpen(false);
+    setIsSubmitting(false);
   };
 
   const fetchArticle = async () => {
@@ -73,6 +83,10 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
     } else if (report === "") {
       alert("신고 내용을 입력해주세요.");
     } else {
+      if (isSubmitting) return;
+
+      setIsSubmitting(true);
+
       const payload = {
         articleSeq,
         reportType: reportType,
@@ -85,6 +99,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
       setReport("");
       setReportType(0);
       setReportModalOpen(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -149,7 +164,12 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
                 !detail.articleVisibility ? "filter blur-lg" : ""
               }`}
               value={detail?.articleComment ? detail?.articleComment : message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => {
+                const input = e.target.value;
+                if (input.length <= 300) {
+                  setMessage(e.target.value); // 300자 이하일 때만 상태 업데이트
+                }
+              }}
               placeholder={`${myAddress !== address ? "" : "나도 복 보내기"}`}
               disabled={detail?.articleComment || myAddress !== address}
             />
