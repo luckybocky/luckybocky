@@ -9,6 +9,8 @@ import CallBack from "./pages/CallBack";
 import ErrorPage from "./pages/ErrorPage";
 import JoinPage from "./pages/JoinPage";
 import CheckUser from "./components/CheckUser";
+import QnaBoardPage from "./pages/QnaBoardPage";
+import QnaDetailPage from "./pages/QnaDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +52,14 @@ const router = createBrowserRouter([
         path: "/join",
         element: <JoinPage />,
       },
+      {
+        path: "/qna",
+        element: <QnaBoardPage />,
+      },
+      {
+        path: "/qna/:id",
+        element: <QnaDetailPage />,
+      }
     ],
   },
 ]);
