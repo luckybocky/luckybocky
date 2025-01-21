@@ -65,8 +65,8 @@ const JoinPage = () => {
   }
 
   return (
-    <div className="relative flex flex-col w-full max-w-[600px] bg-[#333] p-6">
-      <h1 className="text-4xl mb-8 mt-5">회원 가입</h1>
+    <div className="relative flex flex-col w-full max-w-[600px] bg-[#333] px-6 py-8">
+      <h1 className="text-4xl mb-8">회원 가입</h1>
       <h1 className="text-2xl">새해 복 많이 받으세요 🙂</h1>
 
       {/* 구분선 추가 */}

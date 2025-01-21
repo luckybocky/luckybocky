@@ -6,8 +6,8 @@ import AuthStore from "../store/AuthStore";
 
 import PocketService from "../api/PocketService.ts";
 
-import bgImageP from "../image/bgImage2.png";
-import bgImageW from "../image/bgImage2.webp";
+import bgImageP from "../image/bgImage.png";
+import bgImageW from "../image/bgImage.webp";
 import MainImageP from "../image/pocket.png";
 import MainImageW from "../image/pocket.webp";
 
@@ -35,12 +35,12 @@ const MainPage = () => {
 
   const { address } = useParams();
   const positions = [
-    { id: 1, position: "top-[40%] left-[8%]" }, // 상단 왼쪽
-    { id: 2, position: "top-[45%] left-[35%]" }, // 상단 오른쪽 -> 가운데
-    { id: 3, position: "top-[40%] left-[62%]" }, // 중단 왼쪽 -> 상단 오른쪽
-    { id: 4, position: "top-[60%] left-[8%]" }, // 중단 오른쪽 -> 하단 왼쪽
-    { id: 5, position: "top-[65%] left-[35%]" }, // 하단 왼쪽 -> 가운데
-    { id: 6, position: "top-[60%] left-[62%]" }, // 하단 오른쪽
+    { id: 1, position: "top-[25%] left-[8%]" }, // 상단 왼쪽
+    { id: 2, position: "top-[35%] left-[38%]" }, // 상단 오른쪽 -> 가운데
+    { id: 3, position: "top-[25%] left-[68%]" }, // 중단 왼쪽 -> 상단 오른쪽
+    { id: 4, position: "top-[55%] left-[8%]" }, // 중단 오른쪽 -> 하단 왼쪽
+    { id: 5, position: "top-[65%] left-[38%]" }, // 하단 왼쪽 -> 가운데
+    { id: 6, position: "top-[55%] left-[68%]" }, // 하단 오른쪽
   ];
   const decorationsPerPage = 6;
   const totalPages = Math.max(
@@ -66,6 +66,7 @@ const MainPage = () => {
           id: decoration.articleSeq,
           position: positions[decorationIdx].position,
           image: decoration.fortuneImg,
+          userNickname: decoration.userNickname,
         };
       });
 
@@ -118,7 +119,7 @@ const MainPage = () => {
 
   return (
     isLoaded && (
-      <div className="relative flex flex-col items-center justify-center w-full max-w-[600px] p-2 overflow-hidden z-20">
+      <div className="relative flex flex-col items-center justify-center w-full max-w-[600px] p-4 overflow-hidden z-20">
         <picture>
           <div className="absolute inset-0 bg-gradient-to-b from-black/15 to-transparent -z-10"></div>
           <source srcSet={bgImageW} type="image/webp" />
@@ -131,17 +132,13 @@ const MainPage = () => {
 
         <Menu />
         {/* 메인 화면 */}
-        <div className="absolute top-0 left-0 pb-2">
-          <h1 className="text-2xl mb-1 ml-4 mt-4 ">
+        <div className="absolute top-0 left-0 p-4">
+          <h1 className="text-2xl mb-1">
             <span className="text-[pink] ">{pocket?.userNickname}</span> 님의
             복주머니
           </h1>
-          <p className="ml-4 text-base">
-            {decorations.length}개의 복이 왔어요.
-          </p>
+          <p className="text-base">{decorations.length}개의 복이 왔어요.</p>
         </div>
-        {/* <h1 className="text-4xl mb-3">Lucky Bocky!</h1>
-      <p className="text-xl mb-6">복 내놔라</p> */}
 
         <div className="relative">
           <picture>
@@ -159,6 +156,9 @@ const MainPage = () => {
               className={`absolute ${decoration.position}`}
               onClick={() => setSelectArticle(decoration.id)}
             >
+              <p className="absolute w-full top-[-15px] text-sm text-shadow-outline">
+                {decoration.userNickname}
+              </p>
               <picture>
                 <source
                   srcSet={fortuneImages[decoration.image].src}
@@ -167,7 +167,7 @@ const MainPage = () => {
                 <img
                   src={fortuneImages[decoration.image].fallback}
                   alt="장식물"
-                  className="w-24 h-24 cursor-pointer"
+                  className="w-20 h-20 cursor-pointer"
                 />
               </picture>
             </button>
@@ -210,7 +210,7 @@ const MainPage = () => {
           }
           className={`${
             isOwner ? "bg-white text-[#0d1a26] pt-3 pb-4" : "bg-[#156082] py-4"
-          }   px-20 rounded-lg w-full max-w-[375px]`}
+          }   px-10 rounded-lg w-full max-w-[350px]`}
         >
           <div className="flex items-center justify-center">
             <Suspense>

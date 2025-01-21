@@ -52,7 +52,7 @@ const WritePage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center w-full max-w-[600px] bg-[#f5f5f5] text-[#3c1e1e] p-2">
+    <div className="flex flex-col justify-center w-full max-w-[600px] bg-[#f5f5f5] text-[#3c1e1e] p-4">
       <h1 className="text-3xl text-center mb-24">메시지를 남겨주세요</h1>
 
       <div className="relative mb-2">

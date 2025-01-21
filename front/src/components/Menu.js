@@ -15,7 +15,7 @@ const IoMailOutline = Util.loadIcon("IoMailOutline").io5;
 const IoChatbubblesOutline = Util.loadIcon("IoChatbubblesOutline").io5;
 const IoPersonCircleOutline = Util.loadIcon("IoPersonCircleOutline").io5;
 const IoHelpCircleOutline = Util.loadIcon("IoHelpCircleOutline").io5;
-     
+
 const Menu = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,7 +28,7 @@ const Menu = () => {
   const [rating, setRating] = useState(0);
   const [feedbackAlarm, setFeedbackAlarm] = useState(false);
   const [confirmCloseModal, setConfirmCloseModal] = useState(false);
-  
+
   const isQnaPage = location.pathname.startsWith("/qna");
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
@@ -82,7 +82,7 @@ const Menu = () => {
 
       {/* 메뉴 버튼 */}
       <button
-        className="absolute top-4 right-4 text-3xl"
+        className="absolute top-0 right-0 text-3xl p-4"
         style={{
           color: isQnaPage ? "#0d1a26" : undefined, // CSS 변수로 동적 색상 지정
         }}
@@ -95,13 +95,13 @@ const Menu = () => {
 
       {/* 메뉴 바 */}
       <div
-        className={`absolute top-0 right-0 h-full bg-[#333] transition-transform duration-300 ease-in-out z-20 ${
+        className={`absolute top-0 right-0 h-full bg-[#333] text-lg transition-transform duration-300 ease-in-out py-4 px-6 z-20 ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
-        style={{ width: "270px" }}
+        style={{ width: "260px" }}
       >
         {myAddress && (
-          <ul className="space-y-5 py-3 px-6">
+          <ul className="space-y-3">
             <button
               onClick={() => navigate("/account")}
               className="flex hover:underline items-center gap-2"
@@ -154,18 +154,21 @@ const Menu = () => {
         )}
 
         {!myAddress && (
-          <ul className="space-y-5 py-3 px-6">
+          <ul className="space-y-3">
             <button
-              className="flex hover:underline items-center gap-2"
+              className="flex hover:underline items-center gap-2 my-16 text-xl"
               onClick={() => navigate("/")}
             >
-              <IoPersonCircleOutline size={24} />
+              <IoPersonCircleOutline size={28} />
               <span className="mt-1">로그인 / 회원가입</span>
             </button>
           </ul>
         )}
-        <div className="border-t border-gray-600">
-          <ul className="py-3 px-6 space-y-5">
+
+        <hr className="border-t-2 border-gray-600 my-4 mx-auto" />
+
+        <div>
+          <ul className="space-y-2">
             <button
               className="flex hover:underline items-center gap-2"
               onClick={() => {
@@ -182,9 +185,9 @@ const Menu = () => {
           </ul>
         </div>
 
-        <footer className="border-t border-gray-600 p-4 text-center">
-          Lucky Bocky!
-        </footer>
+        <hr className="border-t-2 border-gray-600 my-4 mx-auto" />
+
+        <footer className="text-center">Lucky Bocky!</footer>
       </div>
 
       {/* 피드백 모달 */}

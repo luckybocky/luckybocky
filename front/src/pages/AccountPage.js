@@ -9,7 +9,7 @@ import FirebaseService from "../api/FirebaseService.ts";
 import Footer from "../components/Footer";
 import Util from "../components/Util.js";
 
-const IoArrowBack = Util.loadIcon("IoArrowBack").io5;
+const IoHomeOutline = Util.loadIcon("IoHomeOutline").io5;
 
 const AccountPage = () => {
   const navigate = useNavigate();
@@ -100,21 +100,20 @@ const AccountPage = () => {
   }
 
   return (
-    <div className="relative flex flex-col w-full max-w-[600px] bg-[#333] p-6">
-      {/* 뒤로 가기 버튼 */}
+    <div className="relative flex flex-col w-full max-w-[600px] bg-[#333] px-6 py-8">
+      {/* 홈으로 가기 버튼 */}
       <button
-        className="absolute top-8 right-8 text-3xl"
-        onClick={() => navigate(-1)}
+        className="absolute top-0 right-0 text-3xl px-6 pt-8"
+        onClick={() => navigate(window.sessionStorage.getItem("pocketAddress"))}
       >
         <Suspense>
-          <IoArrowBack />
+          <IoHomeOutline />
         </Suspense>
       </button>
 
-      <h1 className="text-4xl mb-8 mt-5">계정 설정</h1>
+      <h1 className="text-4xl mb-8 ">계정 설정</h1>
       <h1 className="text-2xl">
-        <span className="text-[pink]">{user.userNickname}</span> 님, 새해 복
-        많이 받으세요 🙂
+        <span className="text-[pink]">{user.userNickname}</span> 님
       </h1>
 
       {/* 구분선 추가 */}

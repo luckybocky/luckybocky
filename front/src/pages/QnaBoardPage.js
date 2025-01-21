@@ -75,7 +75,7 @@ const QnaBoardPage = () => {
 
     await QnaService.saveQuestion(payload); // 질문 저장
     closeModals(); // 모달 닫기
-    fetchQuestions();
+    fetchQuestions(currentPage, flag);
   };
 
   const checkAccess = async (payload) => {
@@ -108,6 +108,9 @@ const QnaBoardPage = () => {
       response = await QnaService.getMyQuestion(params);
     }
 
+    console.log("Flag" + flag);
+    console.log("fetch" + response);
+
     setQuestions(response.content);
     setTotalPages(response.page.totalPages);
   };
@@ -118,6 +121,9 @@ const QnaBoardPage = () => {
 
   useEffect(() => {
     const savedFlag = sessionStorage.getItem("flag");
+
+    console.log("받아오기" + savedFlag);
+
     if (savedFlag !== null) {
       setFlag(JSON.parse(savedFlag));
     }
@@ -274,9 +280,9 @@ const QnaBoardPage = () => {
       {/* 돌아가기 버튼 */}
       <button
         onClick={() => navigate(window.sessionStorage.getItem("pocketAddress"))}
-        className="fixed bottom-0 w-full max-w-[600px] bg-[#E3CAA5] text-[#0d1a26] py-4 rounded-t-lg z-20"
+        className="fixed bottom-0 w-full max-w-[600px] bg-[#E3CAA5] text-[#0d1a26] py-4 rounded-t-lg"
       >
-        <span className="flex justify-center pt-1">돌아가기</span>
+        돌아가기
       </button>
 
       {/* 질문게시 모달 */}

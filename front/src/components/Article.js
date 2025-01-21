@@ -104,7 +104,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
         onClick={confirmClose}
       >
         <div
-          className="relative bg-white rounded-lg max-w-[375px] w-full shadow-lg p-4"
+          className="relative bg-white rounded-lg max-w-[350px] w-full shadow-lg p-4"
           onClick={(e) => e.stopPropagation()}
         >
           <picture>

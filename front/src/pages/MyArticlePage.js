@@ -29,13 +29,13 @@ const MyArticlePage = () => {
   }
 
   return (
-    <div className="relative flex flex-col items-center w-full max-w-[600px] bg-[#ba947f] overflow-hidden p-2">
+    <div className="relative flex flex-col items-center w-full max-w-[600px] bg-[#ba947f] p-4 overflow-hidden p-2">
       <Menu />
 
       <h1 className="text-2xl mb-4">메시지 목록</h1>
 
       {/* 메시지 리스트 */}
-      <div className="w-full px-4 space-y-8 pb-16 mt-8">
+      <div className="w-full space-y-8 pb-16 mt-8">
         {articles?.map((article, index) => (
           <div
             key={index}
@@ -75,7 +75,7 @@ const MyArticlePage = () => {
 
       {/* 돌아가기 버튼 */}
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => navigate(window.sessionStorage.getItem("pocketAddress"))}
         className="fixed bottom-0 w-full max-w-[600px] bg-white text-[#3c1e1e] rounded-t-lg pt-5 pb-4"
       >
         돌아가기
