@@ -21,6 +21,7 @@ import com.project.luckybocky.qna.dto.QnaListResDto;
 import com.project.luckybocky.qna.dto.QnaUserReqDto;
 import com.project.luckybocky.qna.service.QnaService;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 public class QnaController {
 	private final QnaService qnaService;
 
+	@RateLimiter(name = "saveRateLimiter")
 	@PostMapping("/question")
 	public ResponseEntity<ResponseDto> saveQuestion(@RequestBody QnaUserReqDto question, HttpSession session) {
 		qnaService.saveQuestion(question, session);
@@ -43,6 +45,7 @@ public class QnaController {
 			.body(new ResponseDto("질문 등록 성공"));
 	}
 
+	@RateLimiter(name = "saveRateLimiter")
 	@PutMapping("/answer")
 	public ResponseEntity<ResponseDto> saveAnswer(@RequestBody QnaDto answer) {
 		qnaService.saveAnswer(answer);

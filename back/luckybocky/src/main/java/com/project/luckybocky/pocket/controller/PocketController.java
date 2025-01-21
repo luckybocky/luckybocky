@@ -16,6 +16,7 @@ import com.project.luckybocky.pocket.exception.PocketNotFoundException;
 import com.project.luckybocky.pocket.service.PocketService;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -110,6 +111,7 @@ public class PocketController {
 		@ApiResponse(responseCode = "401", description = "사용자 조회 실패",
 			content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
 	})
+	@RateLimiter(name = "saveRateLimiter")
 	@PostMapping
 	public ResponseEntity<DataResponseDto> createPocket(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");

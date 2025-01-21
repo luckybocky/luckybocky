@@ -1,6 +1,5 @@
 package com.project.luckybocky.report.controller;
 
-import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +17,7 @@ import com.project.luckybocky.report.dto.ReportResDto;
 import com.project.luckybocky.report.exception.ReportNotFoundException;
 import com.project.luckybocky.report.service.ReportService;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -45,6 +45,7 @@ public class ReportController {
 		@ApiResponse(responseCode = "401", description = "User session not found, unable to save feedback",
 			content = @Content(schema = @Schema(implementation = SessionNotFoundException.class)))
 	})
+	@RateLimiter(name = "saveRateLimiter")
 	@PostMapping()
 	public ResponseEntity<ResponseDto> saveReport(@RequestBody ReportReqDto report, HttpSession session) {
 		reportService.saveReport(report, session);

@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.luckybocky.auth.exception.LoginFailedException;
-import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.auth.service.AuthService;
+import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.common.SessionNotFoundException;
 import com.project.luckybocky.user.dto.UserDto;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -81,9 +82,11 @@ public class AuthController {
 		@ApiResponse(responseCode = "401", description = "User session not found, unable to logout",
 			content = @Content(schema = @Schema(implementation = SessionNotFoundException.class)))
 	})
+
+	@RateLimiter(name = "saveRateLimiter")
 	@PostMapping("/logout")
 	public ResponseEntity<ResponseDto> kakaoLogout(HttpSession session) {
-		if(session.getAttribute("user") == null) {
+		if (session.getAttribute("user") == null) {
 			throw new SessionNotFoundException("User session not found, unable to logout");
 		}
 

@@ -21,6 +21,7 @@ import com.project.luckybocky.user.exception.ForbiddenUserException;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 import com.project.luckybocky.user.service.UserService;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -66,6 +67,7 @@ public class ArticleController {
 		@ApiResponse(responseCode = "404", description = "1. 포춘 조회 실패 \t\n 2. 복주머니 조회 실패",
 			content = @Content(schema = @Schema(implementation = FortuneNotFoundException.class))),
 	})
+	@RateLimiter(name = "saveRateLimiter")
 	@PostMapping
 	public ResponseEntity<ResponseDto> writeArticle(HttpSession session,
 		@RequestBody WriteArticleDto writeArticleDto) {
@@ -88,6 +90,7 @@ public class ArticleController {
 		@ApiResponse(responseCode = "404", description = "게시글 조회 실패",
 			content = @Content(schema = @Schema(implementation = ArticleNotFoundException.class)))
 	})
+	@RateLimiter(name = "saveRateLimiter")
 	@DeleteMapping
 	public ResponseEntity<ResponseDto> deleteArticle(HttpSession session, @RequestParam int articleSeq) {
 		String userKey = (String)session.getAttribute("user");
