@@ -1,12 +1,16 @@
 package com.project.luckybocky.user.repository;
 
-import com.project.luckybocky.user.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByUserSeq(int userSeq);
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-    Optional<User> findByUserKey(String userKey);
+import com.project.luckybocky.user.entity.User;
+
+public interface UserRepository extends JpaRepository<User, Integer> {
+	Optional<User> findByUserSeq(int userSeq);
+
+	@Query("SELECT u FROM User u WHERE (:key IS NULL AND u.userKey IS NULL) OR (u.userKey = :key)")
+	Optional<User> findByUserKey(@Param("key") String userKey);
 }
