@@ -1,6 +1,7 @@
 import ApiClient from "./ApiClient";
 
 export interface QuestionPayload {
+  qnaSeq?: number;
   title: string;
   content: string;
   secretStatus: boolean;
@@ -32,18 +33,20 @@ export interface PaginatedResponse<Question> {
 
 class QnaService {
   /**
-   * 질문들 조회
+   * 내 질문들 조회
    * @param {PaginationParams} params - 페이지네이션 파라미터
    * @returns {Promise<PaginatedResponse<Question>>}
    */
-  static async getMyQuestion(params: PaginationParams): Promise<PaginatedResponse<Question> | undefined> {  // 내 QnA만 조회 -> 사용자 관점
+  static async getMyQuestions(
+    params: PaginationParams
+  ): Promise<PaginatedResponse<Question> | undefined> {
     try {
       const { page, size, sort } = params;
       const response = await ApiClient.get("qna/question/me", {
         params: { page, size, sort },
       });
 
-      return response.data.data.qnaListResDto;  // 응답 구조에 맞게 반환
+      return response.data.data.qnaListResDto; // 응답 구조에 맞게 반환
     } catch (error) {
       console.error("Error in getMyQuestions:", error);
     }
@@ -58,18 +61,20 @@ class QnaService {
    * @param {PaginationParams} params - 페이지네이션 파라미터
    * @returns {Promise<PaginatedResponse<Question>>}
    */
-    static async getQuestions(params: PaginationParams): Promise<PaginatedResponse<Question> | undefined> {
-      try {
-        const { page, size, sort } = params;
-        const response = await ApiClient.get("qna/question", {
-          params: { page, size, sort },
-        });
+  static async getQuestions(
+    params: PaginationParams
+  ): Promise<PaginatedResponse<Question> | undefined> {
+    try {
+      const { page, size, sort } = params;
+      const response = await ApiClient.get("qna/question", {
+        params: { page, size, sort },
+      });
 
-        return response.data.data.qnaListResDto;  // 응답 구조에 맞게 반환
-      } catch (error) {
-        console.error("Error in getQuestions:", error);
-      }
+      return response.data.data.qnaListResDto; // 응답 구조에 맞게 반환
+    } catch (error) {
+      console.error("Error in getQuestions:", error);
     }
+  }
 
   /**
    * 질문 등록
@@ -85,34 +90,52 @@ class QnaService {
   }
 
   /**
-   * 
-   * @param qnaSeq 
+   * 특정 질문 조회
+   * @param qnaSeq
    * @returns {Promise<number>}
    */
-  static async checkAccess(qnaSeq: number): Promise<number | undefined> {  // 특정 질문 조회
+  static async checkAccess(qnaSeq: number): Promise<number | undefined> {
     try {
-      const response = await ApiClient.get(`qna/question/${qnaSeq}`)
-      
+      const response = await ApiClient.get(`qna/question/${qnaSeq}`);
+
       return response.data.data;
     } catch (error) {
-      console.error("Failed to access QnA: ", error)
+      console.error("Failed to access QnA: ", error);
     }
   }
 
-  // static async updateQuestion(): {  // 특정 질문 수정
-
-  // }
-
-  // static async deleteQuestion(): {  // 특정 질문 삭제
-
-  // }
+  /**
+   * 특정 질문 수정
+   * @param {QuestionPayload} payload: 
+   * @returns {Promise<void>}
+   */
+  static async updateQuestion(payload: QuestionPayload): Promise<void> {
+    try {
+      await ApiClient.put(`qna/question/${payload.qnaSeq}`);
+    } catch (error) {
+      console.error("Failed to update QnA: ", error);
+    }
+  }
 
     /**
+   * 특정 질문 삭제
+   * @param qnaSeq
+   * @returns {Promise<void>}
+   */
+  static async deleteQuestion(qnaSeq: number): Promise<void> {
+    try {
+      await ApiClient.delete(`qna/question/${qnaSeq}`);
+    } catch (error) {
+      console.error("Failed to delete QnA: ", error);
+    }
+  }
+
+  /**
    * 답변 등록
    * @param {Question} payload - 답변이 추가된 질문
    * @returns {Promise<void>}
    */
-  static async saveAnswer(payload: Question): Promise<void> {  // 답변 등록
+  static async saveAnswer(payload: Question): Promise<void> {
     try {
       await ApiClient.put("qna/answer", payload);
     } catch (error) {

@@ -19,6 +19,14 @@ const QnaDetailPage = () => {
   };
 
   const sendAnswer = async () => {
+    if (answer === "") {
+      alert("답변을 입력해주세요.");
+    } else {
+      confirmAnswer();
+    }
+  };
+
+  const confirmAnswer = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
@@ -36,6 +44,11 @@ const QnaDetailPage = () => {
     setQuestion(payload);
   };
 
+  const deleteQuestion = async () => {
+    await QnaService.deleteQuestion(question.qnaSeq);
+    navigate(-1);
+  }
+
   return (
     <div className="relative flex flex-col items-center w-full p-2 max-w-[600px] min-h-screen bg-[#FEFAF6] text-white overflow-hidden">
       <Menu />
@@ -52,7 +65,7 @@ const QnaDetailPage = () => {
           </button>
           <button
             className="bg-[#CEAB93] h-9 p-3 rounded-lg flex items-center justify-center"
-            onClick={() => activateAlarm()}
+            onClick={() => deleteQuestion()}
           >
             삭제하기
           </button>
@@ -123,9 +136,9 @@ const QnaDetailPage = () => {
       {/* 돌아가기 버튼 */}
       <button
         onClick={() => navigate(-1)}
-        className="fixed bottom-0 w-full max-w-[600px] bg-[#E3CAA5] text-[#0d1a26] py-4 rounded-t-lg z-20"
+        className="fixed bottom-0 w-full max-w-[600px] bg-[#E3CAA5] text-[#0d1a26] rounded-t-lg pt-5 pb-4"
       >
-        <span className="flex justify-center pt-1">돌아가기</span>
+        돌아가기
       </button>
       {/*임시 알림 */}
       {tempAlarm && (

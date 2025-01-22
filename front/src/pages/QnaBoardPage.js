@@ -1,4 +1,4 @@
-import React, { useEffect, useState, lazy, Suspense } from "react";
+import React, { useRef, useEffect, useState, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
 import AuthStore from "../store/AuthStore";
@@ -21,6 +21,7 @@ const QnaBoardPage = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const mount = useRef(false);
 
   const itemsPerPage = 5;
   const startPage = Math.floor((currentPage - 1) / 3) * 3 + 1;
@@ -81,7 +82,7 @@ const QnaBoardPage = () => {
 
     setIsSubmitting(false);
     closeModals(); // 모달 닫기
-    fetchQuestions(currentPage, flag);
+    fetchQuestions();
   };
 
   const checkAccess = async (payload) => {
@@ -111,7 +112,7 @@ const QnaBoardPage = () => {
     if (flag === false) {
       response = await QnaService.getQuestions(params);
     } else if (flag === true) {
-      response = await QnaService.getMyQuestion(params);
+      response = await QnaService.getMyQuestions(params);
     }
 
     setQuestions(response.content);
@@ -119,7 +120,17 @@ const QnaBoardPage = () => {
   };
 
   useEffect(() => {
-    fetchQuestions();
+    if(sessionStorage.getItem("flag") === null) {
+      fetchQuestions(); 
+    }
+  }, []);
+
+  useEffect(() => {
+    if(!mount.current) {
+      mount.current = true;
+    } else {
+      fetchQuestions();
+    }
   }, [currentPage, flag]);
 
   useEffect(() => {
