@@ -11,7 +11,7 @@ const SelectDecoPage = () => {
   const location = useLocation();
   const { address, pocketSeq } = location.state;
 
-  const decorations = new Array(9).fill(null).map((_, idx) => idx);
+  const decorations = new Array(7).fill(null).map((_, idx) => idx);
 
   const handleNext = () => {
     if (selectedDecoration === null) {
@@ -32,29 +32,24 @@ const SelectDecoPage = () => {
       <h1 className="text-3xl text-[#3c1e1e] mb-4">장식을 골라주세요</h1>
 
       <div className="grid grid-cols-3 gap-4 mb-6">
-        {decorations.map(
-          (id) =>
-            fortuneImages[id] && (
-              <button
-                key={id}
-                className={`border-4 rounded-md ${
-                  selectedDecoration === id
-                    ? "border-blue-500"
-                    : "border-gray-300"
-                }`}
-                onClick={() => setSelectedDecoration(id)}
-              >
-                <picture>
-                  <source srcSet={fortuneImages[id].src} type="image/webp" />
-                  <img
-                    src={fortuneImages[id].fallback}
-                    alt="장식물"
-                    className="w-20 h-20"
-                  />
-                </picture>
-              </button>
-            )
-        )}
+        {decorations.map((id) => (
+          <button
+            key={id}
+            className={`border-4 rounded-md ${
+              selectedDecoration === id ? "border-blue-500" : "border-gray-300"
+            }`}
+            onClick={() => setSelectedDecoration(id)}
+          >
+            <picture>
+              <source srcSet={fortuneImages[id].src} type="image/webp" />
+              <img
+                src={fortuneImages[id].fallback}
+                alt="장식물"
+                className="w-20 h-20"
+              />
+            </picture>
+          </button>
+        ))}
       </div>
 
       <div className="flex gap-2">
