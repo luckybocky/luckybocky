@@ -17,6 +17,7 @@ const WritePage = () => {
   const [visibility, setVisibility] = useState(true);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [cansSubmit, setCanSubmit] = useState(false);
 
   const location = useLocation();
   const decorationId = location.state?.decorationId;
@@ -56,7 +57,11 @@ const WritePage = () => {
     setNickname(userNickname);
   }, []);
 
-  useEffect(() => {}, [isSubmitting]);
+  useEffect(() => {
+    if (nickname?.length >= 2 && nickname?.length <= 6 && message?.length >= 1)
+      setCanSubmit(true);
+    else setCanSubmit(false);
+  }, [nickname, message]);
 
   return (
     <div className="flex flex-col justify-center w-full max-w-[600px] bg-[#f5f5f5] text-[#3c1e1e] p-4">
@@ -126,7 +131,11 @@ const WritePage = () => {
           </button>
           <button
             onClick={handleSubmit}
-            className="bg-blue-500 text-white rounded-lg py-2 px-6"
+            className={`${cansSubmit
+                ? "bg-blue-500 hover:bg-blue-600"
+                : "bg-gray-400 cursor-not-allowed"
+              } text-white rounded-lg py-2 px-6`}
+            disabled={!cansSubmit}
           >
             저장
           </button>

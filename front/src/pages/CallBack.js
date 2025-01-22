@@ -10,7 +10,6 @@ const CallBack = () => {
 
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get("code");
-  const redirectPath = urlParams.get("state");
 
   const init = async () => {
     if (isCalled.current) return; // 이미 실행된 경우 중단
@@ -18,7 +17,7 @@ const CallBack = () => {
 
     const result = await AuthService.login(code);
 
-    if (result === 2) navigate(redirectPath);
+    if (result === 2) navigate(window.sessionStorage.getItem("pocketAddress")||"/");
     else if (result === 1) navigate("/join");
   };
 

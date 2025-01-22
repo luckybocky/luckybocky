@@ -1,10 +1,10 @@
-import FortuneImageBasicW from "../image/fortunes/새해뱀.webp";
-import FortuneImageHealthW from "../image/fortunes/건강뱀.webp";
-import FortuneImageLoveW from "../image/fortunes/애정뱀.webp";
-import FortuneImageWealthW from "../image/fortunes/재물뱀.webp";
-import FortuneImageJobW from "../image/fortunes/취업뱀.webp";
-import FortuneImageEduW from "../image/fortunes/학업뱀.webp";
-import FortuneImageLuckyW from "../image/fortunes/행운뱀.webp";
+import FortuneImageBasicW from "../image/fortunes/새해뱀.png";
+import FortuneImageHealthW from "../image/fortunes/건강뱀.png";
+import FortuneImageLoveW from "../image/fortunes/애정뱀.png";
+import FortuneImageWealthW from "../image/fortunes/재물뱀.png";
+import FortuneImageJobW from "../image/fortunes/취업뱀.png";
+import FortuneImageEduW from "../image/fortunes/학업뱀.png";
+import FortuneImageLuckyW from "../image/fortunes/행운뱀.png";
 
 import FortuneImageBasicP from "../image/fortunes/새해뱀.png";
 import FortuneImageHealthP from "../image/fortunes/건강뱀.png";
