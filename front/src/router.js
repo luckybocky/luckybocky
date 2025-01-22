@@ -12,6 +12,16 @@ import CheckUser from "./components/CheckUser";
 import QnaBoardPage from "./pages/QnaBoardPage";
 import QnaDetailPage from "./pages/QnaDetailPage";
 
+const options = {
+  future: {
+    v7_relativeSplatPath: true,
+    v7_fetcherPersist: true,
+    v7_normalizeFormMethod: true,
+    v7_partialHydration: true,
+    v7_skipActionErrorRevalidation: true,
+  },
+}
+
 const router = createBrowserRouter([
   {
     element: <CheckUser />,
@@ -62,6 +72,6 @@ const router = createBrowserRouter([
       }
     ],
   },
-]);
+], options);
 
 export default router;

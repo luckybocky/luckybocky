@@ -24,10 +24,7 @@ try {
     navigator.serviceWorker
       .register("/firebase-messaging-sw.js") // 서비스 워커 경로
       .then((registration) => {
-        console.log(
-          "Service Worker registered with scope:",
-          registration.scope
-        );
+        FirebaseService.setupOnMessageListener();
       })
       .catch((error) => {
         console.error("Service Worker registration failed:", error);
@@ -38,8 +35,6 @@ try {
 } catch (error) {
   console.error("Service Worker 등록 중 예기치 못한 오류 발생:", error);
 }
-
-FirebaseService.setupOnMessageListener();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
