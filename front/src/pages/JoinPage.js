@@ -33,8 +33,8 @@ const JoinPage = () => {
 
     await Authservice.update();
 
+    navigate(window.sessionStorage.getItem("pocketAddress")||`/${user.address}`);
     setIsSubmitting(false);
-    navigate(`/${user.address}`);
   };
 
   const updateAlarmStatus = async () => {
@@ -65,7 +65,7 @@ const JoinPage = () => {
     }
   };
 
-  if (user.createdAt == null || user.userNickname !== null) {
+  if (!isSubmitting&&(user.createdAt == null || user.userNickname !== null)) {
     return <Navigate to="/" replace />;
   }
 
