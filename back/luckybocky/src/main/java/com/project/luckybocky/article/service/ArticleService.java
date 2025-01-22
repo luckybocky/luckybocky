@@ -48,7 +48,11 @@ public class ArticleService {
 
 		ArticleResponseDto response = article.toArticleResponseDto();
 
-		if (userKey == null || !userKey.equals(article.getPocket().getUser().getUserKey())) {    // 복주머니의 주인이 아닐경우
+		String pocketOwnerKey = article.getPocket().getUser().getUserKey();
+		String articleOwnerKey = article.getUser().getUserKey();
+
+		if (userKey == null ||
+			(!userKey.equals(pocketOwnerKey) && !userKey.equals(articleOwnerKey))) {    // 복주머니,게시글의 주인이 아닐경우
 			// 비공개 복주머니나 비공개 글인 경우 -> 전부 비공개로 설정
 			if (!article.getPocket().getUser().isFortuneVisibility() || !article.isArticleVisibility()) {
 				response.setArticleVisibility(false);
@@ -56,7 +60,7 @@ public class ArticleService {
 				response.setArticleComment("비밀글입니다.");
 			}
 		}
-		//복주머니 주인의 경우 -> 비밀글 설정을 다 공개로 바꿈
+		//복주머니,게시글 주인의 경우 -> 비밀글 설정을 다 공개로 바꿈
 		else {
 			response.setArticleVisibility(true);
 		}
