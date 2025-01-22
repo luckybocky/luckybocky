@@ -7,9 +7,9 @@ import AuthStore from "../store/AuthStore";
 import PocketService from "../api/PocketService.ts";
 
 import bgImageP from "../image/bgImage.png";
-import bgImageW from "../image/bgImage.webp";
+import bgImageW from "../image/bgImage.png";
 import MainImageP from "../image/pocket.png";
-import MainImageW from "../image/pocket.webp";
+import MainImageW from "../image/pocket.png";
 
 import fortuneImages from "../components/FortuneImages";
 import Menu from "../components/Menu";

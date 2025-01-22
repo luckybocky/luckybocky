@@ -22,16 +22,7 @@ const WritePage = () => {
   const location = useLocation();
   const decorationId = location.state?.decorationId;
   const pocketAddress = location.state?.pocketAddress;
-  const pocketSeq = location.state?.pocketSeq;
-
-  const handleSubmit = async () => {
-    if (!nickname || !message) {
-      alert("닉네임과 메시지를 입력해주세요!");
-      return;
-    }
-
-    setSaveModalOpen(true);
-  };
+  const pocketSeq = location.state?.pocketSeq; 
 
   const confirmWrite = async () => {
     if (isSubmitting) return;
@@ -130,7 +121,7 @@ const WritePage = () => {
             이전
           </button>
           <button
-            onClick={handleSubmit}
+            onClick={()=>{setSaveModalOpen(true)}}
             className={`${cansSubmit
                 ? "bg-blue-500 hover:bg-blue-600"
                 : "bg-gray-400 cursor-not-allowed"
