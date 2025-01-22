@@ -47,7 +47,7 @@ public class QnaController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "질문 등록 성공"),
-		@ApiResponse(responseCode = "500", description = "서버 문제로 인해 질문 등록에 실패했습니다.",
+		@ApiResponse(responseCode = "503", description = "서버 문제로 인해 답변 등록에 실패",
 			content = @Content(schema = @Schema(implementation = QnaSaveException.class))),
 	})
 	@PostMapping("/question")
@@ -65,7 +65,7 @@ public class QnaController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "답변 등록 성공"),
-		@ApiResponse(responseCode = "500", description = "서버 문제로 인해 답변 등록에 실패했습니다.",
+		@ApiResponse(responseCode = "503", description = "서버 문제로 인해 답변 등록 실패",
 			content = @Content(schema = @Schema(implementation = QnaSaveException.class))),
 	})
 	@PutMapping("/answer")
@@ -83,7 +83,7 @@ public class QnaController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "QnA 목록 조회 성공"),
-		@ApiResponse(responseCode = "404", description = "QnA 목록 조회 실패",
+		@ApiResponse(responseCode = "404", description = "QnA 목록 데이터 찾을 수 없음",
 			content = @Content(schema = @Schema(implementation = QnaSaveException.class))),
 	})
 	@GetMapping("/question")
@@ -104,7 +104,7 @@ public class QnaController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "QnA 조회 성공"),
-		@ApiResponse(responseCode = "404", description = "QnA 조회 실패",
+		@ApiResponse(responseCode = "404", description = "QnA 데이터 찾을 수 없음",
 			content = @Content(schema = @Schema(implementation = QnaNotFoundException.class))),
 	})
 	@GetMapping("/question/{qnaSeq}")
@@ -123,7 +123,7 @@ public class QnaController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "사용자 QnA 목록 조회 성공"),
-		@ApiResponse(responseCode = "404", description = "사용자 QnA 목록 조회 실패",
+		@ApiResponse(responseCode = "404", description = "사용자 QnA 목록 데이터 찾을 수 없음",
 			content = @Content(schema = @Schema(implementation = QnaNotFoundException.class))),
 	})
 	@GetMapping("/question/me")
