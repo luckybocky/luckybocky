@@ -1,6 +1,5 @@
 package com.project.luckybocky.feedback.controller;
 
-import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +12,12 @@ import com.project.luckybocky.common.DataResponseDto;
 import com.project.luckybocky.common.NicknameNotFoundException;
 import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.common.SessionNotFoundException;
-import com.project.luckybocky.exam.exception.ExamException;
 import com.project.luckybocky.feedback.dto.FeedbackReqDto;
 import com.project.luckybocky.feedback.dto.FeedbackResDto;
 import com.project.luckybocky.feedback.exception.FeedbackNotFoundException;
 import com.project.luckybocky.feedback.service.FeedbackService;
-import com.project.luckybocky.user.exception.UserNotFoundException;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -47,6 +45,7 @@ public class FeedbackController {
 		@ApiResponse(responseCode = "401", description = "User session not found, unable to save feedback",
 			content = @Content(schema = @Schema(implementation = SessionNotFoundException.class)))
 	})
+	@RateLimiter(name = "saveRateLimiter")
 	@PostMapping()
 	public ResponseEntity<ResponseDto> saveFeedback(@RequestBody FeedbackReqDto feedback, HttpSession session) {
 		feedbackService.saveFeedback(feedback, session);

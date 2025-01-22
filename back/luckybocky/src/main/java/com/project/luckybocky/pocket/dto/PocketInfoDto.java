@@ -1,25 +1,26 @@
 package com.project.luckybocky.pocket.dto;
 
-import com.project.luckybocky.pocket.entity.Pocket;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 public class PocketInfoDto {
-    private int pocketSeq;
-    private String pocketAddress;
-    private int userSeq;
-    private String userKey;
-    private String userNickname;
-    private boolean fortuneVisibility;
-
-    public PocketInfoDto(Pocket pocket){
-        this.pocketSeq = pocket.getPocketSeq();
-        this.pocketAddress = pocket.getPocketAddress();
-        this.userSeq = pocket.getUser().getUserSeq();
-        this.userKey = pocket.getUser().getUserKey();
-        this.userNickname = pocket.getUser().getUserNickname();
-        this.fortuneVisibility = pocket.getUser().isFortuneVisibility();
-    }
+	@Schema(description = "복주머니 번호")
+	private int pocketSeq;
+	@Schema(description = "복주머니 주소")
+	private String pocketAddress;
+	@Schema(description = "복주머니 주인 번호")
+	private int userSeq;
+	@Schema(description = "복주머니 주인 식별키")
+	private String userKey;
+	@Schema(description = "복주머니 주인 닉네임")
+	private String userNickname;
+	@Schema(description = "복주머니 공개 여부")
+	private boolean fortuneVisibility;
 }
