@@ -1,30 +1,49 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  IoSettingsOutline,
-  IoMailOutline,
-  IoChatbubblesOutline,
-} from "react-icons/io5";
-import PocketIcon from "../image/pocketIcon.svg";
-import { saveFeedback } from "../api/FeedbackApi";
+import React, { useState, Suspense } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import AuthStore from "../store/AuthStore";
 
+import FeedbackService from "../api/FeedbackService.ts";
+
+import PocketIcon from "../image/pocketIcon.svg";
+
+import Util from "./Util";
+
+const IoMenuSharp = Util.loadIcon("SlMenu").sl;
+const IoSettingsOutline = Util.loadIcon("IoSettingsOutline").io5;
+const IoMailOutline = Util.loadIcon("IoMailOutline").io5;
+const IoChatbubblesOutline = Util.loadIcon("IoChatbubblesOutline").io5;
+const IoPersonCircleOutline = Util.loadIcon("IoPersonCircleOutline").io5;
+const IoHelpCircleOutline = Util.loadIcon("IoHelpCircleOutline").io5;
+
 const Menu = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const myAddress = AuthStore((state) => state.user.address);
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [rating, setRating] = useState(0);
   const [feedbackAlarm, setFeedbackAlarm] = useState(false);
+  const [confirmCloseModal, setConfirmCloseModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const navigate = useNavigate();
-
-  const myAddress = AuthStore((state) => state.user.address);
+  const isQnaPage = location.pathname.startsWith("/qna");
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
-  const closeModals = () => {
+  const closeModal = () => {
+    if (feedback === "") confirmClose();
+    else setConfirmCloseModal(true);
+  };
+
+  const confirmClose = () => {
+    setConfirmCloseModal(false);
     setFeedbackModalOpen(false);
     setRating(0);
+    setFeedback("");
   };
 
   const sendFeedback = () => {
@@ -37,63 +56,67 @@ const Menu = () => {
     }
   };
 
-  const confirmFeedback = () => {
-    saveFeedback(feedback, rating);
+  const confirmFeedback = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    const payload = {
+      feedbackContent: feedback,
+      feedbackRate: rating,
+    };
+
+    await FeedbackService.save(payload);
     setFeedbackModalOpen(false);
     setRating(0);
     setFeedback("");
+    setIsSubmitting(false);
 
     setFeedbackAlarm(true);
     setTimeout(() => setFeedbackAlarm(false), 2000);
   };
-
-  // const sendReport = () => {
-  //   if (report === "") {
-  //     alert("신고 내용을 입력해주세요.");
-  //     return;
-  //   } else {
-  //     saveReport(1, 0, report);
-  //     alert("감사합니다. 신고 완료되었습니다.");
-  //   }
-
-  //   setReport("");
-  //   setReportModalOpen(false);
-  // };
 
   return (
     <div>
       {/* 오버레이 */}
       {menuOpen && (
         <div
-          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-10"
+          className="fixed inset-0 bg-black bg-opacity-60 z-10"
           onClick={toggleMenu}
         ></div>
       )}
 
       {/* 메뉴 버튼 */}
       <button
-        className="absolute top-4 right-4 text-2xl z-20"
+        className="absolute top-0 right-0 text-3xl p-4"
+        style={{
+          color: isQnaPage ? "#0d1a26" : undefined, // CSS 변수로 동적 색상 지정
+        }}
         onClick={toggleMenu}
       >
-        ☰
+        <Suspense>
+          <IoMenuSharp />
+        </Suspense>
       </button>
 
       {/* 메뉴 바 */}
       <div
-        className={`absolute top-0 left-28 h-full bg-[#333] text-white shadow-lg transition-transform duration-300 ease-in-out z-20 ${
+        className={`absolute top-0 right-0 h-full bg-[#333] text-lg transition-transform duration-300 ease-in-out py-4 px-6 z-20 ${
           menuOpen ? "translate-x-0" : "translate-x-full"
         }`}
-        style={{ width: "275px" }}
+        style={{ width: "260px" }}
       >
         {myAddress && (
-          <ul className="py-3 px-6 space-y-5">
+          <ul className="space-y-3">
             <button
               onClick={() => navigate("/account")}
               className="flex hover:underline items-center gap-2"
             >
-              <IoSettingsOutline />
+              <Suspense>
+                <IoSettingsOutline size={24} />
+              </Suspense>
               <span className="mt-1">계정 설정</span>
             </button>
+
             <button
               onClick={() => {
                 navigate(`/${myAddress}`);
@@ -104,11 +127,12 @@ const Menu = () => {
               <img
                 src={PocketIcon}
                 alt="pocketIcon"
-                width="18"
+                width="24"
                 className="mb-1"
               ></img>
               <span>내 복주머니 보러가기</span>
             </button>
+
             <button
               className="flex hover:underline items-center gap-2"
               onClick={() => {
@@ -116,56 +140,74 @@ const Menu = () => {
                 toggleMenu();
               }}
             >
-              <IoMailOutline className="mb-1" />
+              <Suspense>
+                <IoMailOutline className="mb-1" size={24} />
+              </Suspense>
               <span>내가 보낸 메시지</span>
             </button>
+
             <button
               className="flex hover:underline items-center gap-2"
               onClick={() => setFeedbackModalOpen(true)}
             >
-              <IoChatbubblesOutline className="mb-1" />
+              <Suspense>
+                <IoChatbubblesOutline className="mb-1" size={24} />
+              </Suspense>
               <span>피드백하기</span>
             </button>
-            {/* <button
-            className="flex hover:underline items-center gap-2"
-            onClick={() => setReportModalOpen(true)}
-          >
-            <AiOutlineAlert className="mb-1" />
-            <span className="">신고하기</span>
-          </button> */}
           </ul>
         )}
+
         {!myAddress && (
-          <ul className="py-3 px-6 space-y-5">
+          <ul className="space-y-3">
             <button
-              className="flex hover:underline items-center gap-2"
+              className="flex hover:underline items-center gap-2 my-16 text-xl"
               onClick={() => navigate("/")}
             >
-              <span className="text-xl my-8">로그인 / 회원가입</span>
+              <IoPersonCircleOutline size={28} />
+              <span className="mt-1">로그인 / 회원가입</span>
             </button>
           </ul>
         )}
-        <footer className="border-t border-gray-600 p-4 text-center text-sm">
-          Lucky Bocky!
-        </footer>
+
+        <hr className="border-t-2 border-gray-600 my-4 mx-auto" />
+
+        <div>
+          <ul className="space-y-2">
+            <button
+              className="flex hover:underline items-center gap-2"
+              onClick={() => {
+                if (window.sessionStorage.getItem("flag") !== null) {
+                  window.sessionStorage.removeItem("flag");
+                }
+                navigate("/qna", { state: false });
+                toggleMenu();
+              }}
+            >
+              <IoHelpCircleOutline size={24} />
+              <span className="mt-1">문의하기</span>
+            </button>
+          </ul>
+        </div>
+
+        <hr className="border-t-2 border-gray-600 my-4 mx-auto" />
+
+        <footer className="text-center">Lucky Bocky!</footer>
       </div>
+
       {/* 피드백 모달 */}
       {feedbackModalOpen && (
-        <div
-          className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-60"
-          onClick={closeModals}
-        >
-          <div
-            className="bg-white text-[#0d1a26] p-4 rounded-lg w-80"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-lg mb-4">피드백하기</h2>
+        <div className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-60">
+          <div className="bg-white text-[#3c1e1e] rounded-lg w-80 p-4">
+            <h2 className="text-xl mb-4">피드백하기</h2>
+
             <textarea
-              className="w-full h-60 p-2 border border-gray-300 rounded-md mb-2 resize-none"
+              className="border border-gray-300 rounded-md w-full h-60 p-2 mb-2 resize-none"
               placeholder="피드백 내용을 입력하세요."
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
             ></textarea>
+
             <div className="flex justify-between">
               <div className="flex gap-1 pl-1">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -182,13 +224,13 @@ const Menu = () => {
               </div>
               <div className="flex gap-2">
                 <button
-                  className="bg-gray-300 text-black py-2 px-4 rounded-lg"
-                  onClick={closeModals}
+                  className="bg-gray-300 text-black rounded-lg py-2 px-4"
+                  onClick={closeModal}
                 >
                   취소
                 </button>
                 <button
-                  className="bg-[#0d1a26] text-white py-2 px-4 rounded-lg"
+                  className="bg-[#0d1a26] text-white rounded-lg py-2 px-4 "
                   onClick={sendFeedback}
                 >
                   보내기
@@ -199,48 +241,34 @@ const Menu = () => {
         </div>
       )}
 
-      {/* 신고 모달 */}
-      {/* {reportModalOpen && (
-        <div
-          className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-60"
-          onClick={closeModals}
-        >
-          <div
-            className="bg-white text-[#0d1a26] p-4 rounded-lg w-80"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-lg mb-4">신고하기</h2>
-            <input
-              className="w-full p-2 border border-gray-300 rounded-md mb-4"
-              placeholder="제목을 입력하세요."
-            />
-            <textarea
-              className="w-full h-48 p-2 border border-gray-300 rounded-md mb-2 resize-none"
-              placeholder="신고 내용을 입력하세요."
-              value={report}
-              onChange={(e) => setReport(e.target.value)}
-            ></textarea>
-            <div className="flex justify-end gap-2">
+      {confirmCloseModal && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="flex flex-col items-center bg-white rounded-lg shadow-lg w-80 p-6">
+            <h2 className="text-xl text-[#3c1e1e] mb-4">
+              작성한 내용이 사라집니다.
+            </h2>
+            <p className="text-gray-700 mb-6">정말 닫으시겠어요?</p>
+            <div className="flex gap-4">
               <button
-                className="bg-gray-300 text-black py-2 px-4 rounded-lg"
-                onClick={closeModals}
+                className="bg-gray-300 text-black rounded-md py-2 px-4"
+                onClick={() => setConfirmCloseModal(false)}
               >
                 취소
               </button>
               <button
-                className="bg-[#0d1a26] text-white py-2 px-4 rounded-lg"
-                onClick={sendReport}
+                className="bg-red-500 text-white rounded-md py-2 px-4"
+                onClick={confirmClose}
               >
-                보내기
+                닫기
               </button>
             </div>
           </div>
         </div>
-      )} */}
+      )}
 
       {/*피드백 성공 알림 */}
       {feedbackAlarm && (
-        <div className="fixed bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md z-30 transform -translate-x-1/2">
+        <div className="fixed bottom-16 bg-green-500 rounded-lg shadow-md py-2 px-4 z-30 transform -translate-x-1/2">
           피드백 전달 완료!
         </div>
       )}

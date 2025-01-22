@@ -7,3 +7,15 @@
   src: url(./fonts/Jalnan.ttf);
   font-display: block;
 }
+
+@font-face {
+  font-family: "JalnanW";
+  src: url(./fonts/Jalnan.woff);
+  font-display: block;
+}
+
+@font-face {
+  font-family: "JalnanGothic";
+  src: url(./fonts/JalnanGothicTTF.ttf);
+  font-display: swap;
+}

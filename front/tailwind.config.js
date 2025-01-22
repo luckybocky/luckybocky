@@ -4,9 +4,13 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Jalnan"],
+        sans: ["JalnanW,Jalnan"],
+      },
+      textShadow: {
+        outline:
+          "1px 1px 0px rgba(0, 0, 0, 0.3), 0px 0px 0px #000, 0px 0px 0px #000, 0px 0px 0px #000",
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-textshadow")],
 };
