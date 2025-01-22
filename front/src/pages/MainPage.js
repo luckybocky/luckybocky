@@ -156,7 +156,7 @@ const MainPage = () => {
               className={`absolute ${decoration.position}`}
               onClick={() => setSelectArticle(decoration.id)}
             >
-              <p className="absolute w-full top-[-15px] text-sm text-shadow-outline">
+              <p className="absolute w-full top-[-10px] text-xs text-shadow-outline">
                 {decoration.userNickname}
               </p>
               <picture>
