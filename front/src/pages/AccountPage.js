@@ -58,6 +58,7 @@ const AccountPage = () => {
       if (permission === "granted") {
         if (isSubmitting) return;
 
+        FirebaseService.requestToken();
         setUser({
           ...user,
           alarmStatus: !user.alarmStatus,
@@ -159,11 +160,10 @@ const AccountPage = () => {
               setChangeMode((prev) => !prev);
             }
           }}
-          className={`${
-            nickname?.length >= 2 && nickname?.length <= 6
+          className={`${nickname?.length >= 2 && nickname?.length <= 6
               ? "bg-blue-500 hover:bg-blue-600"
               : "bg-gray-400 cursor-not-allowed"
-          } text-white py-2 rounded-lg w-[80px] p-2`}
+            } text-white py-2 rounded-lg w-[80px] p-2`}
           disabled={nickname?.length < 2 || nickname?.length > 6}
         >
           {changeMode ? "저장" : "변경"}

@@ -38,8 +38,8 @@ const JoinPage = () => {
 
     await Authservice.update();
 
+    navigate(window.sessionStorage.getItem("pocketAddress") || `/${user.address}`);
     setIsSubmitting(false);
-    navigate(`/${user.address}`);
   };
 
   const updateAlarmStatus = async () => {
@@ -60,6 +60,7 @@ const JoinPage = () => {
       }
 
       if (permission === "granted") {
+        FirebaseService.requestToken();
         setIsAlarm(!isAlarm);
       } else {
         setNotice(true);
@@ -70,8 +71,8 @@ const JoinPage = () => {
     }
   };
 
-  if (user.createdAt == null || user.userNickname !== null) {
-    // return <Navigate to="/" replace />;
+  if (!isSubmitting && (user.createdAt == null || user.userNickname !== null)) {
+    return <Navigate to="/" replace />;
   }
 
   return (
@@ -151,7 +152,7 @@ const JoinPage = () => {
         </div>
       )}
 
-      
+
 
       {/* 아이폰 알림 설정 방법 안내 */}
       <div className="flex text-[#909090] items-center flex-wrap w-full pt-4">
@@ -179,11 +180,10 @@ const JoinPage = () => {
       <hr className="border-t-2 border-gray-600 my-10" />
 
       <button
-        className={`${
-          nickname?.length >= 2 && nickname?.length <= 6
-            ? "bg-white"
-            : "bg-gray-400"
-        } text-[#3c1e1e] text-2xl rounded-lg py-4`}
+        className={`${nickname?.length >= 2 && nickname?.length <= 6
+          ? "bg-white"
+          : "bg-gray-400"
+          } text-[#3c1e1e] text-2xl rounded-lg py-4`}
         onClick={joinUser}
         disabled={nickname?.length < 2 || nickname?.length > 6}
       >

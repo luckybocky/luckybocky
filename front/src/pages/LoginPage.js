@@ -4,11 +4,11 @@ import { Navigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 
 import landingImageP from "../image/landingImage.png";
-import landingImageW from "../image/landingImage.png";
+import landingImageW from "../image/landingImage.webp";
 import MainImageP from "../image/landing.png";
-import MainImageW from "../image/landing.png";
+import MainImageW from "../image/landing.webp";
 import kakaoIcon from "../image/kakao-icon.png";
-import kakaoIconW from "../image/kakao-icon.png";
+import kakaoIconW from "../image/kakao-icon.webp";
 
 import Footer from "../components/Footer";
 
