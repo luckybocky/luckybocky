@@ -13,11 +13,11 @@ import com.project.luckybocky.common.DataResponseDto;
 import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.user.dto.FirebaseKeyRequest;
 import com.project.luckybocky.user.dto.SettingDto;
-import com.project.luckybocky.user.dto.UserInfoDto;
 import com.project.luckybocky.user.dto.UserLoginDto;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 import com.project.luckybocky.user.service.UserSettingService;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -46,6 +46,7 @@ public class SettingController {
 		@ApiResponse(responseCode = "401", description = "사용자를 찾을 수 없음",
 			content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
 	})
+	@RateLimiter(name = "saveRateLimiter")
 	@PutMapping("/user")
 	public ResponseEntity<ResponseDto> updateSetting(@RequestBody SettingDto settingDto, HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
@@ -85,6 +86,7 @@ public class SettingController {
 		@ApiResponse(responseCode = "401", description = "2. 사용자를 찾을 수 없음",
 			content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
 	})
+	@RateLimiter(name = "saveRateLimiter")
 	@PutMapping("/firebase")
 	public ResponseEntity<ResponseDto> updateFireBaseKey(HttpSession session,
 		@RequestBody FirebaseKeyRequest firebaseKeyRequest) {

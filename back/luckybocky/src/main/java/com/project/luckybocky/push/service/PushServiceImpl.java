@@ -21,7 +21,6 @@ public class PushServiceImpl implements PushService {
 
 	//복주머니에 복이 달렸을때, 복주머니 주인에게 푸시 알림을 보내야한다
 	public void sendPush(PushDto pushDto) {
-		System.out.println("한글");
 		if (!canPush(pushDto.getToUser())) {
 			return;
 		}

@@ -23,6 +23,7 @@ import com.project.luckybocky.qna.exception.QnaNotFoundException;
 import com.project.luckybocky.qna.exception.QnaSaveException;
 import com.project.luckybocky.qna.service.QnaService;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -41,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 public class QnaController {
 	private final QnaService qnaService;
 
+	@RateLimiter(name = "saveRateLimiter")
 	@Operation(
 		summary = "질문 등록",
 		description = "질문을 등록한다."
@@ -59,6 +61,7 @@ public class QnaController {
 			.body(new ResponseDto("질문 등록 성공"));
 	}
 
+	@RateLimiter(name = "saveRateLimiter")
 	@Operation(
 		summary = "답변 등록",
 		description = "질문에 대한 답변을 등록한다."

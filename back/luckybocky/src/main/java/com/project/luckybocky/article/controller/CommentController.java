@@ -12,6 +12,7 @@ import com.project.luckybocky.article.exception.ArticleNotFoundException;
 import com.project.luckybocky.article.service.ArticleService;
 import com.project.luckybocky.common.ResponseDto;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,6 +38,7 @@ public class CommentController {
 		@ApiResponse(responseCode = "404", description = "1. 복 조회 실패 ",
 			content = @Content(schema = @Schema(implementation = ArticleNotFoundException.class))),
 	})
+	@RateLimiter(name = "saveRateLimiter")
 	@PostMapping
 	public ResponseEntity<ResponseDto> writeComment(HttpSession session, @RequestBody CommentDto commentDto) {
 		articleService.updateComment(commentDto);
