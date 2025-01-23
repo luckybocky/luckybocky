@@ -1,12 +1,14 @@
-import React, { useRef, useEffect, useState, lazy, Suspense } from "react";
+import React, { useRef, useEffect, useState, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import Menu from "../components/Menu";
+
 import AuthStore from "../store/AuthStore";
+
 import QnaService from "../api/QnaService.ts";
 
-const IoLockClosed = lazy(() =>
-  import("react-icons/io5").then((mod) => ({ default: mod.IoLockClosed }))
-);
+import Menu from "../components/Menu";
+import Util from "../components/Util.js";
+
+const IoLockClosed = Util.loadIcon("IoLockClosed").io5;
 
 const QnaBoardPage = () => {
   const navigate = useNavigate();
@@ -142,7 +144,7 @@ const QnaBoardPage = () => {
   }, [title, content]);
 
   return (
-    <div className="relative flex flex-col items-center w-full p-2 max-w-[600px] min-h-screen bg-[#FEFAF6] text-white overflow-hidden">
+    <div className="relative flex flex-col items-center w-full p-4 max-w-[600px] min-h-screen bg-[#FEFAF6] text-white overflow-hidden">
       <Menu />
       {/* 제목 영역 */}
       <h1 className="text-xl mt-2 mb-2 text-[#0d1a26]">QnA</h1>
@@ -275,7 +277,7 @@ const QnaBoardPage = () => {
           onClick={closeModals}
         >
           <div
-            className="bg-white w-full max-w-[600px] text-[#0d1a26] p-4 rounded-lg w-80"
+            className="bg-white text-[#0d1a26] p-4 rounded-lg w-80"
             onClick={(e) => e.stopPropagation()}
           >
             <textarea
