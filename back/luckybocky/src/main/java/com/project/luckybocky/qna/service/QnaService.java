@@ -29,6 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 public class QnaService {
 	private final UserRepository userRepository;
 	private final QnaRepository qnaRepository;
+	private final int generalUser = 200;  // 일반 사용자
+	private final int authorizedUser = 300;  // 접근 권한이 있는 사용자
+	private final int admin = 400;  //  관리자
 
 	public void saveQuestion(QnaUserReqDto qnaUserReqDto, HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
@@ -56,19 +59,20 @@ public class QnaService {
 		}
 	}
 
-	public QnaListResDto getQuestions(Pageable pageable) {
+	public QnaListResDto getQuestions(Pageable pageable, HttpSession session) {
 		Page<Qna> qnaList = qnaRepository.findAllByisDeletedIsFalse(pageable);
-		Page<QnaDto> qnaDtoList = QnaDto.toQnaPageDto(qnaList);
+		String userKey = (String)session.getAttribute("user");
+
+		User user = userRepository.findByUserKey(userKey)
+			.orElseThrow(UserNotFoundException::new);
+
+		Page<QnaDto> qnaDtoList = QnaDto.toQnaPageDto(qnaList, user.getRole() == 1, user.getUserKey());
 
 		log.info("질문 목록 로딩 성공");
 		return QnaListResDto.toQnaResDto(qnaDtoList);
 	}
 
 	public Integer getQuestion(Integer qnaSeq, HttpSession session) {
-		final int user = 200;  // 일반 사용자
-		final int authorizedUser = 300;  // 접근 권한이 있는 사용자
-		final int admin = 400;  //  관리자
-
 		Qna qna = qnaRepository.findById(qnaSeq)
 			.orElseThrow(QnaNotFoundException::new);
 
@@ -90,7 +94,7 @@ public class QnaService {
 		}
 
 		log.info("{}번 질문 - <일반 사용자>에 대한 접근 요청을 반환합니다.", qnaSeq);
-		return user;
+		return generalUser;
 	}
 
 	public void deleteQna(Integer qnaSeq) {
@@ -129,7 +133,7 @@ public class QnaService {
 
 		Page<Qna> qnaList = qnaRepository.findAllByisDeletedIsFalseAndUser(pageable, user);
 
-		Page<QnaDto> qnaDtoList = QnaDto.toQnaPageDto(qnaList);
+		Page<QnaDto> qnaDtoList = QnaDto.toQnaPageDto(qnaList, false, user.getUserKey());
 
 		log.info("{} 시용자가 질문 목록을 조회했습니다.", user.getUserKey());
 		return QnaListResDto.toQnaResDto(qnaDtoList);
