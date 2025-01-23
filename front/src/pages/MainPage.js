@@ -7,9 +7,11 @@ import AuthStore from "../store/AuthStore";
 import PocketService from "../api/PocketService.ts";
 
 import bgImageP from "../image/bgImage.png";
-import bgImageW from "../image/bgImage.png";
-import MainImageP from "../image/pocket.png";
-import MainImageW from "../image/pocket.png";
+import bgImageW from "../image/bgImage.webp";
+import mainImageP from "../image/pocket.png";
+import mainImageW from "../image/pocket.webp";
+import pocketIconImageP from "../image/pocketIcon.png"
+import pocketIconImageW from "../image/pocketIcon.webp"
 
 import fortuneImages from "../components/FortuneImages";
 import Menu from "../components/Menu";
@@ -133,18 +135,26 @@ const MainPage = () => {
         <Menu />
         {/* 메인 화면 */}
         <div className="absolute top-0 left-0 p-4">
-          <h1 className="text-2xl mb-1">
+          <h1 className="text-2xl xs:text-xl mb-1">
             <span className="text-[pink] ">{pocket?.userNickname}</span> 님의
             복주머니
           </h1>
-          <p className="text-base">{decorations.length}개의 복이 왔어요.</p>
+          <picture className="flex">
+            <source srcSet={pocketIconImageW} type="image/webp" />
+            <img
+              src={pocketIconImageP}
+              alt="복주머니 아이콘 이미지"
+              className="w-5 h-5 xs:w-4 xs:h-4 mr-1"
+            />
+             <span className="text-base xs:text-sm">{decorations.length}개의 복이 왔어요!</span>
+          </picture>
         </div>
 
         <div className="relative">
           <picture>
-            <source srcSet={MainImageW} type="image/webp" />
+            <source srcSet={mainImageW} type="image/webp" />
             <img
-              src={MainImageP}
+              src={mainImageP}
               alt="복주머니 이미지"
               className="w-80 h-80 mb-6"
             />
@@ -156,7 +166,7 @@ const MainPage = () => {
               className={`absolute ${decoration.position}`}
               onClick={() => setSelectArticle(decoration.id)}
             >
-              <p className="absolute w-full top-[-15px] text-sm text-shadow-outline">
+              <p className="absolute w-full top-[-10px] text-xs text-shadow-outline">
                 {decoration.userNickname}
               </p>
               <picture>

@@ -10,6 +10,10 @@ import Footer from "../components/Footer";
 import Util from "../components/Util.js";
 
 const IoHomeOutline = Util.loadIcon("IoHomeOutline").io5;
+const IoShareOutline = Util.loadIcon("IoShareOutline").io5;
+const AiOutlinePlusSquare = Util.loadIcon("AiOutlinePlusSquare").ai;
+const AiOutlineArrowRight = Util.loadIcon("AiOutlineArrowRight").ai;
+const IoBulbOutline = Util.loadIcon("IoBulbOutline").io5;
 
 const AccountPage = () => {
   const navigate = useNavigate();
@@ -54,6 +58,7 @@ const AccountPage = () => {
       if (permission === "granted") {
         if (isSubmitting) return;
 
+        FirebaseService.requestToken();
         setUser({
           ...user,
           alarmStatus: !user.alarmStatus,
@@ -134,7 +139,7 @@ const AccountPage = () => {
       <hr className="border-t-2 border-gray-600 mt-3 mb-10" />
 
       {/* 닉네임 변경 */}
-      <label className="text-xl mb-2">닉네임 변경</label>
+      <label className="text-xl mb-2">닉네임</label>
       <div className="flex items-center">
         <input
           type="text"
@@ -155,11 +160,10 @@ const AccountPage = () => {
               setChangeMode((prev) => !prev);
             }
           }}
-          className={`${
-            nickname?.length >= 2 && nickname?.length <= 6
+          className={`${nickname?.length >= 2 && nickname?.length <= 6
               ? "bg-blue-500 hover:bg-blue-600"
               : "bg-gray-400 cursor-not-allowed"
-          } text-white py-2 rounded-lg w-[100px] p-2`}
+            } text-white py-2 rounded-lg w-[80px] p-2`}
           disabled={nickname?.length < 2 || nickname?.length > 6}
         >
           {changeMode ? "저장" : "변경"}
@@ -176,6 +180,25 @@ const AccountPage = () => {
       {/* 구분선 추가 */}
       <hr className="border-t-2 border-gray-600 my-10" />
 
+      {/* 메시지 공개 여부 */}
+      <div className="flex mb-6">
+        <label className="w-full md:w-8/12 mr-4">메시지 공개 여부</label>
+        <div className="flex justify-between items-center gap-2">
+          <div className="relative w-11 h-5">
+            <input
+              type="checkbox"
+              checked={user.fortuneVisibility}
+              onChange={saveFortuneVisibility}
+              className="peer appearance-none w-11 h-5 bg-slate-100 rounded-full checked:bg-blue-500 cursor-pointer transition-colors duration-300"
+            />
+            <label className="absolute top-0 left-0 w-5 h-5 bg-white rounded-full border border-slate-300 shadow-sm transition-transform duration-300 peer-checked:translate-x-6 peer-checked:border-blue-600 cursor-pointer" />
+          </div>
+          <span className="ml-2 w-[80px]">
+            {user.fortuneVisibility ? "전체 공개" : "나만 보기"}
+          </span>
+        </div>
+      </div>
+
       {/* 알림 설정 여부 */}
       <div className="flex mb-6">
         <label className="w-full md:w-8/12 mr-4">알림 설정 여부</label>
@@ -189,7 +212,7 @@ const AccountPage = () => {
             />
             <label className="absolute top-0 left-0 w-5 h-5 bg-white rounded-full border border-slate-300 shadow-sm transition-transform duration-300 peer-checked:translate-x-6 peer-checked:border-blue-600 cursor-pointer" />
           </div>
-          <span className="ml-2 w-[100px]">
+          <span className="ml-2 w-[80px]">
             {user.alarmStatus ? "알림 허용" : "알림 거절"}
           </span>
         </div>
@@ -202,33 +225,33 @@ const AccountPage = () => {
         </div>
       )}
 
-      {/* 메시지 공개 여부 */}
-      <div className="flex">
-        <label className="w-full md:w-8/12 mr-4">메시지 공개 여부</label>
-        <div className="flex justify-between items-center gap-2">
-          <div className="relative w-11 h-5">
-            <input
-              type="checkbox"
-              checked={user.fortuneVisibility}
-              onChange={saveFortuneVisibility}
-              className="peer appearance-none w-11 h-5 bg-slate-100 rounded-full checked:bg-blue-500 cursor-pointer transition-colors duration-300"
-            />
-            <label className="absolute top-0 left-0 w-5 h-5 bg-white rounded-full border border-slate-300 shadow-sm transition-transform duration-300 peer-checked:translate-x-6 peer-checked:border-blue-600 cursor-pointer" />
+      {/* 아이폰 알림 설정 방법 안내 */}
+      <div className="flex text-[#909090] items-center flex-wrap w-full pt-4">
+        <div className="text-base text-[#91C2ED]">설정에 따라 알림이 차단될 수 있습니다.</div>
+        <div className="text-sm text-[#A0A0A0] flex flex-col w-full pt-4 space-y-2">
+          <div className="flex items-center">
+            <Suspense><IoBulbOutline className="mr-2" /></Suspense>
+            <span className="font-semibold">아이폰 알림 설정 방법:</span>
           </div>
-          <span className="ml-2 w-[100px]">
-            {user.fortuneVisibility ? "전체 공개" : "나만 보기"}
-          </span>
+          <ul className="list-decimal pl-5 space-y-1">
+            <li className="flex items-center">
+              Safari 하단 <Suspense><IoShareOutline className="mx-1" /></Suspense> 공유 버튼 클릭
+            </li>
+            <li className="flex items-center">
+              홈 화면에 추가 <Suspense><AiOutlinePlusSquare className="mx-1" /></Suspense> 버튼 선택
+            </li>
+            <li className="flex items-center">
+              앱 → 계정 설정 → 알림/팝업 허용
+            </li>
+          </ul>
         </div>
       </div>
+
 
       <hr className="border-t-2 border-gray-600 my-10" />
 
       <div>
         <button onClick={logoutButton}>로그아웃</button>
-      </div>
-
-      <div className="flex justify-center">
-        <Footer />
       </div>
 
       {/* 변경 성공 알림 */}

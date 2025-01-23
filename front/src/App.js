@@ -7,7 +7,7 @@ const App = () => {
     //default : text-white,lg / 높이 기기 화면에 맞춤
     <div className="flex justify-center bg-[#ede0d4] text-white min-h-screen text-base">
       {/* 라우터 적용 */}
-      <RouterProvider router={router} />
+      <RouterProvider router={router} future={{ v7_startTransition: true }}/>
     </div>
   );
 };

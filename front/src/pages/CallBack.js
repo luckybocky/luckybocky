@@ -27,8 +27,20 @@ const CallBack = () => {
 
   return (
     <div className="flex flex-col justify-center items-center p-6">
-      <h1 className="text-4xl mb-1">로그인 중 입니다...</h1>
-      <p className="text-xl text-orange-400">알림 권한을 확인해주세요.</p>
+       <h1 className="text-4xl mb-1">로그인 중<span className="dots"></span></h1>
+      <style>{`
+        @keyframes dotAnimation {
+          0% { content: ""; }
+          33% { content: "."; }
+          66% { content: ".."; }
+          100% { content: "..."; }
+        }
+        .dots::after {
+          display: inline-block;
+          animation: dotAnimation 3s steps(3, end) infinite;
+          content: "...";
+        }
+      `}</style>
     </div>
   );
 };

@@ -14,9 +14,9 @@ class FirebaseService {
         const token = await getToken(messaging, {
           vapidKey: process.env.REACT_APP_FIREBASE_VAPID_KEY,
         });
-
-        // await this.setupOnMessageListener();
+        
         await this.sendToken(token);
+
         return true; // 토큰 반환
       } else {
         console.log("Notification permission denied");
