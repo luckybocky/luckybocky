@@ -111,7 +111,11 @@ class QnaService {
    */
   static async updateQuestion(payload: QuestionPayload): Promise<void> {
     try {
-      await ApiClient.put(`qna/question/${payload.qnaSeq}`);
+      await ApiClient.put(`qna/question/${payload.qnaSeq}`, {
+        title: payload.title,
+        content: payload.content,
+        secretStatus: payload.secretStatus,
+      });
     } catch (error) {
       console.error("Failed to update QnA: ", error);
     }

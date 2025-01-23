@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Menu from "../components/Menu";
 import QnaService from "../api/QnaService.ts";
@@ -6,16 +6,26 @@ import QnaService from "../api/QnaService.ts";
 const QnaDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [answer, setAnswer] = useState("");
-  const [tempAlarm, setTempAlarm] = useState(false);
+  const [questionModalOpen, setQuestionModalOpen] = useState(false);
   const [question, setQuestion] = useState(location.state?.question || null);
+  const [title, setTitle] = useState(question?.title || null);
+  const [content, setContent] = useState(question?.content || null);
+  const [secretStatus, setSecretStatus] = useState(
+    question?.secretStatus || null
+  );
+  const [answer, setAnswer] = useState("");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [cansSubmit, setCanSubmit] = useState(false);
+  const initialValues = useRef({ title: "", content: "", secretStatus: false });
 
   const code = location.state?.code || 200;
 
-  const activateAlarm = () => {
-    setTempAlarm(true);
-    setTimeout(() => setTempAlarm(false), 1000);
+  const closeModals = () => {
+    setQuestionModalOpen(false);
+    setTitle("");
+    setContent("");
+    setSecretStatus(false);
   };
 
   const sendAnswer = async () => {
@@ -44,10 +54,55 @@ const QnaDetailPage = () => {
     setQuestion(payload);
   };
 
-  const deleteQuestion = async () => {
+  const confirmDelete = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     await QnaService.deleteQuestion(question.qnaSeq);
+    setIsSubmitting(false);
     navigate(-1);
-  }
+  };
+
+  const confirmUpdate = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    const payload = {
+      qnaSeq: question.qnaSeq,
+      title,
+      content,
+      answer: question.answer,
+      secretStatus,
+    };
+
+    await QnaService.updateQuestion(payload);
+
+    setIsSubmitting(false);
+    closeModals();
+    setQuestion(payload);
+  };
+
+  useEffect(() => {
+    if (questionModalOpen) {
+      // 모달이 열릴 때 초기값을 저장 (처음 한 번만)
+      if (!initialValues.current.title && !initialValues.current.content) {
+        initialValues.current = {
+          title: question?.title || "",
+          content: question?.content || "",
+          secretStatus: question?.secretStatus || false,
+        };
+      }
+      // 상태를 초기값으로 설정
+      setTitle(initialValues.current.title);
+      setContent(initialValues.current.content);
+      setSecretStatus(initialValues.current.secretStatus);
+    }
+  }, [questionModalOpen, location.question]);
+
+  useEffect(() => {
+    if (title?.length >= 1 && content?.length >= 1) setCanSubmit(true);
+    else setCanSubmit(false);
+  }, [title, content]);
 
   return (
     <div className="relative flex flex-col items-center w-full p-2 max-w-[600px] min-h-screen bg-[#FEFAF6] text-white overflow-hidden">
@@ -58,14 +113,19 @@ const QnaDetailPage = () => {
       {question && (code === 300 || code === 400) ? (
         <div className="w-full grid grid-cols-2 px-4 space-x-4 mt-3 mb-3 text-sm">
           <button
-            className="bg-[#AD8B73] h-9 p-3 rounded-lg flex items-center justify-center"
-            onClick={() => activateAlarm()}
+            className={`${
+              question.answer === null
+                ? "bg-[#AD8B73]"
+                : "bg-gray-400 cursor-not-allowed"
+            } h-9 p-3 rounded-lg flex items-center justify-center`}
+            onClick={() => setQuestionModalOpen(true)}
+            disabled={question.answer !== null}
           >
             수정하기
           </button>
           <button
             className="bg-[#CEAB93] h-9 p-3 rounded-lg flex items-center justify-center"
-            onClick={() => deleteQuestion()}
+            onClick={() => setDeleteModalOpen(true)}
           >
             삭제하기
           </button>
@@ -76,7 +136,7 @@ const QnaDetailPage = () => {
         </div>
       )}
       {/* QnA */}
-      <div className="w-full text-[#0d1a26] font-JalnanGothic">
+      <div className="w-full text-[#0d1a26]">
         {question ? (
           <div className="w-full px-4">
             <div className="p-3 border-t border-b border-gray-600">
@@ -133,6 +193,31 @@ const QnaDetailPage = () => {
           </div>
         )}
       </div>
+      {/* 삭제 모달 */}
+      {deleteModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40">
+          <div className="flex flex-col items-center bg-white rounded-lg shadow-lg p-6 w-80">
+            <h2 className="text-xl text-[#3c1e1e] mb-4">
+              질문은 복구할 수 없어요.
+            </h2>
+            <p className="text-gray-700 mb-6">정말 삭제하시겠어요?</p>
+            <div className="flex gap-4">
+              <button
+                className="bg-gray-300 text-black rounded-md py-2 px-4"
+                onClick={() => setDeleteModalOpen(false)}
+              >
+                취소
+              </button>
+              <button
+                className="bg-red-500 text-white rounded-md py-2 px-4"
+                onClick={confirmDelete}
+              >
+                삭제
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* 돌아가기 버튼 */}
       <button
         onClick={() => navigate(-1)}
@@ -140,10 +225,66 @@ const QnaDetailPage = () => {
       >
         돌아가기
       </button>
-      {/*임시 알림 */}
-      {tempAlarm && (
-        <div className="fixed bottom-16 bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md z-30">
-          준비중입니다!
+      {/* 질문게시 모달 */}
+      {questionModalOpen && (
+        <div
+          className="fixed inset-0 z-30 flex items-center justify-center bg-black bg-opacity-60"
+          onClick={closeModals}
+        >
+          <div
+            className="bg-white w-full max-w-[600px] text-[#0d1a26] p-4 rounded-lg w-80"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <textarea
+              className="w-full p-2 border border-gray-300 rounded-md resize-none whitespace-nowrap"
+              placeholder="제목을 입력하세요."
+              rows={1}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              onKeyDown={(e) => {
+                if ((e.altKey && e.key === "Enter") || e.key === "Enter") {
+                  e.preventDefault();
+                }
+              }}
+            ></textarea>
+            <textarea
+              className="w-full h-60 p-2 border border-gray-300 rounded-md mb-2 resize-none"
+              placeholder="내용을 입력하세요."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            ></textarea>
+            <div className="space-x-2 mb-4">
+              <input
+                type="checkbox"
+                checked={secretStatus}
+                onChange={() => {
+                  setSecretStatus(!secretStatus);
+                }}
+              />
+              <span>비공개</span>
+            </div>
+            <div className="flex justify-between">
+              <div className="flex gap-2">
+                <button
+                  className="bg-[#E3CAA5] text-black py-2 px-4 rounded-lg"
+                  onClick={closeModals}
+                >
+                  취소
+                </button>
+                <button
+                  onClick={confirmUpdate}
+                  className={`${
+                    cansSubmit
+                      ? "bg-[#AD8B73]"
+                      : "bg-gray-400 cursor-not-allowed"
+                  } text-white rounded-lg py-2 px-6`}
+                  disabled={!cansSubmit}
+                >
+                  저장
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
