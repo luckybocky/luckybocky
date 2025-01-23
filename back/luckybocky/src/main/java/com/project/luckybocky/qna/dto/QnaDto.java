@@ -23,6 +23,7 @@ public class QnaDto {
 	private Boolean secretStatus;
 	private String userNickname;
 	private LocalDate createdAt;
+	private Integer authorizedCode;
 
 	public static Page<QnaDto> toQnaPageDto(Page<Qna> qnaList) {
 		return qnaList.map(qna -> QnaDto.builder()
@@ -35,4 +36,17 @@ public class QnaDto {
 			.createdAt(qna.getCreatedAt().toLocalDate())
 			.build());
 	}
+
+	// public static QnaDto toQnaDto(Qna qna, int code) {
+	// 	return QnaDto.builder()
+	// 		.qnaSeq(qna.getQnaSeq())
+	// 		.title(qna.getTitle())
+	// 		.content(qna.getContent())
+	// 		.answer(qna.getAnswer())
+	// 		.secretStatus(qna.getSecretStatus())
+	// 		.userNickname(qna.getUser().getUserNickname())
+	// 		.createdAt(qna.getCreatedAt().toLocalDate())
+	// 		.authorizedCode(code)
+	// 		.build();
+	// }
 }
