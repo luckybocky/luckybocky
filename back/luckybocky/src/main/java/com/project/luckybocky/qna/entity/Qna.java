@@ -20,6 +20,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -28,6 +29,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @DynamicInsert
+@ToString
 public class Qna extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
