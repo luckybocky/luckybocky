@@ -87,7 +87,7 @@ const Menu = () => {
 
       {/* 메뉴 버튼 */}
       <button
-        className="absolute top-0 right-0 text-3xl p-4"
+        className="absolute top-0 right-0 text-3xl p-4 z-10"
         style={{
           color: isQnaPage ? "#0d1a26" : undefined, // CSS 변수로 동적 색상 지정
         }}

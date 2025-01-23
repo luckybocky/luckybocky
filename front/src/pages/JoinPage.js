@@ -189,10 +189,6 @@ const JoinPage = () => {
       >
         <span className="flex justify-center pt-1">시작하기</span>
       </button>
-
-      <div className="flex justify-center">
-        <Footer />
-      </div>
     </div>
   );
 };

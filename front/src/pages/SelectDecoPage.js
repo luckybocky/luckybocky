@@ -29,7 +29,7 @@ const SelectDecoPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-[600px] bg-[#f5f5f5] p-4">
-      <h1 className="text-3xl text-[#3c1e1e] mb-4">장식을 골라주세요</h1>
+      <h1 className="text-3xl text-[#3c1e1e] mb-4">복을 골라주세요</h1>
 
       <div className="grid grid-cols-3 gap-4 mb-6">
         {decorations.map((id) => (

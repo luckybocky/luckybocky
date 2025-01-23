@@ -254,11 +254,6 @@ const AccountPage = () => {
         <button onClick={logoutButton}>로그아웃</button>
       </div>
 
-      <div className="flex justify-center">
-        <Footer />
-      </div>
-
-
       {/* 변경 성공 알림 */}
       {saved && (
         <div className="fixed bottom-16 bg-green-500 py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
