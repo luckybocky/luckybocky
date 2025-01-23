@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -92,9 +93,10 @@ public class QnaController {
 	@GetMapping("/question")
 	public ResponseEntity<DataResponseDto<QnaListResDto>> getQuestions(
 		@RequestParam(value = "page", defaultValue = "0") int page,
-		@RequestParam(value = "size", defaultValue = "5") int size) {
+		@RequestParam(value = "size", defaultValue = "5") int size,
+		HttpSession session) {
 		Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-		QnaListResDto qnaListResDto = qnaService.getQuestions(pageable);
+		QnaListResDto qnaListResDto = qnaService.getQuestions(pageable, session);
 
 		return ResponseEntity
 			.status(HttpStatus.OK)
@@ -102,7 +104,7 @@ public class QnaController {
 	}
 
 	@Operation(
-		summary = "사용자 권한 조회",
+		summary = "QnA 조회",
 		description = "QnA 상세 접근을 위한 권한 정보를 조회한다."
 	)
 	@ApiResponses(value = {
@@ -111,13 +113,52 @@ public class QnaController {
 			content = @Content(schema = @Schema(implementation = QnaNotFoundException.class))),
 	})
 	@GetMapping("/question/{qnaSeq}")
-	public ResponseEntity<DataResponseDto<Integer>> checkAccess(@PathVariable(value = "qnaSeq") Integer qnaSeq,
+	public ResponseEntity<DataResponseDto<Integer>> getQuestion(@PathVariable(value = "qnaSeq") Integer qnaSeq,
 		HttpSession session) {
-		Integer checkResult = qnaService.checkAccess(qnaSeq, session);
+		Integer result = qnaService.getQuestion(qnaSeq, session);
 
 		return ResponseEntity
 			.status(HttpStatus.OK)
-			.body(new DataResponseDto<>("#" + qnaSeq + " 질문 접근 조회 성공", checkResult));
+			.body(new DataResponseDto<>("#" + qnaSeq + " 질문 접근 조회 성공", result));
+	}
+
+	@Operation(
+		summary = "QnA 삭제",
+		description = "주어진 QnA를 삭제한다. 삭제는 관리자 및 글쓴 사용자가 수행한다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "QnA 삭제 성공"),
+		@ApiResponse(responseCode = "404", description = "QnA 데이터 찾을 수 없음",
+			content = @Content(schema = @Schema(implementation = QnaNotFoundException.class))),
+	})
+	@DeleteMapping("/question/{qnaSeq}")
+	public ResponseEntity<ResponseDto> deleteQna(@PathVariable(value = "qnaSeq") Integer qnaSeq) {
+		qnaService.deleteQna(qnaSeq);
+
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(new ResponseDto("#" + qnaSeq + " 질문 삭제 성공"));
+	}
+
+	@Operation(
+		summary = "QnA 수정",
+		description = "주어진 QnA를 수정한다. 수정은 관리자 및 글쓴 사용자가 수행한다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "QnA 수정 성공"),
+		@ApiResponse(responseCode = "404", description = "QnA 데이터 찾을 수 없음",
+			content = @Content(schema = @Schema(implementation = QnaNotFoundException.class))),
+		@ApiResponse(responseCode = "503", description = "QnA 데이터 수정할 수 없음",
+			content = @Content(schema = @Schema(implementation = QnaSaveException.class)))
+	})
+	@PutMapping("/question/{qnaSeq}")
+	public ResponseEntity<ResponseDto> updateQna(@PathVariable(value = "qnaSeq") Integer qnaSeq,
+		@RequestBody QnaUserReqDto updatedQuestion) {
+		qnaService.updateQna(qnaSeq, updatedQuestion);
+
+		return ResponseEntity
+			.status(HttpStatus.OK)
+			.body(new ResponseDto("#" + qnaSeq + " 질문 수정 성공"));
 	}
 
 	@Operation(

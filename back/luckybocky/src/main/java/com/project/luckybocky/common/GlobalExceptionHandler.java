@@ -13,8 +13,10 @@ import com.project.luckybocky.feedback.exception.FeedbackNotFoundException;
 import com.project.luckybocky.feedback.exception.FeedbackSaveException;
 import com.project.luckybocky.fortune.exception.FortuneNotFoundException;
 import com.project.luckybocky.pocket.exception.PocketNotFoundException;
+import com.project.luckybocky.qna.exception.QnaDeleteException;
 import com.project.luckybocky.qna.exception.QnaNotFoundException;
 import com.project.luckybocky.qna.exception.QnaSaveException;
+import com.project.luckybocky.qna.exception.QnaUpdateException;
 import com.project.luckybocky.report.exception.ReportNotFoundException;
 import com.project.luckybocky.report.exception.ReportSaveException;
 import com.project.luckybocky.user.exception.ForbiddenUserException;
@@ -117,6 +119,18 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ResponseDto> handleQnaNotFoundException(QnaNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 			.body(new ResponseDto((ex.getMessage())));
+	}
+
+	@ExceptionHandler(QnaUpdateException.class)
+	public ResponseEntity<ResponseDto> handleQnaUpdateException(QnaUpdateException ex) {
+		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+			.body(new ResponseDto(("데이터베이스 문제로 인해 QnA를 수정할 수 없니다. -> " + ex.getMessage())));
+	}
+
+	@ExceptionHandler(QnaDeleteException.class)
+	public ResponseEntity<ResponseDto> handleQnaDeleteException(QnaDeleteException ex) {
+		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+			.body(new ResponseDto(("데이터베이스 문제로 인해 QnA를 삭제할 수 없니다. -> " + ex.getMessage())));
 	}
 	//===== 우재 예외 추가 end ======
 }

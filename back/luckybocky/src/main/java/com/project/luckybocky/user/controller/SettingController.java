@@ -46,7 +46,6 @@ public class SettingController {
 		@ApiResponse(responseCode = "401", description = "사용자를 찾을 수 없음",
 			content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
 	})
-	@RateLimiter(name = "saveRateLimiter")
 	@PutMapping("/user")
 	public ResponseEntity<ResponseDto> updateSetting(@RequestBody SettingDto settingDto, HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
