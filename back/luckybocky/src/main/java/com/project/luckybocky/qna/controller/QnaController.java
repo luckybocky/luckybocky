@@ -93,9 +93,10 @@ public class QnaController {
 	@GetMapping("/question")
 	public ResponseEntity<DataResponseDto<QnaListResDto>> getQuestions(
 		@RequestParam(value = "page", defaultValue = "0") int page,
-		@RequestParam(value = "size", defaultValue = "5") int size) {
+		@RequestParam(value = "size", defaultValue = "5") int size,
+		HttpSession session) {
 		Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-		QnaListResDto qnaListResDto = qnaService.getQuestions(pageable);
+		QnaListResDto qnaListResDto = qnaService.getQuestions(pageable, session);
 
 		return ResponseEntity
 			.status(HttpStatus.OK)
