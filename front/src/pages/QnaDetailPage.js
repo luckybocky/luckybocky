@@ -105,7 +105,7 @@ const QnaDetailPage = () => {
   }, [title, content]);
 
   return (
-    <div className="relative flex flex-col items-center w-full p-2 max-w-[600px] min-h-screen bg-[#FEFAF6] text-white overflow-hidden">
+    <div className="relative flex flex-col items-center w-full p-4 max-w-[600px] min-h-screen bg-[#FEFAF6] text-white overflow-hidden">
       <Menu />
       {/* 제목 영역 */}
       <h1 className="text-xl mt-2 mb-2 text-[#0d1a26]">QnA</h1>
