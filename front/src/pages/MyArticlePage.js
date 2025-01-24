@@ -29,13 +29,13 @@ const MyArticlePage = () => {
   }
 
   return (
-    <div className="relative flex flex-col items-center w-full max-w-[600px] bg-[#ba947f] p-4 overflow-hidden p-2">
+    <div className="relative flex flex-col items-center w-full max-w-[600px] bg-[#ba947f] p-4 overflow-hidden">
       <Menu />
 
-      <h1 className="text-2xl mb-4">메시지 목록</h1>
+      <h1 className="text-xl mt-2 mb-2">메시지 목록</h1>
 
       {/* 메시지 리스트 */}
-      <div className="w-full space-y-8 pb-16 mt-8">
+      <div className="w-full space-y-8 pb-16 mt-10">
         {articles?.map((article, index) => (
           <div
             key={index}
