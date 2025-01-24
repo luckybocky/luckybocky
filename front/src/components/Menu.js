@@ -203,7 +203,7 @@ const Menu = () => {
 
             <textarea
               className="border border-gray-300 rounded-md w-full h-60 p-2 mb-2 resize-none"
-              placeholder="피드백 내용을 입력하세요."
+              placeholder="서비스에 대한 피드백을 남겨주세요 :)"
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
             ></textarea>

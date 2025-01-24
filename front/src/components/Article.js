@@ -130,14 +130,14 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
             <img
               src={fortuneImages[detail?.fortuneImg].fallback}
               alt="Fortune"
-              className="absolute top-[-45px] left-1/2 transform -translate-x-1/2 w-[100px] h-[100px]"
+              className="absolute top-[-45px] left-1/2 transform -translate-x-1/2 w-[100px] h-[100px] z-10"
             />
           </picture>
 
           <div className="flex justify-end mb-1">
             <button
-              className="bg-blue-500 rounded-md py-1 px-3"
-              onClick={onClose}
+              className="text-gray-600 rounded-md"
+              onClick={confirmClose}
             >
               <Suspense>
                 <AiOutlineClose size={24} />
