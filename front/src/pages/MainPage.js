@@ -225,7 +225,7 @@ const MainPage = () => {
                 <Suspense>
                   <IoLogInOutline size={28} className="mr-1.5" />
                 </Suspense>
-                <span className="w-[90px] text-shadow-outline">
+                <span className="w-[95px] text-shadow-outline">
                   로그인하기
                 </span>
               </div>
@@ -246,7 +246,7 @@ const MainPage = () => {
                 <Suspense>
                   <BsPencil size={22} className="mr-3" />
                 </Suspense>
-                <span className={"pt-1 w-[90px]"}>
+                <span className={"pt-1 w-[95px]"}>
                   복 전달하기
                 </span>
               </div>
