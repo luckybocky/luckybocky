@@ -230,7 +230,7 @@ const Menu = () => {
                   취소
                 </button>
                 <button
-                  className="bg-[#0d1a26] text-white rounded-lg py-2 px-4 "
+                  className="bg-blue-500 text-white rounded-lg py-2 px-4 "
                   onClick={sendFeedback}
                 >
                   보내기
