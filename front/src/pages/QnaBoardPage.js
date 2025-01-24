@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, Suspense } from "react";
+import React, {useEffect, useState, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 
 import AuthStore from "../store/AuthStore";
@@ -15,7 +15,6 @@ const QnaBoardPage = () => {
   const [questionModalOpen, setQuestionModalOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [flag, setFlag] = useState(false);
   const [secretStatus, setSecretStatus] = useState(false);
   const [secretAlarm, setSecretAlarm] = useState(false);
   const [accessAlarm, setAccessAlarm] = useState(false);
@@ -24,7 +23,7 @@ const QnaBoardPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [cansSubmit, setCanSubmit] = useState(false);
-  const mount = useRef(false);
+  const [flag, setFlag] = useState(JSON.parse(sessionStorage.getItem("flag"))||false);
 
   const itemsPerPage = 5;
   const startPage = Math.floor((currentPage - 1) / 3) * 3 + 1;
@@ -117,26 +116,8 @@ const QnaBoardPage = () => {
   };
 
   useEffect(() => {
-    if (sessionStorage.getItem("flag") === null) {
-      fetchQuestions();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!mount.current) {
-      mount.current = true;
-    } else {
-      fetchQuestions();
-    }
+    fetchQuestions();
   }, [currentPage, flag]);
-
-  useEffect(() => {
-    const savedFlag = sessionStorage.getItem("flag");
-
-    if (savedFlag !== null) {
-      setFlag(JSON.parse(savedFlag));
-    }
-  }, []);
 
   useEffect(() => {
     if (title?.length >= 1 && content?.length >= 1) setCanSubmit(true);
