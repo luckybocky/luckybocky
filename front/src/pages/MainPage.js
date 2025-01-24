@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import AuthStore from "../store/AuthStore";
@@ -21,9 +21,11 @@ import Util from "../components/Util.js";
 
 const IoShareOutline = Util.loadIcon("IoShareOutline").io5;
 const BsPencil = Util.loadIcon("BsPencil").bs;
+const IoLogInOutline = Util.loadIcon("IoLogInOutline").io5;
 
 const MainPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const myAddress = AuthStore((state) => state.user.address);
 
@@ -34,7 +36,9 @@ const MainPage = () => {
   const [decorations, setDecorations] = useState([]);
   const [isOwner, setIsOwner] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false); // 로드 상태
+  const [notice, setNotice] = useState(false);
 
+  const afterWrite = location.state?.afterWrite;
   const { address } = useParams();
   const positions = [
     { id: 1, position: "top-[25%] left-[8%]" }, // 상단 왼쪽
@@ -119,6 +123,13 @@ const MainPage = () => {
     setIsOwner(address === myAddress);
   }, [address]);
 
+  useEffect(() => {
+    if (afterWrite) {
+      setNotice(true);
+      setTimeout(() => setNotice(false), 3000);
+    }
+  }, [])
+
   return (
     isLoaded && (
       <div className="relative flex flex-col items-center justify-center w-full max-w-[600px] p-4 overflow-hidden z-20">
@@ -146,7 +157,7 @@ const MainPage = () => {
               alt="복주머니 아이콘 이미지"
               className="w-5 h-5 xs:w-4 xs:h-4 mr-1"
             />
-             <span className="text-base xs:text-sm">{decorations.length}개의 복이 왔어요!</span>
+            <span className="text-base xs:text-sm">{decorations.length}개의 복이 왔어요!</span>
           </picture>
         </div>
 
@@ -205,36 +216,79 @@ const MainPage = () => {
           </button>
         </div>
 
-        <button
-          onClick={
-            isOwner
-              ? handleCopyURL
-              : () =>
-                  navigate("/select-deco", {
-                    state: {
-                      address,
-                      // fortuneVisibility,
-                      pocketSeq: pocket.pocketSeq,
-                    },
-                  })
-          }
-          className={`${
-            isOwner ? "bg-white text-[#0d1a26] pt-3 pb-4" : "bg-[#156082] py-4"
-          }   px-10 rounded-lg w-full max-w-[350px]`}
-        >
-          <div className="flex items-center justify-center">
-            <Suspense>
-              {isOwner ? (
-                <IoShareOutline size={28} className="mr-2" />
-              ) : (
-                <BsPencil size={22} className="mr-3" />
-              )}
-            </Suspense>
-            <span className={`${isOwner ? "pt-2" : "pt-1"}`}>
-              {isOwner ? "내 복주머니 공유하기" : "복 전달하기"}
-            </span>
+        {/* 비로그인 상태 */}
+        {myAddress === "" &&
+          <div className="flex justify-center items-center gap-2 w-full">
+            <button className="bg-[#F4BB44] py-4 px-5 rounded-lg"
+              onClick={() => navigate("/")}>
+              <div className="flex items-center justify-center">
+                <Suspense>
+                  <IoLogInOutline size={28} className="mr-1.5" />
+                </Suspense>
+                <span className="w-[90px] text-shadow-outline">
+                  로그인하기
+                </span>
+              </div>
+            </button>
+
+            <button
+              onClick={() =>
+                navigate("/select-deco", {
+                  state: {
+                    address,
+                    pocketSeq: pocket.pocketSeq,
+                  },
+                })
+              }
+              className={"bg-[#156082] py-4 px-5 rounded-lg"}
+            >
+              <div className="flex items-center justify-center">
+                <Suspense>
+                  <BsPencil size={22} className="mr-3" />
+                </Suspense>
+                <span className={"pt-1 w-[90px]"}>
+                  복 전달하기
+                </span>
+              </div>
+            </button>
           </div>
-        </button>
+        }
+
+
+        {/* 로그인 상태 */}
+        {myAddress !== "" &&
+          <div className="flex justify-center items-center gap-2 w-full">
+            <button
+              onClick={
+                isOwner
+                  ? handleCopyURL
+                  : () =>
+                    navigate("/select-deco", {
+                      state: {
+                        address,
+                        // fortuneVisibility,
+                        pocketSeq: pocket.pocketSeq,
+                      },
+                    })
+              }
+              className={`${isOwner ? "bg-white text-[#0d1a26] pt-3 pb-4" : "bg-[#156082] py-4"
+                } w-full max-w-[350px] px-5 rounded-lg`}
+            >
+              <div className="flex items-center justify-center">
+                <Suspense>
+                  {isOwner ? (
+                    <IoShareOutline size={28} className="mr-2" />
+                  ) : (
+                    <BsPencil size={22} className="mr-3" />
+                  )}
+                </Suspense>
+                <span className={`${isOwner ? "pt-2" : "pt-1"}`}>
+                  {isOwner ? "내 복주머니 공유하기" : "복 전달하기"}
+                </span>
+              </div>
+            </button>
+          </div>
+        }
 
         {/* 복사 성공 알림 */}
         {copied && (
@@ -252,6 +306,13 @@ const MainPage = () => {
             myAddress={myAddress}
             address={address}
           />
+        )}
+
+        {/* 비회원 글쓰기 후 알림 */}
+        {notice && (
+          <div className="fixed bottom-50 bg-green-500 bg-opacity-70 py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
+            <p className="whitespace-nowrap">로그인 후 나의 복주머니도 공유해보세요!</p>
+          </div>
         )}
 
         <Footer />

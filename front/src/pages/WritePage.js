@@ -16,13 +16,14 @@ const WritePage = () => {
   const [message, setMessage] = useState("");
   const [visibility, setVisibility] = useState(true);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
+  const [visibilityModalOpen, setVisibilityModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [cansSubmit, setCanSubmit] = useState(false);
 
   const location = useLocation();
   const decorationId = location.state?.decorationId;
   const pocketAddress = location.state?.pocketAddress;
-  const pocketSeq = location.state?.pocketSeq; 
+  const pocketSeq = location.state?.pocketSeq;
 
   const confirmWrite = async () => {
     if (isSubmitting) return;
@@ -35,14 +36,41 @@ const WritePage = () => {
       content: message,
       fortuneSeq: decorationId,
       visibility: visibility,
-      url: `${window.location.origin}${window.location.pathname}`,
     };
 
     await ArticleService.save(payload);
 
-    navigate("/" + pocketAddress);
+    //비회원
+    if (userNickname === "") {
+      navigate("/" + pocketAddress, {
+        state: {
+          afterWrite: true,
+        },
+      });
+    } else {
+      navigate("/" + pocketAddress);
+    }
+
     setSaveModalOpen(false);
   };
+
+  const changeVisibility = () => {
+    //로그인이 된 유저
+    if (userNickname !== "") {
+      setVisibility(!visibility);
+      return;
+    }
+
+    //비로그인 유저
+    else {
+      if (!visibility) {
+        setVisibility(true);
+        return;
+      } else {
+        setVisibilityModalOpen(true);
+      }
+    }
+  }
 
   useEffect(() => {
     setNickname(userNickname);
@@ -108,7 +136,7 @@ const WritePage = () => {
           <input
             type="checkbox"
             checked={!visibility}
-            onChange={(e) => setVisibility(!e.target.checked)}
+            onChange={changeVisibility}
             className="mr-2 h-5 w-5"
           />
           비밀글
@@ -121,10 +149,10 @@ const WritePage = () => {
             이전
           </button>
           <button
-            onClick={()=>{setSaveModalOpen(true)}}
+            onClick={() => { setSaveModalOpen(true) }}
             className={`${cansSubmit
-                ? "bg-blue-500 hover:bg-blue-600"
-                : "bg-gray-400 cursor-not-allowed"
+              ? "bg-blue-500 hover:bg-blue-600"
+              : "bg-gray-400 cursor-not-allowed"
               } text-white rounded-lg py-2 px-6`}
             disabled={!cansSubmit}
           >
@@ -157,6 +185,35 @@ const WritePage = () => {
           </div>
         </div>
       )}
+
+      {visibilityModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="flex flex-col items-center bg-white shadow-lg rounded-lg w-80 p-6">
+            <h2 className="text-xl text-[#3c1e1e] text-center mb-4">
+              비로그인 시 이후에 <br />글을 확인할 수 없습니다.
+            </h2>
+            <p className="text-gray-700 mb-6">비밀글로 설정하시겠어요?</p>
+            <div className="flex gap-4">
+              <button
+                className="bg-gray-300 text-black rounded-md py-2 px-4"
+                onClick={() => setVisibilityModalOpen(false)}
+              >
+                취소
+              </button>
+              <button
+                className="bg-red-500 text-white rounded-md py-2 px-4"
+                onClick={() => {
+                  setVisibility(false);
+                  setVisibilityModalOpen(false);
+                }}
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
