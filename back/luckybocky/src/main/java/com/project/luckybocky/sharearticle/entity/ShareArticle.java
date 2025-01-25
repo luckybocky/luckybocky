@@ -54,7 +54,7 @@ public class ShareArticle extends BaseEntity {
 	@JoinColumn(name = "fortune_seq", columnDefinition = "smallint", nullable = false)
 	private Fortune fortune;
 
-	@OneToMany(mappedBy = "articleSeq")
+	@OneToMany(mappedBy = "shareArticle")
 	private List<Article> articles;
 
 	@Column(length = 500)

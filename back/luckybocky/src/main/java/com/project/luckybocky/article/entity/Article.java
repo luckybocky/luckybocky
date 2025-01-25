@@ -69,6 +69,7 @@ public class Article extends BaseEntity {
 	private List<Report> reports = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "share_article_seq", nullable = true)
 	private ShareArticle shareArticle;
 
 	//12-23 창희 복주머니 칼럼 추가
