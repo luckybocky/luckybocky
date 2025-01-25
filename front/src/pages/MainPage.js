@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import AuthStore from "../store/AuthStore";
@@ -22,10 +22,11 @@ import Util from "../components/Util.js";
 const IoShareOutline = Util.loadIcon("IoShareOutline").io5;
 const BsPencil = Util.loadIcon("BsPencil").bs;
 const IoLogInOutline = Util.loadIcon("IoLogInOutline").io5;
+const BsFillSendFill = Util.loadIcon("BsFillSendFill").bs;
 
 const MainPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
 
   const myAddress = AuthStore((state) => state.user.address);
 
@@ -38,7 +39,7 @@ const MainPage = () => {
   const [isLoaded, setIsLoaded] = useState(false); // 로드 상태
   const [notice, setNotice] = useState(false);
 
-  const afterWrite = location.state?.afterWrite;
+  // const afterWrite = location.state?.afterWrite;
   const { address } = useParams();
   const positions = [
     { id: 1, position: "top-[25%] left-[8%]" }, // 상단 왼쪽
@@ -120,15 +121,20 @@ const MainPage = () => {
 
   useEffect(() => {
     fetchPocket();
+
     setIsOwner(address === myAddress);
+
+    if (window.sessionStorage.getItem("share") !== null) {
+      window.sessionStorage.removeItem("share");
+    }
   }, [address]);
 
-  useEffect(() => {
-    if (afterWrite) {
-      setNotice(true);
-      setTimeout(() => setNotice(false), 3000);
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (afterWrite) {
+  //     setNotice(true);
+  //     setTimeout(() => setNotice(false), 3000);
+  //   }
+  // }, [])
 
   return (
     isLoaded && (
@@ -159,6 +165,10 @@ const MainPage = () => {
             />
             <span className="text-base xs:text-sm">{decorations.length}개의 복이 왔어요!</span>
           </picture>
+
+          {!isOwner && !pocket?.fortuneVisibility && <div className="flex text-base xs:text-sm mt-2">
+            <p className="text-gray-600 ">🔒 이 복주머니는 주인만 볼 수 있어요!</p>
+          </div>}
         </div>
 
         <div className="relative">
@@ -219,19 +229,19 @@ const MainPage = () => {
         {/* 비로그인 상태 */}
         {myAddress === "" &&
           <div className="flex justify-center items-center gap-2 w-full">
-            <button className="bg-[#F4BB44] py-4 px-5 rounded-lg"
+            <button className="bg-[#F4BB44] w-full max-w-[350px] rounded-lg py-4 px-5"
               onClick={() => navigate("/")}>
               <div className="flex items-center justify-center">
                 <Suspense>
                   <IoLogInOutline size={28} className="mr-1.5" />
                 </Suspense>
-                <span className="w-[95px] text-shadow-outline">
-                  로그인하기
+                <span className="text-shadow-outline mt-1">
+                  복주머니 만들러 가기
                 </span>
               </div>
             </button>
 
-            <button
+            {/* <button
               onClick={() =>
                 navigate("/select-deco", {
                   state: {
@@ -250,28 +260,51 @@ const MainPage = () => {
                   복 전달하기
                 </span>
               </div>
-            </button>
+            </button> */}
           </div>
         }
 
 
         {/* 로그인 상태 */}
         {myAddress !== "" &&
-          <div className="flex justify-center items-center gap-2 w-full">
+          <div className="flex flex-col justify-center items-center gap-2 w-full">
+            {isOwner &&
+              <button
+                onClick={() =>
+                  navigate("/write", {
+                    state: {
+                      pocketAddress: address,
+                      pocketSeq: pocket.pocketSeq,
+                      share: true
+                    },
+                  })}
+
+                className={"bg-[#156082] py-4 w-full max-w-[350px] px-5 rounded-lg"}
+              >
+                <div className="flex items-center justify-center">
+                  <Suspense>
+                    <BsFillSendFill size={22} className="mr-3" />
+                  </Suspense>
+                  <span className={"pt-1"}>
+                    새해 인사 전달하기
+                  </span>
+                </div>
+              </button>}
+
             <button
               onClick={
                 isOwner
                   ? handleCopyURL
                   : () =>
-                    navigate("/select-deco", {
+                    navigate("/write", {
                       state: {
-                        address,
-                        // fortuneVisibility,
+                        pocketAddress: address,
                         pocketSeq: pocket.pocketSeq,
+                        share: false,
                       },
                     })
               }
-              className={`${isOwner ? "bg-white text-[#0d1a26] pt-3 pb-4" : "bg-[#156082] py-4"
+              className={`${isOwner ? "bg-white text-[#0d1a26] pt-3 pb-4" : "bg-green-600 py-4"
                 } w-full max-w-[350px] px-5 rounded-lg`}
             >
               <div className="flex items-center justify-center">
@@ -283,7 +316,7 @@ const MainPage = () => {
                   )}
                 </Suspense>
                 <span className={`${isOwner ? "pt-2" : "pt-1"}`}>
-                  {isOwner ? "내 복주머니 공유하기" : "복 전달하기"}
+                  {isOwner ? "내 복주머니 자랑하기" : "복주머니에 새해 인사 남기기"}
                 </span>
               </div>
             </button>
@@ -309,11 +342,11 @@ const MainPage = () => {
         )}
 
         {/* 비회원 글쓰기 후 알림 */}
-        {notice && (
+        {/* {notice && (
           <div className="fixed bottom-50 bg-green-500 bg-opacity-70 py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
             <p className="whitespace-nowrap">로그인 후 나의 복주머니도 공유해보세요!</p>
           </div>
-        )}
+        )} */}
 
         <Footer />
       </div>
