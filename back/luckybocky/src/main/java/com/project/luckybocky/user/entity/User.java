@@ -60,6 +60,7 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy = "user")
 	List<Article> articles = new ArrayList<>();
 
+	//이 공유페이지를 직접생성한 사람이라는뜻
 	@OneToMany(mappedBy = "user")
 	List<ShareArticle> shareArticles = new ArrayList<>();
 
