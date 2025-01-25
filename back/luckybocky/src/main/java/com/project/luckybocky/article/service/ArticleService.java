@@ -48,19 +48,15 @@ public class ArticleService {
 
 		ArticleResponseDto response = article.toArticleResponseDto();
 
-		String pocketOwnerKey = article.getPocket().getUser().getUserKey();
-		String articleOwnerKey = article.getUser().getUserKey();
-
-		if (userKey == null ||
-			(!userKey.equals(pocketOwnerKey) && !userKey.equals(articleOwnerKey))) {    // 복주머니,게시글의 주인이 아닐경우
-			// 비공개 복주머니나 비공개 글인 경우 -> 전부 비공개로 설정
-			if (!article.getPocket().getUser().isFortuneVisibility() || !article.isArticleVisibility()) {
+		if (userKey == null || !userKey.equals(article.getPocket().getUser().getUserKey())) {
+			// 복주머니 주인이 아니고, 비공개 복주머니일 경우 -> 게시글 전체 비공개 설정
+			if (!article.getPocket().getUser().isFortuneVisibility()) {
 				response.setArticleVisibility(false);
 				response.setArticleContent("비밀글입니다.");
 				response.setArticleComment("비밀글입니다.");
 			}
 		}
-		//복주머니,게시글 주인의 경우 -> 비밀글 설정을 다 공개로 바꿈
+		// 복주머니 주인 -> 게시글 전체 공개 설정
 		else {
 			response.setArticleVisibility(true);
 		}
@@ -97,7 +93,6 @@ public class ArticleService {
 			.userNickname(writeArticleDto.getNickname())
 			.articleContent(writeArticleDto.getContent())
 			.articleComment(null)
-			.articleVisibility(writeArticleDto.isVisibility())
 			.fortune(fortune)
 			.pocket(pocket)
 			.build();

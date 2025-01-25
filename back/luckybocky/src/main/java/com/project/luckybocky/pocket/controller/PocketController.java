@@ -67,16 +67,8 @@ public class PocketController {
 		PocketInfoDto findPocket = pocketService.getPocketInfo(url);
 		pocketDto.setPocketSeq(findPocket.getPocketSeq());
 		pocketDto.setUserNickname(findPocket.getUserNickname());
-
-		//        if (userKey == findPocket.getUserKey()){    // 복주머니 주인의 경우 (모든 게시글을 볼 수 있어야 함)
+		pocketDto.setFortuneVisibility(findPocket.isFortuneVisibility());
 		pocketDto.setArticles(articleService.getAllArticles(findPocket.getPocketSeq()));
-		//        } else {        // 복주머니의 주인이 아닐경우
-		//            if (!findPocket.isFortuneVisibility()){     // 비공개 복주머니일 경우 -> 전부 비공개로 설정
-		//                pocketDto.setArticles(articleService.getAllArticlesInvisible(findPocket.getPocketSeq()));
-		//            } else {    // 비공개 복주머니가 아닐 경우 -> 비공개 글만 비공개로 설정
-		//                pocketDto.setArticles(articleService.getAllArticlesCheck(findPocket.getPocketSeq()));
-		//            }
-		//        }
 
 		log.info("주소(url)로 복주머니 조회 - 주소: {}, 번호: {}, 복주머니 주인: {}", url, pocketDto.getPocketSeq(),
 			pocketDto.getUserNickname());
