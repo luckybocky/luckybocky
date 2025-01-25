@@ -58,6 +58,19 @@ class ArticleService {
   }
 
   /**
+   * 사용자 공유 글 목록 가져오기 -> 연결 예정
+   * @returns {Promise<Article[]>}
+   */
+  // static async getSharedMyList(): Promise<MyArticle[] | undefined> {
+  //   try {
+  //     const response = await ApiClient.get("share/save");
+  //     return response.data.data.articles;
+  //   } catch (error) {
+  //     console.error("Error in getSharedMyList:", error);
+  //   }
+  // }
+
+  /**
    * 글 작성
    * @param {ArticlePayload} payload - 글 작성 정보
    * @returns {Promise<void>}
