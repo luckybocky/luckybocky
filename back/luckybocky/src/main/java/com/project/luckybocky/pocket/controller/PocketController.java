@@ -16,6 +16,7 @@ import com.project.luckybocky.pocket.exception.PocketNotFoundException;
 import com.project.luckybocky.pocket.service.PocketService;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,11 +25,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/pocket", produces = "application/json; charset=UTF8")
 @Tag(name = "pocket", description = "복주머니 API")
+@Slf4j
 public class PocketController {
 	private final PocketService pocketService;
 	private final ArticleService articleService;
@@ -67,6 +70,8 @@ public class PocketController {
 		pocketDto.setFortuneVisibility(findPocket.isFortuneVisibility());
 		pocketDto.setArticles(articleService.getAllArticles(findPocket.getPocketSeq()));
 
+		log.info("주소(url)로 복주머니 조회 - 주소: {}, 번호: {}, 복주머니 주인: {}", url, pocketDto.getPocketSeq(),
+			pocketDto.getUserNickname());
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", pocketDto));
 	}
 
@@ -85,6 +90,7 @@ public class PocketController {
 	public ResponseEntity<DataResponseDto> getPocketAddress(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
 		String address = pocketService.getPocketAddress(userKey);
+		log.info("복주머니 주소(url) 조회 - 주소: {}", address);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("success", address));
 	}
 
@@ -97,10 +103,12 @@ public class PocketController {
 		@ApiResponse(responseCode = "401", description = "사용자 조회 실패",
 			content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
 	})
+	@RateLimiter(name = "saveRateLimiter")
 	@PostMapping
 	public ResponseEntity<DataResponseDto> createPocket(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
 		String address = pocketService.createPocket(userKey);
+		log.info("복주머니 생성 - 주소: {}", address);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("success", address));
 	}
 }

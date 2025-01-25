@@ -21,6 +21,7 @@ import com.project.luckybocky.user.exception.ForbiddenUserException;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 import com.project.luckybocky.user.service.UserService;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,10 +29,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/article")
 @RequiredArgsConstructor
+@Slf4j
 public class ArticleController {
 	private final ArticleService articleService;
 	private final UserService userService;
@@ -49,8 +52,10 @@ public class ArticleController {
 	public ResponseEntity<DataResponseDto<ArticleResponseDto>> getArticleDetails(HttpSession session,
 		@RequestParam int articleSeq) {
 		String userKey = (String)session.getAttribute("user");
-		ArticleResponseDto articleResponseDto = articleService.getArticleDetails(userKey, articleSeq);
-		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", articleResponseDto));
+		ArticleResponseDto dto = articleService.getArticleDetails(userKey, articleSeq);
+		log.info("복 상세조회 - 번호: {}, 작성자: {}, 내용: {}, 리복: {}, 복 이름: {}", dto.getArticleSeq(), dto.getUserNickname(),
+			dto.getArticleContent(), dto.getArticleComment(), dto.getFortuneName());
+		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", dto));
 	}
 
 	@Operation(
@@ -58,14 +63,17 @@ public class ArticleController {
 		description = "복주머니에 복을 단다."
 	)
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "복 달기 성공"),
+		@ApiResponse(responseCode = "200", description = "1. 복 달기 성공 \t\n 2. 복주머니 푸시 알림 성공"),
 		@ApiResponse(responseCode = "404", description = "1. 포춘 조회 실패 \t\n 2. 복주머니 조회 실패",
-			content = @Content(schema = @Schema(implementation = FortuneNotFoundException.class)))
+			content = @Content(schema = @Schema(implementation = FortuneNotFoundException.class))),
 	})
+	@RateLimiter(name = "saveRateLimiter")
 	@PostMapping
-	public ResponseEntity<ResponseDto> writeArticle(HttpSession session, @RequestBody WriteArticleDto writeArticleDto) {
+	public ResponseEntity<ResponseDto> writeArticle(HttpSession session,
+		@RequestBody WriteArticleDto writeArticleDto) {
 		String userKey = (String)session.getAttribute("user");
 		articleService.createArticle(userKey, writeArticleDto);
+
 		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 	}
 
@@ -82,6 +90,7 @@ public class ArticleController {
 		@ApiResponse(responseCode = "404", description = "게시글 조회 실패",
 			content = @Content(schema = @Schema(implementation = ArticleNotFoundException.class)))
 	})
+	@RateLimiter(name = "saveRateLimiter")
 	@DeleteMapping
 	public ResponseEntity<ResponseDto> deleteArticle(HttpSession session, @RequestParam int articleSeq) {
 		String userKey = (String)session.getAttribute("user");
@@ -91,6 +100,7 @@ public class ArticleController {
 			throw new ForbiddenUserException();
 		} else {
 			articleService.deleteArticle(articleSeq);
+			log.info("복 삭제 - 번호: {}", articleSeq);
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 		}
 	}

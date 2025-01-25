@@ -16,9 +16,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.luckybocky.auth.dto.KakaoLoginDto;
 import com.project.luckybocky.auth.exception.LoginFailedException;
-import com.project.luckybocky.user.repository.UserRepository;
 import com.project.luckybocky.user.dto.UserDto;
 import com.project.luckybocky.user.entity.User;
+import com.project.luckybocky.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +63,7 @@ public class AuthService {
 			request,
 			KakaoLoginDto.class);
 
-		if(response.getBody() != null) {
+		if (response.getBody() != null) {
 			return response.getBody().getAccess_token();
 		}
 
@@ -84,7 +84,7 @@ public class AuthService {
 			request,
 			String.class);
 
-		if(response.getBody() != null) {
+		if (response.getBody() != null) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			String responseBody = response.getBody();
 			JsonNode jsonNode = objectMapper.readTree(responseBody);
@@ -109,6 +109,7 @@ public class AuthService {
 		}
 
 		try {
+			log.info("userKey: {}", userKey);
 			User user = userRepository.findByUserKey(userKey)
 				.orElseGet(() -> userRepository.save(  // 가입되어 있지 않은 사람이면 기본 정보 저장
 					User.builder()
@@ -118,6 +119,7 @@ public class AuthService {
 						.build()
 				));
 
+			log.info("user: {}", user);
 			UserDto userDto = UserDto.builder()
 				.userKey(userKey)
 				.userNickname(user.getUserNickname())
@@ -126,7 +128,7 @@ public class AuthService {
 				.fortuneVisibility(user.isFortuneVisibility())
 				.build();
 
-			if(userDto.getUserNickname() == null) {
+			if (userDto.getUserNickname() == null) {
 				log.info("userDto(new coming) create success: {}", userDto);
 			} else {
 				log.info("userDto(revisiting) create success: {}", userDto);

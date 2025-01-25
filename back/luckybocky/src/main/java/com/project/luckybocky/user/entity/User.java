@@ -1,18 +1,29 @@
 package com.project.luckybocky.user.entity;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.project.luckybocky.article.entity.Article;
 import com.project.luckybocky.common.BaseEntity;
 import com.project.luckybocky.feedback.entity.Feedback;
 import com.project.luckybocky.pocket.entity.Pocket;
 import com.project.luckybocky.report.entity.Report;
 import com.project.luckybocky.user.dto.UserInfoDto;
+import com.project.luckybocky.user.dto.UserLoginDto;
 
-import jakarta.persistence.*;
-import lombok.*;
-
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -41,6 +52,9 @@ public class User extends BaseEntity {
 
 	@Column(nullable = false)
 	private boolean fortuneVisibility;
+
+	@Column(nullable = false, columnDefinition = "SMALLINT DEFAULT 0")
+	private byte role;
 
 	@OneToMany(mappedBy = "user")
 	List<Article> articles = new ArrayList<>();
@@ -91,6 +105,16 @@ public class User extends BaseEntity {
 			.createdAt(formattedDate)
 			.build();
 	}
+
+	public UserLoginDto getMemberInfo() {
+		UserInfoDto userInfoDto = getUserInfo();
+		return new UserLoginDto(userInfoDto, true);
+	}
+
+	public static UserLoginDto getNonMemberInfo() {
+		return new UserLoginDto(null, false);
+	}
+
 	//=====창희 dto 함수 end
 
 }

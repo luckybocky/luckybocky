@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.project.luckybocky.article.entity.Article;
 import com.project.luckybocky.article.exception.ArticleNotFoundException;
 import com.project.luckybocky.article.repository.MyArticleRepository;
+import com.project.luckybocky.user.entity.User;
+import com.project.luckybocky.user.exception.UserNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +20,21 @@ public class ArticlePushServiceImpl implements ArticlePushService {
 	private final MyArticleRepository myArticleRepository;
 
 	@Override
-	public String findPocketOwner(int articleSeq) {
+	public User findArticleOwner(int articleSeq) {
 		Article article = myArticleRepository.findByArticleSeq(articleSeq);
 
-		if (article == null)
+		if (article == null){
+			log.info("{}의 복을 찾을 수 없습니다.",articleSeq);
 			throw new ArticleNotFoundException();
+		}
 
-		return article.getUser().getUserKey();
+
+		if(article.getUser() == null){
+			log.info("{}의 복 주인을 찾을 수 없습니다.",articleSeq);
+			throw new UserNotFoundException();
+		}
+
+
+		return article.getUser();
 	}
 }
