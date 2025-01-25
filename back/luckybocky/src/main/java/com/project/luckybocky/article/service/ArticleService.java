@@ -93,7 +93,6 @@ public class ArticleService {
 			.userNickname(writeArticleDto.getNickname())
 			.articleContent(writeArticleDto.getContent())
 			.articleComment(null)
-			.articleVisibility(writeArticleDto.isVisibility())
 			.fortune(fortune)
 			.pocket(pocket)
 			.build();
