@@ -14,6 +14,7 @@ import com.project.luckybocky.common.BaseEntity;
 import com.project.luckybocky.fortune.entity.Fortune;
 import com.project.luckybocky.pocket.entity.Pocket;
 import com.project.luckybocky.report.entity.Report;
+import com.project.luckybocky.sharearticle.entity.ShareArticle;
 import com.project.luckybocky.user.dto.UserInfoDto;
 import com.project.luckybocky.user.entity.User;
 
@@ -66,6 +67,10 @@ public class Article extends BaseEntity {
 	//12-23 창희 신고 칼럼 추가
 	@OneToMany(mappedBy = "article")
 	private List<Report> reports = new ArrayList<>();
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "share_article_seq", nullable = true)
+	private ShareArticle shareArticle;
 
 	//12-23 창희 복주머니 칼럼 추가
 	//어떤 복주머니에 달려있는 복인지
