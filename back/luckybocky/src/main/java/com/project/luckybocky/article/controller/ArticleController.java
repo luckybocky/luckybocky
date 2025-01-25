@@ -53,8 +53,8 @@ public class ArticleController {
 		@RequestParam int articleSeq) {
 		String userKey = (String)session.getAttribute("user");
 		ArticleResponseDto dto = articleService.getArticleDetails(userKey, articleSeq);
-		log.info("복 상세조회 - 번호: {}, 작성자: {}, 내용: {}, 리복: {}, 복 이름: {}", dto.getArticleSeq(), dto.getUserNickname(),
-			dto.getArticleContent(), dto.getArticleComment(), dto.getFortuneName());
+		log.info("복 상세조회 - 번호: {}, 작성자: {}, 내용: {}, 복 이름: {}", dto.getArticleSeq(), dto.getUserNickname(),
+			dto.getArticleContent(), dto.getFortuneName());
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", dto));
 	}
 

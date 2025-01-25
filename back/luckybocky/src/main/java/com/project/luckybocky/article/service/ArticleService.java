@@ -9,11 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.project.luckybocky.article.dto.ArticleResponseDto;
 import com.project.luckybocky.article.dto.ArticleSummaryDto;
-import com.project.luckybocky.article.dto.CommentDto;
 import com.project.luckybocky.article.dto.WriteArticleDto;
 import com.project.luckybocky.article.entity.Article;
 import com.project.luckybocky.article.exception.ArticleNotFoundException;
-import com.project.luckybocky.article.exception.CommentConflictException;
 import com.project.luckybocky.article.repository.ArticleRepository;
 import com.project.luckybocky.fortune.entity.Fortune;
 import com.project.luckybocky.fortune.exception.FortuneNotFoundException;
@@ -46,14 +44,19 @@ public class ArticleService {
 		Article article = articleRepository.findByArticleSeq(articleSeq)
 			.orElseThrow(() -> new ArticleNotFoundException());
 
-		ArticleResponseDto response = article.toArticleResponseDto();
+		ArticleResponseDto response;
+		if (article.getShareArticle() == null) {
+			response = article.toArticleResponseDto();
+		} else {
+			response = article.shareArticleToArticleResponseDto(article.getShareArticle());
+		}
 
+		// 게시글 공개 여부 설정
+		// 복주머니 주인이 아니고, 비공개 복주머니일 경우 -> 게시글 전체 비공개 설정
 		if (userKey == null || !userKey.equals(article.getPocket().getUser().getUserKey())) {
-			// 복주머니 주인이 아니고, 비공개 복주머니일 경우 -> 게시글 전체 비공개 설정
 			if (!article.getPocket().getUser().isFortuneVisibility()) {
 				response.setArticleVisibility(false);
 				response.setArticleContent("비밀글입니다.");
-				response.setArticleComment("비밀글입니다.");
 			}
 		}
 		// 복주머니 주인 -> 게시글 전체 공개 설정
@@ -69,7 +72,7 @@ public class ArticleService {
 	//        LocalDate startDate = LocalDate.of(year, 7, 1);
 	//        Pocket findPocket = pocketRepository.findPocketByUserAndDate(userSeq, startDate, LocalDate.now())
 	//                .orElseThrow(() -> new NullPointerException("복주머니를 찾지 못했습니다."));
-	//        List<ArticleResponseDto> result = findPocket.getArticles().stream()
+	//        List<`ArticleResponseDto`> result = findPocket.getArticles().stream()
 	//                .map(a -> new ArticleResponseDto(a))
 	//                .collect(Collectors.toList());
 	//
@@ -78,9 +81,6 @@ public class ArticleService {
 
 	public void createArticle(String userKey, WriteArticleDto writeArticleDto) {
 		Optional<User> user = userRepository.findByUserKey(userKey);
-		//        if (user.isEmpty()){
-		//            throw new IllegalArgumentException("Invalid userKey: " + userKey);
-		//        }
 
 		Fortune fortune = fortuneRepository.findByFortuneSeq(writeArticleDto.getFortuneSeq())
 			.orElseThrow(() -> new FortuneNotFoundException());
@@ -92,7 +92,6 @@ public class ArticleService {
 			.user(user.orElse(null))
 			.userNickname(writeArticleDto.getNickname())
 			.articleContent(writeArticleDto.getContent())
-			.articleComment(null)
 			.fortune(fortune)
 			.pocket(pocket)
 			.build();
@@ -112,30 +111,31 @@ public class ArticleService {
 		pushService.sendPush(pushDto);
 	}
 
-	public ArticleResponseDto updateComment(CommentDto commentDto) {
-		int findArticle = commentDto.getArticleSeq();
-		Article article = articleRepository.findByArticleSeq(findArticle)
-			.orElseThrow(() -> new ArticleNotFoundException());
-		if (article.getArticleComment() != null) {
-			throw new CommentConflictException();
-		}
-		article.updateComment(commentDto.getComment());
-		articleRepository.save(article);
-
-		//push 알림추가(이후 비동기로 진행하면 더 좋을 듯)
-		PushMessage pushMessage = PushMessage.COMMENT;
-
-		PushDto pushDto = PushDto.builder()
-			.toUser(article.getUser())
-			.address(article.getPocket().getPocketAddress())
-			.title(pushMessage.getTitle())
-			.content(article.getPocket().getUser().getUserNickname() + pushMessage.getBody())
-			.build();
-
-		pushService.sendPush(pushDto);
-
-		return article.toArticleResponseDto();
-	}
+	// 리복 달기
+	// public ArticleResponseDto updateComment(CommentDto commentDto) {
+	// 	int findArticle = commentDto.getArticleSeq();
+	// 	Article article = articleRepository.findByArticleSeq(findArticle)
+	// 		.orElseThrow(() -> new ArticleNotFoundException());
+	// 	if (article.getArticleComment() != null) {
+	// 		throw new CommentConflictException();
+	// 	}
+	// 	article.updateComment(commentDto.getComment());
+	// 	articleRepository.save(article);
+	//
+	// 	//push 알림추가(이후 비동기로 진행하면 더 좋을 듯)
+	// 	PushMessage pushMessage = PushMessage.COMMENT;
+	//
+	// 	PushDto pushDto = PushDto.builder()
+	// 		.toUser(article.getUser())
+	// 		.address(article.getPocket().getPocketAddress())
+	// 		.title(pushMessage.getTitle())
+	// 		.content(article.getPocket().getUser().getUserNickname() + pushMessage.getBody())
+	// 		.build();
+	//
+	// 	pushService.sendPush(pushDto);
+	//
+	// 	return article.toArticleResponseDto();
+	// }
 
 	public void deleteArticle(int articleSeq) {
 		Article findArticle = articleRepository.findByArticleSeq(articleSeq)
@@ -158,47 +158,4 @@ public class ArticleService {
 			.map(Article::summaryArticle)
 			.collect(Collectors.toList());
 	}
-
-	//    // 모든 복의 공개여부 체크 후 가져오기
-	//    public List<ArticleResponseDto> getAllArticlesCheck(int pocketSeq) {
-	//        Pocket pocket = pocketRepository.findPocketByPocketSeq(pocketSeq)
-	//                .orElseThrow(() -> new PocketNotFoundException("not found pocket"));
-	//        List<ArticleResponseDto> result = pocket.getArticles().stream()
-	//                .map(article -> {
-	//                    ArticleResponseDto dto = new ArticleResponseDto(article);
-	//                    if (!dto.isArticleVisibility()) {
-	//                        dto.setArticleContent("비밀글입니다.");
-	//                        dto.setArticleComment("비밀글입니다.");
-	//                    }
-	//                    return dto;
-	//                })
-	//                .collect(Collectors.toList());
-	//        return result;
-	//    }
-
-	//    // 모든 복을 비공개로 가져오기
-	//    public List<ArticleResponseDto> getAllArticlesInvisible(int pocketSeq) {
-	//        Pocket pocket = pocketRepository.findPocketByPocketSeq(pocketSeq)
-	//                .orElseThrow(() -> new PocketNotFoundException("not found pocket"));
-	//        List<ArticleResponseDto> result = pocket.getArticles().stream()
-	//                .map(article -> {
-	//                    ArticleResponseDto dto = new ArticleResponseDto(article);
-	//                    dto.setArticleContent("비밀글입니다.");
-	//                    dto.setArticleComment("비밀글입니다.");
-	//                    return dto;
-	//                })
-	//                .collect(Collectors.toList());
-	//        return result;
-	//    }
-
-	//    public List<ArticleResponseDto> getArticlesByUser(String userKey){
-	//        User user = userRepository.findByUserKey(userKey)
-	//                .orElseThrow(() -> new UserNotFoundException("not found user"));
-	//        Pocket pocket = pocketRepository.findFirstByUserOrderByCreatedAtDesc(user)
-	//                .orElseThrow(() -> new PocketNotFoundException("not found pocket"));
-	//        List<ArticleResponseDto> result = pocket.getArticles().stream()
-	//                .map(a -> new ArticleResponseDto(a))
-	//                .collect(Collectors.toList());
-	//        return result;
-	//    }
 }
