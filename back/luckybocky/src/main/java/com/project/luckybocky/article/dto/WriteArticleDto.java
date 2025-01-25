@@ -20,6 +20,4 @@ public class WriteArticleDto {
 	private String content;
 	@Schema(description = "복 번호")   // ** 이거 fortuneImg가 번호로 바뀌면서, fortuneImg를 주는 거랑 다른게 없어졌음
 	private int fortuneSeq;
-	@Schema(description = "게시글 공개여부")
-	private boolean visibility;
 }
