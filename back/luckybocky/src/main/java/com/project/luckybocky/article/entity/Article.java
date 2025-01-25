@@ -59,9 +59,6 @@ public class Article extends BaseEntity {
 	@JoinColumn(name = "fortune_seq", columnDefinition = "smallint", nullable = false)
 	private Fortune fortune;
 
-	@Column(nullable = false)
-	private boolean articleVisibility;
-
 	@Column(length = 500)
 	private String articleContent;
 
@@ -114,7 +111,7 @@ public class Article extends BaseEntity {
 
 	public ArticleResponseDto toArticleResponseDto() {
 		return ArticleResponseDto.builder()
-			.articleVisibility(this.articleVisibility)
+			.articleVisibility(true)
 			.articleSeq(this.articleSeq)
 			.userKey(this.user == null ? null : this.user.getUserKey())
 			.userNickname(this.userNickname)
@@ -128,7 +125,7 @@ public class Article extends BaseEntity {
 	// 출처가 공유게시글일 경우 article 응답 Dto
 	public ArticleResponseDto shareArticleToArticleResponseDto(ShareArticle shareArticle) {
 		return ArticleResponseDto.builder()
-			.articleVisibility(this.articleVisibility)
+			.articleVisibility(true)
 			.articleSeq(this.articleSeq)
 			.userKey(shareArticle.getUser().getUserKey())    // shareArticle의 경우 비회원이 작성할 수 없기 때문에 null 체크 필요 X
 			.userNickname(shareArticle.getUser().getUserNickname())
