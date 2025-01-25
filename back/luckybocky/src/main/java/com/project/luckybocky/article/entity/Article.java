@@ -32,8 +32,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.swing.*;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -110,8 +108,9 @@ public class Article extends BaseEntity {
 			.build();
 	}
 
-	public Article(User user, String userNickname, String articleContent, Fortune fortune,Pocket pocket, ShareArticle shareArticle) {
-		this.user =  user;
+	public Article(User user, String userNickname, String articleContent, Fortune fortune, Pocket pocket,
+		ShareArticle shareArticle) {
+		this.user = user;
 		this.userNickname = userNickname;
 		this.articleContent = articleContent;
 		this.fortune = fortune;
@@ -126,6 +125,7 @@ public class Article extends BaseEntity {
 			.articleSeq(this.articleSeq)
 			.userKey(this.user == null ? null : this.user.getUserKey())
 			.userNickname(this.userNickname)
+			.pocketAddress(this.user.getPockets().get(0).getPocketAddress())
 			.articleContent(this.articleContent)
 			.fortuneName(this.fortune.getFortuneName())
 			.fortuneImg(this.fortune.getFortuneSeq())
@@ -140,6 +140,7 @@ public class Article extends BaseEntity {
 			.articleSeq(this.articleSeq)
 			.userKey(shareArticle.getUser().getUserKey())    // shareArticle의 경우 비회원이 작성할 수 없기 때문에 null 체크 필요 X
 			.userNickname(shareArticle.getUser().getUserNickname())
+			.pocketAddress(this.user.getPockets().get(0).getPocketAddress())
 			.articleContent(shareArticle.getShareArticleContent())
 			.fortuneName(shareArticle.getFortune().getFortuneName())
 			.fortuneImg(shareArticle.getFortune().getFortuneSeq())

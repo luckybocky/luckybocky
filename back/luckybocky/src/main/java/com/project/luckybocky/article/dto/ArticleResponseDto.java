@@ -23,6 +23,8 @@ public class ArticleResponseDto {
 	private String userKey;
 	@Schema(description = "게시글 작성자 닉네임")
 	private String userNickname;
+	@Schema(description = "게시글 작성자 복주머니 주소")
+	private String pocketAddress;
 
 	@Schema(description = "게시글 내용")
 	private String articleContent;
