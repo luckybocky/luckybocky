@@ -11,7 +11,7 @@ import JoinPage from "./pages/JoinPage";
 import CheckUser from "./components/CheckUser";
 import QnaBoardPage from "./pages/QnaBoardPage";
 import QnaDetailPage from "./pages/QnaDetailPage";
-import ShareArticlePage from "./pages/shareArticlePage";
+import ShareArticlePage from "./pages/shareArticlePage.tsx";
 
 const options = {
   future: {
