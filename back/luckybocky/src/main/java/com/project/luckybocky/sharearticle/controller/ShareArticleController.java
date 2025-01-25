@@ -29,12 +29,13 @@ import lombok.extern.slf4j.Slf4j;
 public class ShareArticleController {
 
 	private final ShareArticleService shareArticleService;
+
 	//공유 게시글 생성
 	@PostMapping
 	public ResponseEntity<DataResponseDto<ShareArticleDto>> createShareArticle(HttpSession session,
-		@RequestBody WriteShareArticleDto writeShareArticleDto){
-		// String userKey = (String)session.getAttribute("user");
-		String userKey = "K3858126130";
+		@RequestBody WriteShareArticleDto writeShareArticleDto) {
+		String userKey = (String)session.getAttribute("user");
+		// String userKey = "K3858126130";
 
 		ShareArticleDto shareArticle = shareArticleService.createShareArticle(userKey, writeShareArticleDto);
 
@@ -43,23 +44,18 @@ public class ShareArticleController {
 
 	//공유게시글을 조회했을때 비회원은 로그인 창으로, 회원은 저장 처리
 	@PostMapping("/save")
-	public ResponseEntity<DataResponseDto<Boolean>> createShareArticle(HttpSession session, @RequestBody
-		ShareArticleSeqDto shareArticleSeqDto){
-		String userKey = "K3858126130";
-		// String userKey = (String)session.getAttribute("user");
+	public ResponseEntity<DataResponseDto<Boolean>> enterShareArticle(HttpSession session, @RequestBody
+	ShareArticleSeqDto shareArticleSeqDto) {
+		// String userKey = "K3858126130";
+		String userKey = (String)session.getAttribute("user");
 
 		boolean isLogin = false;
-		if(userKey != null){
+		if (userKey != null) {
 			isLogin = true;
 			int shareArticleSeq = shareArticleSeqDto.getShareArticleSeq();
-			shareArticleService.isMyShareArticle(userKey,shareArticleSeq);
+			shareArticleService.enterShareArticle(userKey, shareArticleSeq);
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", isLogin));
 	}
-
-
-
-
-
 
 }

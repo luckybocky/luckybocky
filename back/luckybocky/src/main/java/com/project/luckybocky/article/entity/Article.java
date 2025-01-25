@@ -28,6 +28,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.*;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -102,6 +104,15 @@ public class Article extends BaseEntity {
 			.fortuneImg(this.getFortune().getFortuneSeq())
 			.createdAt(this.getCreatedAt().format(formatter))
 			.build();
+	}
+
+	public Article(User user, String userNickname, String articleContent, Fortune fortune,Pocket pocket, ShareArticle shareArticle) {
+		this.user =  user;
+		this.userNickname = userNickname;
+		this.articleContent = articleContent;
+		this.fortune = fortune;
+		this.pocket = pocket;
+		this.shareArticle = shareArticle;
 	}
 	//=====창희 dto 함수 end
 
