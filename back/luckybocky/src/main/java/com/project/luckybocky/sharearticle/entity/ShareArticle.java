@@ -1,10 +1,13 @@
 package com.project.luckybocky.sharearticle.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.project.luckybocky.article.dto.ArticleResponseDto;
 import com.project.luckybocky.article.entity.Article;
 import com.project.luckybocky.common.BaseEntity;
 import com.project.luckybocky.fortune.entity.Fortune;
+import com.project.luckybocky.sharearticle.dto.ShareArticleDto;
 import com.project.luckybocky.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -55,7 +58,7 @@ public class ShareArticle extends BaseEntity {
 	private Fortune fortune;
 
 	@OneToMany(mappedBy = "shareArticle")
-	private List<Article> articles;
+	private List<Article> articles = new ArrayList<>();
 
 	@Column(length = 500)
 	private String shareArticleContent;
@@ -63,13 +66,34 @@ public class ShareArticle extends BaseEntity {
 	@Column(length = 255)
 	private String shareArticleAddress;
 
-	//add실행될때마다 count + 1
-	private Integer shareCount;
 
-	//저장시 공유게시글을 실제게시글로 변환하여 저장
+	public ShareArticle(User user, Fortune fortune, String content, String address) {
+		this.user=user;
+		this.fortune = fortune;
+		this.shareArticleContent=content;
+		this.shareArticleAddress=address;
 
-	//본인 공유게시글인지 판단(본인의 공유게시글은 저장하지 않아야 하기 떄문에)
+	}
 
-	//저장하려는 유저가 이미 이 공유게시글을 저장한 경우
+
+
+
+	public ShareArticleDto toShareArticleDto(){
+		List<ArticleResponseDto> articleResponseDtos=new ArrayList<>();
+
+		for(Article article : this.articles){
+			articleResponseDtos.add(article.toArticleResponseDto());
+		}
+
+		return ShareArticleDto
+			.builder()
+			.shareArticleSeq(this.shareArticleSeq)
+			.userKey(this.user.getUserKey())
+			.articles(articleResponseDtos)
+			.shareArticleContent(this.shareArticleContent)
+			.shareArticleAddress(this.shareArticleAddress)
+			.shareCount(this.articles.size())
+			.build();
+	}
 
 }

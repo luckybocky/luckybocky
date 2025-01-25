@@ -19,6 +19,7 @@ import com.project.luckybocky.qna.exception.QnaSaveException;
 import com.project.luckybocky.qna.exception.QnaUpdateException;
 import com.project.luckybocky.report.exception.ReportNotFoundException;
 import com.project.luckybocky.report.exception.ReportSaveException;
+import com.project.luckybocky.sharearticle.exception.ShareArticleException;
 import com.project.luckybocky.user.exception.ForbiddenUserException;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 
@@ -46,10 +47,18 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(ex.getStatusCode()).body(new ResponseDto(ex.getMessage()));
 	}
 
+
+	@ExceptionHandler(ShareArticleException.class)
+	public ResponseEntity<ResponseDto> handleShareArticleException(ShareArticleException ex) {
+		return ResponseEntity.status(ex.getStatusCode()).body(new ResponseDto(ex.getMessage()));
+	}
+
 	@ExceptionHandler(FirebaseMessagingException.class)
 	public ResponseEntity<ResponseDto> handleFirebaseMessagingException(FirebaseMessagingException ex) {
 		return ResponseEntity.status(HttpStatus.GONE).body(new ResponseDto("푸시 전송 에러 발생했습니다.(파이어베이스키가 유효하지 않습니다."));
 	}
+
+
 
 	//===== 창희 예외 추가 end ======
 

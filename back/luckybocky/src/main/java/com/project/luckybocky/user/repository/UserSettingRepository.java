@@ -13,6 +13,7 @@ public class UserSettingRepository {
 
     private final EntityManager em;
 
+
     public User save(User user) {
         em.persist(user);
         return user;
