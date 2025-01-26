@@ -40,8 +40,8 @@ const ShareArticlePage = () => {
         if (id) {
             const result = await ShareArticleService.getByShareArticleAddress(id);
 
-            window.sessionStorage.setItem("pocketAddress", "/" + result?.shareArticleDto.shareArticleAddress);
-            if (result?.shareArticleDto.shareArticleAddress === myAddress)
+            window.sessionStorage.setItem("pocketAddress", "/" + result?.shareArticleDto.pocketAddress);
+            if (result?.shareArticleDto.pocketAddress === myAddress)
                 setIsOwner(true);
 
             setDetail(result?.shareArticleDto);
@@ -120,7 +120,7 @@ const ShareArticlePage = () => {
                         isOwner
                             ? handleCopyURL
                             : () =>
-                                navigate(`/${detail?.shareArticleAddress}`)
+                                navigate(`/${detail?.pocketAddress}`)
                     }
                     className={`${isOwner ? "bg-[#156082] text-[#0d1a26] pt-3 pb-4" : "bg-green-600 py-4"
                         } w-full max-w-[350px] px-5 rounded-lg`}
