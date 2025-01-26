@@ -1,18 +1,19 @@
 package com.project.luckybocky.sharearticle.controller;
 
-import javax.swing.text.html.HTML;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.luckybocky.common.DataResponseDto;
-import com.project.luckybocky.common.ResponseDto;
+import com.project.luckybocky.sharearticle.dto.ShareArticleAddressDto;
 import com.project.luckybocky.sharearticle.dto.ShareArticleDto;
-import com.project.luckybocky.sharearticle.dto.ShareArticleSeqDto;
+import com.project.luckybocky.sharearticle.dto.ShareArticleLoginDto;
 import com.project.luckybocky.sharearticle.dto.WriteShareArticleDto;
 import com.project.luckybocky.sharearticle.sevice.ShareArticleService;
 
@@ -43,19 +44,25 @@ public class ShareArticleController {
 	}
 
 	//공유게시글을 조회했을때 비회원은 로그인 창으로, 회원은 저장 처리
-	@PostMapping("/save")
-	public ResponseEntity<DataResponseDto<Boolean>> enterShareArticle(HttpSession session, @RequestBody
-	ShareArticleSeqDto shareArticleSeqDto) {
+	@GetMapping("/{address}")
+	public ResponseEntity<DataResponseDto<ShareArticleLoginDto>> enterShareArticle(HttpSession session, @PathVariable String address) {
 		// String userKey = "K3858126130";
 		String userKey = (String)session.getAttribute("user");
 
-		boolean isLogin = false;
-		if (userKey != null) {
-			isLogin = true;
-			int shareArticleSeq = shareArticleSeqDto.getShareArticleSeq();
-			shareArticleService.enterShareArticle(userKey, shareArticleSeq);
+		if (userKey == null) {
+			log.info("비회원의 공유게시글 찾기입니다.");
+
+			ShareArticleDto shareArticle = shareArticleService.findShareArticle(address);
+			ShareArticleLoginDto shareArticleLoginDto = new ShareArticleLoginDto(false, shareArticle);
+			return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", shareArticleLoginDto));
+		} else {
+			log.info("회원의 공유게시글 찾기입니다. {}", userKey);
+
+			ShareArticleDto shareArticleDto = shareArticleService.enterShareArticle(userKey, address);
+			ShareArticleLoginDto shareArticleLoginDto = new ShareArticleLoginDto(true, shareArticleDto);
+			return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", shareArticleLoginDto));
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", isLogin));
+
 	}
 
 }

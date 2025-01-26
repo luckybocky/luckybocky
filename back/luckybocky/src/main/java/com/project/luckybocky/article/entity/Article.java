@@ -76,6 +76,10 @@ public class Article extends BaseEntity {
 	@JoinColumn(name = "pocket_seq")
 	private Pocket pocket;
 
+	public void setPocket(Pocket pocket) {
+		this.pocket = pocket;
+	}
+
 	public ArticleSummaryDto summaryArticle() {
 		return ArticleSummaryDto.builder()
 			.articleSeq(this.articleSeq)
@@ -147,4 +151,6 @@ public class Article extends BaseEntity {
 			.createdAt(this.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
 			.build();
 	}
+
+	//연관관계 펀의 메서드
 }

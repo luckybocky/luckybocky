@@ -1,5 +1,7 @@
 package com.project.luckybocky.sharearticle.repository;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import com.project.luckybocky.sharearticle.entity.ShareArticle;
@@ -21,9 +23,10 @@ public class ShareArticleRepository {
 		return em.find(ShareArticle.class, shareArticleSeq);
 	}
 
-	// public Optional<User> findByKey(String userKey) {
-	// 	return em.createQuery("select u from User u where u.userKey=:userKey", User.class)
-	// 		.setParameter("userKey", userKey)
-	// 		.getResultList().stream().findAny();
-	// }
+	public Optional<ShareArticle> findByAddress(String shareArticleAddress) {
+		return em.createQuery(
+				"select s from ShareArticle s where s.shareArticleAddress=:shareArticleAddress", ShareArticle.class)
+			.setParameter("shareArticleAddress", shareArticleAddress)
+			.getResultList().stream().findAny();
+	}
 }

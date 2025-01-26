@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShareArticleSeqDto {
-	int shareArticleSeq;
+public class ShareArticleAddressDto {
+	String shareArticleAddress;
 }
