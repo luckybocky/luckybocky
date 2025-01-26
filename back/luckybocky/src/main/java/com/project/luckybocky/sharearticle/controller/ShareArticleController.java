@@ -50,7 +50,6 @@ public class ShareArticleController {
 
 		if (userKey == null) {
 			log.info("비회원의 공유게시글 찾기입니다.");
-
 			ShareArticleDto shareArticle = shareArticleService.findShareArticle(address);
 			ShareArticleLoginDto shareArticleLoginDto = new ShareArticleLoginDto(false, shareArticle);
 			return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", shareArticleLoginDto));

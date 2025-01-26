@@ -24,6 +24,8 @@ public class ShareArticleDto {
 
 	private int fortuneSeq;
 
+	private String fortuneName;
+
 	private List<ArticleResponseDto> articles;
 
 	private String shareArticleContent;

@@ -57,13 +57,6 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 		UUID uuid = UUID.randomUUID();
 		String address = uuid.toString();
 
-		// ShareArticle shareArticle = ShareArticle
-		// 	.builder()
-		// 	.user(user)
-		// 	.fortune(fortune)
-		// 	.shareArticleContent(writeShareArticleDto.getContent())
-		// 	.shareArticleAddress(address)
-		// 	.build();
 
 		ShareArticle shareArticle = new ShareArticle(user, fortune, writeShareArticleDto.getContent(), address);
 
@@ -78,8 +71,7 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 
 		shareArticleRepository.save(shareArticle);
 
-		log.info("{} 공유게시글 생성", shareArticle.getUser().getUserNickname());
-
+		log.info("{}({}) 공유게시글 생성", shareArticle.getUser().getUserKey(), shareArticle.getUser().getUserNickname());
 		return shareArticle.toShareArticleDto();
 	}
 

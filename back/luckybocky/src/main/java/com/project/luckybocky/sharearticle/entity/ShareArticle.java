@@ -87,6 +87,8 @@ public class ShareArticle extends BaseEntity {
 			.userKey(this.user.getUserKey())
 			.userNickname(this.user.getUserNickname())
 			.articles(articleResponseDtos)
+			.fortuneSeq(this.fortune.getFortuneSeq())
+			.fortuneName(this.fortune.getFortuneName())
 			.shareArticleContent(this.shareArticleContent)
 			.shareArticleAddress(this.shareArticleAddress)
 			.shareCount(this.articles.size())
