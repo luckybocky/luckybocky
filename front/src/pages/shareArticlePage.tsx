@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import AuthStore from "../store/AuthStore";
 import ShareArticleService from "../api/ShareArticleService.ts";
-import { ShareArticleDetail } from "../api/ShareArticleService.ts"
+import { ShareArticle } from "../api/ShareArticleService.ts"
 
 import fortuneImages from "../components/FortuneImages.js";
 import Util from "../components/Util.js";
@@ -17,36 +17,38 @@ const ShareArticlePage = () => {
 
     const myAddress = AuthStore((state) => state.user.address);
 
-    const dummy = {
-        shareArticleSeq: 1,
-        userKey: "qwfqwf",
-        userNickname: "qwfqwf",
-        fortuneSeq: 0,
-        articles: [],
-        shareArticleContent: fortuneImages[0].comment + fortuneImages[0].comment + "qwdwqdwqdwqdwqdqwdwqopfkjwqpofkwqpofkwqopfkqdqp[lwdpqwld[pqwldqw[pdlwqdjwqpodkwqdopqwkdpwoqkpoqdk",
-        shareArticleAddress: "bb51cab3-0f15-45cd-9f56-7cd20d24dede",
-        shareCount: 0,
-        isLogin: true
-    }
+    // const dummy = {
+    //     shareArticleSeq: 1,
+    //     userKey: "qwfqwf",
+    //     userNickname: "qwfqwf",
+    //     fortuneSeq: 0,
+    //     articles: [],
+    //     shareArticleContent: fortuneImages[0].comment + fortuneImages[0].comment + "qwdwqdwqdwqdwqdqwdwqopfkjwqpofkwqpofkwqopfkqdqp[lwdpqwld[pqwldqw[pdlwqdjwqpodkwqdopqwkdpwoqkpoqdk",
+    //     shareArticleAddress: "bb51cab3-0f15-45cd-9f56-7cd20d24dede",
+    //     shareCount: 0,
+    //     isLogin: true
+    // }
 
-    const [detail, setDetail] = useState<ShareArticleDetail | undefined>();
+    const [detail, setDetail] = useState<ShareArticle | undefined>();
     const [isOwner, setIsOwner] = useState(false);
     const [copied, setCopied] = useState(false); // URL 복사 알림 상태
+    const [isLogin, setIsLogin] = useState<boolean | undefined>();
 
     const { id } = useParams();
 
-    // const fetchShareArticle = async () => {
-    //     if (id) {
-    //         const result = await ShareArticleService.getByShareArticleAddress(id);
+    const fetchShareArticle = async () => {
+        if (id) {
+            const result = await ShareArticleService.getByShareArticleAddress(id);
 
-    // window.sessionStorage.setItem("pocketAddress", "/"+result?.shareArticleAddress);
-    // if(result?.shareArticleAddress===myAddress)
-    //     setIsOwner(true);
+            window.sessionStorage.setItem("pocketAddress", "/" + result?.shareArticleDto.shareArticleAddress);
+            if (result?.shareArticleDto.shareArticleAddress === myAddress)
+                setIsOwner(true);
 
-    //         setDetail(result);
-    //     }
+            setDetail(result?.shareArticleDto);
+            setIsLogin(result?.isLogin);
+        }
 
-    // }
+    }
 
     const handleCopyURL = async () => {
         try {
@@ -77,11 +79,7 @@ const ShareArticlePage = () => {
     useEffect(() => {
         window.sessionStorage.setItem("share", window.location.pathname);
 
-        // fetchShareArticle();
-        setDetail(dummy);
-        window.sessionStorage.setItem("pocketAddress", "/" + dummy?.shareArticleAddress);
-        if (dummy?.shareArticleAddress === myAddress)
-            setIsOwner(true);
+        fetchShareArticle();
     }, []);
 
     return (
@@ -102,7 +100,7 @@ const ShareArticlePage = () => {
                 </div>
             </div>
 
-            {!detail?.isLogin &&
+            {!isLogin &&
                 <button className="bg-[#F4BB44] w-full max-w-[350px] rounded-lg py-4 px-5"
                     onClick={() => navigate("/")}>
                     <div className="flex items-center justify-center">
@@ -110,19 +108,19 @@ const ShareArticlePage = () => {
                             <IoLogInOutline size={28} className="mr-1.5" />
                         </Suspense>
                         <span className="mt-1">
-                        로그인하고 답장 남기기
+                            로그인하고 답장 남기기
                         </span>
                     </div>
                 </button>}
 
             {/* 로그인 상태 */}
-            {detail?.isLogin &&
+            {isLogin &&
                 <button
                     onClick={
                         isOwner
                             ? handleCopyURL
                             : () =>
-                                navigate(`/${detail.shareArticleAddress}`)
+                                navigate(`/${detail?.shareArticleAddress}`)
                     }
                     className={`${isOwner ? "bg-[#156082] text-[#0d1a26] pt-3 pb-4" : "bg-green-600 py-4"
                         } w-full max-w-[350px] px-5 rounded-lg`}

@@ -17,7 +17,8 @@ export interface ShareArticle {
     shareCount: number;
 }
 
-export interface ShareArticleDetail extends ShareArticle {
+export interface ShareArticleDetail {
+    shareArticleDto: ShareArticle;
     isLogin: boolean;
 }
 
@@ -46,7 +47,7 @@ class ShareArticleService {
         shareArticleAddress: string
     ): Promise<ShareArticleDetail | undefined> {
         try {
-            const result = await ApiClient.get(`share?shareArticleAddress=${shareArticleAddress}`);
+            const result = await ApiClient.get(`share/${shareArticleAddress}`);
 
             return result.data.data;
         } catch (error) {
