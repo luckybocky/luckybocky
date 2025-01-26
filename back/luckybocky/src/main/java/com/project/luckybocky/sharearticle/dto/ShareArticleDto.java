@@ -26,6 +26,8 @@ public class ShareArticleDto {
 
 	private String fortuneName;
 
+	private String pocketAddress;
+
 	private List<ArticleResponseDto> articles;
 
 	private String shareArticleContent;

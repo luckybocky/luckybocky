@@ -1,12 +1,15 @@
 package com.project.luckybocky.sharearticle.entity;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.project.luckybocky.article.dto.ArticleResponseDto;
 import com.project.luckybocky.article.entity.Article;
 import com.project.luckybocky.common.BaseEntity;
 import com.project.luckybocky.fortune.entity.Fortune;
+import com.project.luckybocky.pocket.entity.Pocket;
 import com.project.luckybocky.sharearticle.dto.ShareArticleDto;
 import com.project.luckybocky.user.entity.User;
 
@@ -81,11 +84,17 @@ public class ShareArticle extends BaseEntity {
 			articleResponseDtos.add(article.toArticleResponseDto());
 		}
 
+		List<Pocket> pockets = this.user.getPockets();
+		Collections.sort(pockets, (p1,p2)->p1.getCreatedAt().compareTo(p2.getCreatedAt()));
+
+		String currentPocketAddress = pockets.get(0).getPocketAddress();
+
 		return ShareArticleDto
 			.builder()
 			.shareArticleSeq(this.shareArticleSeq)
 			.userKey(this.user.getUserKey())
 			.userNickname(this.user.getUserNickname())
+			.pocketAddress(currentPocketAddress)
 			.articles(articleResponseDtos)
 			.fortuneSeq(this.fortune.getFortuneSeq())
 			.fortuneName(this.fortune.getFortuneName())
