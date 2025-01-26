@@ -45,7 +45,7 @@ const ShareArticlePage = () => {
                 setIsOwner(true);
 
             setDetail(result?.shareArticleDto);
-            setIsLogin(result?.isLogin);
+            setIsLogin(result?.login);
         }
 
     }
