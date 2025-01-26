@@ -52,4 +52,10 @@ public class Pocket extends BaseEntity {
 	//    public void updateAddress(String pocketAddress){
 	//        this.pocketAddress = pocketAddress;
 	//    }
+
+	//연관관계 편의 메소드
+	public void addArticle(Article article) {
+		articles.add(article);
+		article.setPocket(this);
+	}
 }

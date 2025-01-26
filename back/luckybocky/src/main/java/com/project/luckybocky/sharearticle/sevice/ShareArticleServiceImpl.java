@@ -15,6 +15,7 @@ import com.project.luckybocky.fortune.entity.Fortune;
 import com.project.luckybocky.fortune.exception.FortuneNotFoundException;
 import com.project.luckybocky.fortune.repository.FortuneRepository;
 import com.project.luckybocky.pocket.entity.Pocket;
+import com.project.luckybocky.pocket.repository.PocketRepository;
 import com.project.luckybocky.sharearticle.dto.ShareArticleDto;
 import com.project.luckybocky.sharearticle.dto.WriteShareArticleDto;
 import com.project.luckybocky.sharearticle.entity.ShareArticle;
@@ -37,6 +38,7 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 	private final ShareArticleRepository shareArticleRepository;
 	private final MyArticleRepository myArticleRepository;
 	private final ArticleRepository articleRepository;
+	private final PocketRepository pocketRepository;
 
 	@Override
 	public ShareArticleDto createShareArticle(String userKey, WriteShareArticleDto writeShareArticleDto) {
@@ -81,7 +83,7 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 	}
 
 	@Override
-	public void enterShareArticle(String userKey, int shareArticleSeq) {
+	public ShareArticleDto enterShareArticle(String userKey, String shareArticleAddress) {
 		Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
 		if (userOptional.isEmpty()) {
@@ -90,42 +92,69 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 
 		User user = userOptional.get();
 
-		if(isMyShareArticle(userKey, shareArticleSeq) || isExistsShareArticle(userKey, shareArticleSeq)) return;
+
+		Optional<ShareArticle> shareArticleOptional = shareArticleRepository.findByAddress(shareArticleAddress);
+		if (shareArticleOptional.isEmpty())
+			throw new ShareArticleException();
+
+		ShareArticle shareArticle = shareArticleOptional.get();
+
+		// if (isMyShareArticle(userKey, shareArticle) || isExistsShareArticle(userKey, shareArticle)){
+		// 	log.info("이미 저장되거나 본인의 공유게시글입니다.");
+		// 	return shareArticle.toShareArticleDto();
+		// }
 
 		//저장시 공유게시글을 실제게시글로 변환하여 저장
 		List<Pocket> pockets = user.getPockets();
-		Collections.sort(pockets, (p1,p2)->p1.getCreatedAt().compareTo(p2.getCreatedAt()));
-		ShareArticle shareArticle = shareArticleRepository.findById(shareArticleSeq);
+		Collections.sort(pockets, (p1, p2) -> p1.getCreatedAt().compareTo(p2.getCreatedAt()));
 
+		Pocket targetPocket = pockets.get(0);
 
-		Article article= new Article(user,user.getUserNickname(), shareArticle.getShareArticleContent(), shareArticle.getFortune(),pockets.get(0), shareArticle);
+		Article article = new Article(user, user.getUserNickname(), shareArticle.getShareArticleContent(),
+				shareArticle.getFortune(), targetPocket, shareArticle);
+
+		targetPocket.addArticle(article);
+
 		articleRepository.save(article);
+		pocketRepository.save(targetPocket);
+
+		log.info("공유게시글 저장완료 : {}", userKey);
+
+		return shareArticle.toShareArticleDto();
 
 	}
 
 	@Override
-	public boolean isMyShareArticle(String userKey, int shareArticleSeq) {
-		ShareArticle shareArticle = shareArticleRepository.findById(shareArticleSeq);
-		if (shareArticle == null)
+	public ShareArticleDto findShareArticle(String shareArticleAddress) {
+		Optional<ShareArticle> shareArticleOptional = shareArticleRepository.findByAddress(shareArticleAddress);
+		if (shareArticleOptional.isEmpty())
 			throw new ShareArticleException();
+
+		return shareArticleOptional.get().toShareArticleDto();
+	}
+
+	@Override
+	public boolean isMyShareArticle(String userKey, ShareArticle shareArticle) {
 		return userKey.equals(shareArticle.getUser().getUserKey());
 	}
 
 	@Override
-	public boolean isExistsShareArticle(String userKey, int shareArticleSeq) {
+	public boolean isExistsShareArticle(String userKey, ShareArticle shareArticle) {
 
 		Optional<User> userOptional = userSettingRepository.findByKey(userKey);
 
 		if (userOptional.isEmpty()) {
 			throw new UserNotFoundException();
 		}
+
+		int shareArticleSeq = shareArticle.getShareArticleSeq();
 		List<Article> articleByUserKey = myArticleRepository.findArticleByUserKey(userKey);
 
 		for (Article article : articleByUserKey) {
-			ShareArticle shareArticle = article.getShareArticle();
-			if (shareArticle == null)
+			ShareArticle findShareArticle = article.getShareArticle();
+			if (findShareArticle == null)
 				continue;
-			if (shareArticle.getShareArticleSeq() == shareArticleSeq)
+			if (findShareArticle.getShareArticleSeq() == shareArticleSeq)
 				return true;
 		}
 		return false;
