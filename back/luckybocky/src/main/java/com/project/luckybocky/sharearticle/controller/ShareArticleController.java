@@ -34,7 +34,7 @@ public class ShareArticleController {
 		@RequestBody WriteShareArticleDto writeShareArticleDto) {
 		String userKey = (String)session.getAttribute("user");
 		// String userKey = "K3858126130";
-x
+
 		ShareArticleDto shareArticle = shareArticleService.createShareArticle(userKey, writeShareArticleDto);
 
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<ShareArticleDto>("success", shareArticle));
