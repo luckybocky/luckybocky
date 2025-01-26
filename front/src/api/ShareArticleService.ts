@@ -10,6 +10,7 @@ export interface ShareArticle {
     shareArticleSeq: number;
     userKey: string;
     userNickname: string;
+    pocketAddress: string;
     fortuneSeq: number;
     articles: ArticleDetail[];
     shareArticleContent: string;
