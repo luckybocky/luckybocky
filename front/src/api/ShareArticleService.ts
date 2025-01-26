@@ -19,7 +19,7 @@ export interface ShareArticle {
 
 export interface ShareArticleDetail {
     shareArticleDto: ShareArticle;
-    isLogin: boolean;
+    login: boolean;
 }
 
 class ShareArticleService {
