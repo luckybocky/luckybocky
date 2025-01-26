@@ -1,9 +1,10 @@
 package com.project.luckybocky.sharearticle.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.luckybocky.common.DataResponseDto;
-import com.project.luckybocky.sharearticle.dto.ShareArticleAddressDto;
 import com.project.luckybocky.sharearticle.dto.ShareArticleDto;
 import com.project.luckybocky.sharearticle.dto.ShareArticleLoginDto;
 import com.project.luckybocky.sharearticle.dto.WriteShareArticleDto;
@@ -36,7 +36,6 @@ public class ShareArticleController {
 	public ResponseEntity<DataResponseDto<ShareArticleDto>> createShareArticle(HttpSession session,
 		@RequestBody WriteShareArticleDto writeShareArticleDto) {
 		String userKey = (String)session.getAttribute("user");
-		// String userKey = "K3858126130";
 
 		ShareArticleDto shareArticle = shareArticleService.createShareArticle(userKey, writeShareArticleDto);
 
@@ -45,13 +44,12 @@ public class ShareArticleController {
 
 	//공유게시글을 조회했을때 비회원은 로그인 창으로, 회원은 저장 처리
 	@GetMapping("/{address}")
-	public ResponseEntity<DataResponseDto<ShareArticleLoginDto>> enterShareArticle(HttpSession session, @PathVariable String address) {
-		// String userKey = "K3858126130";
+	public ResponseEntity<DataResponseDto<ShareArticleLoginDto>> enterShareArticle(HttpSession session,
+		@PathVariable String address) {
 		String userKey = (String)session.getAttribute("user");
 
 		if (userKey == null) {
 			log.info("비회원의 공유게시글 찾기입니다.");
-
 			ShareArticleDto shareArticle = shareArticleService.findShareArticle(address);
 			ShareArticleLoginDto shareArticleLoginDto = new ShareArticleLoginDto(false, shareArticle);
 			return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", shareArticleLoginDto));
@@ -62,6 +60,17 @@ public class ShareArticleController {
 			ShareArticleLoginDto shareArticleLoginDto = new ShareArticleLoginDto(true, shareArticleDto);
 			return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", shareArticleLoginDto));
 		}
+
+	}
+
+	//내가 공유한 게시글과, 다른사람들이 저장한 횟수
+	@GetMapping
+	public ResponseEntity<DataResponseDto<List<ShareArticleDto>>> findMyShareArticle(HttpSession session) {
+		String userKey = (String)session.getAttribute("user");
+
+		List<ShareArticleDto> myShareArticle = shareArticleService.getMyShareArticle(userKey);
+
+		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", myShareArticle));
 
 	}
 

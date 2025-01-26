@@ -1,5 +1,6 @@
 package com.project.luckybocky.sharearticle.sevice;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -56,13 +57,6 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 		UUID uuid = UUID.randomUUID();
 		String address = uuid.toString();
 
-		// ShareArticle shareArticle = ShareArticle
-		// 	.builder()
-		// 	.user(user)
-		// 	.fortune(fortune)
-		// 	.shareArticleContent(writeShareArticleDto.getContent())
-		// 	.shareArticleAddress(address)
-		// 	.build();
 
 		ShareArticle shareArticle = new ShareArticle(user, fortune, writeShareArticleDto.getContent(), address);
 
@@ -77,8 +71,7 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 
 		shareArticleRepository.save(shareArticle);
 
-		log.info("{} 공유게시글 생성", shareArticle.getUser().getUserNickname());
-
+		log.info("{}({}) 공유게시글 생성", shareArticle.getUser().getUserKey(), shareArticle.getUser().getUserNickname());
 		return shareArticle.toShareArticleDto();
 	}
 
@@ -99,10 +92,10 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 
 		ShareArticle shareArticle = shareArticleOptional.get();
 
-		// if (isMyShareArticle(userKey, shareArticle) || isExistsShareArticle(userKey, shareArticle)){
-		// 	log.info("이미 저장되거나 본인의 공유게시글입니다.");
-		// 	return shareArticle.toShareArticleDto();
-		// }
+		if (isMyShareArticle(userKey, shareArticle) || isExistsShareArticle(userKey, shareArticle)){
+			log.info("이미 저장되거나 본인의 공유게시글입니다.");
+			return shareArticle.toShareArticleDto();
+		}
 
 		//저장시 공유게시글을 실제게시글로 변환하여 저장
 		List<Pocket> pockets = user.getPockets();
@@ -158,5 +151,26 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 				return true;
 		}
 		return false;
+	}
+
+	@Override
+	public List<ShareArticleDto> getMyShareArticle(String userKey) {
+		List<ShareArticleDto> result = new ArrayList<>();
+
+		Optional<User> userOptional = userSettingRepository.findByKey(userKey);
+
+		if (userOptional.isEmpty()) {
+			throw new UserNotFoundException();
+		}
+
+		User user = userOptional.get();
+
+		List<ShareArticle> shareArticles = user.getShareArticles();
+
+		for(ShareArticle shareArticle : shareArticles){
+			result.add(shareArticle.toShareArticleDto());
+		}
+
+		return result;
 	}
 }

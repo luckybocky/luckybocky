@@ -29,4 +29,6 @@ public class ShareArticleRepository {
 			.setParameter("shareArticleAddress", shareArticleAddress)
 			.getResultList().stream().findAny();
 	}
+
+
 }

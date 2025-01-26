@@ -1,5 +1,7 @@
 package com.project.luckybocky.sharearticle.sevice;
 
+import java.util.List;
+
 import com.project.luckybocky.sharearticle.dto.ShareArticleDto;
 import com.project.luckybocky.sharearticle.dto.WriteShareArticleDto;
 import com.project.luckybocky.sharearticle.entity.ShareArticle;
@@ -21,5 +23,8 @@ public interface ShareArticleService {
 
 	//저장하려는 유저가 이미 이 공유게시글을 저장한 경우
 	boolean isExistsShareArticle(String userKey, ShareArticle shareArticle);
+
+	//본인이 생성한 공유게시글과 몇번 사람들이 저장(공유)했는지 반환
+	List<ShareArticleDto> getMyShareArticle(String userKey);
 
 }
