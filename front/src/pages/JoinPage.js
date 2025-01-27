@@ -38,8 +38,7 @@ const JoinPage = () => {
 
     await Authservice.update();
 
-    navigate(window.sessionStorage.getItem("pocketAddress") || `/${user.address}`);
-    setIsSubmitting(false);
+    navigate(window.sessionStorage.getItem("share") || window.sessionStorage.getItem("pocketAddress") || `/${user.address}`);
   };
 
   const updateAlarmStatus = async () => {

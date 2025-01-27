@@ -3,7 +3,7 @@ import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import AccountPage from "./pages/AccountPage";
 import MyMessagePage from "./pages/MyArticlePage";
-import SelectDecoPage from "./pages/SelectDecoPage";
+// import SelectDecoPage from "./pages/SelectDecoPage";
 import WritePage from "./pages/WritePage";
 import CallBack from "./pages/CallBack";
 import ErrorPage from "./pages/ErrorPage";
@@ -11,6 +11,7 @@ import JoinPage from "./pages/JoinPage";
 import CheckUser from "./components/CheckUser";
 import QnaBoardPage from "./pages/QnaBoardPage";
 import QnaDetailPage from "./pages/QnaDetailPage";
+import ShareArticlePage from "./pages/shareArticlePage.tsx";
 
 const options = {
   future: {
@@ -42,10 +43,10 @@ const router = createBrowserRouter([
         path: "/my-message",
         element: <MyMessagePage />,
       },
-      {
-        path: "/select-deco",
-        element: <SelectDecoPage />,
-      },
+      // {
+      //   path: "/select-deco",
+      //   element: <SelectDecoPage />,
+      // },
       {
         path: "/write",
         element: <WritePage />,
@@ -69,7 +70,11 @@ const router = createBrowserRouter([
       {
         path: "/qna/:id",
         element: <QnaDetailPage />,
-      }
+      },
+      {
+        path: "/share/:id",
+        element: <ShareArticlePage />,
+      },
     ],
   },
 ], options);
