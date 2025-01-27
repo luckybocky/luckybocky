@@ -54,7 +54,7 @@ class ArticleService {
       console.error("Error in getMyList:", error);
     }
   }
-
+  
   /**
    * 글 작성
    * @param {ArticlePayload} payload - 글 작성 정보
