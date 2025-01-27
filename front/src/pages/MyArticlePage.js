@@ -4,6 +4,7 @@ import { useNavigate, Navigate } from "react-router-dom";
 import AuthStore from "../store/AuthStore";
 
 import ArticleService from "../api/ArticleService.ts";
+import ShareArticleService from "../api/ShareArticleService.ts";
 
 import fortuneImages from "../components/FortuneImages";
 import Menu from "../components/Menu";
@@ -12,37 +13,44 @@ const MyArticlePage = () => {
   const navigate = useNavigate();
   const user = AuthStore((state) => state.user);
   const [articles, setArticles] = useState([]);
+  const [shareArticles, setShareArticles] = useState([]);
   const [articleSelector, setArticleSelector] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const init = async () => {
-    const result = await ArticleService.getMyList();
-    setArticles(result.reverse());
+    setLoading(true);
+    try {
+      const result = await ArticleService.getMyList();
+      setArticles(result.reverse());
+    } catch (error) {
+      console.error("Failed to fetch articles:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const temp = () => {  // 공유 메시지 목록 작업 예정
-    setArticles([]);
-  }
+  const fetchShareArticles = async () => {
+    setLoading(true);
+    try {
+      const response = await ShareArticleService.getShareMyList();
+      setShareArticles(response);
+    } catch (error) {
+      console.error("Failed to fetch shared articles:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if(articleSelector === false) {
-      init();
-    } else {
-      setArticles([{
-        fortuneImg: 6,
-        pocketOwner: "스트롱거",
-        content: 
-        `설을 핑계로 그대에게 연락을 드려봅니다.
-        \n그대가 필요로 하는 올해의 소망은 무엇일까요?
-        \n건강, 애정, 재물, 취업, 학업 그게 무엇이든 그대의 소망이 이루어지면 좋겠습니다.
-        \n새해 복 많이 받으세요.`,
-        articleOwner: "암스트롱"
-      }]);
-    }
-  }, [articleSelector]);
+    init();
+    fetchShareArticles();
+  }, []);
 
   if (!user.createdAt) {
     return <Navigate to="/" replace />;
   }
+
+  const currentArticles = articleSelector ? shareArticles : articles;
 
   return (
     <div className="relative flex flex-col items-center w-full max-w-[600px] bg-[#ba947f] p-4 overflow-hidden">
@@ -74,43 +82,57 @@ const MyArticlePage = () => {
         </div>
       </div>
       {/* 메시지 리스트 */}
-      <div className="w-full space-y-8 pb-16 mt-10">
-        {articles?.map((article, index) => (
-          <div
-            key={index}
-            className="relative bg-[#593c2c] text-left border-2 border-[gray] shadow-md rounded-lg p-4"
-          >
-            {/* 이미지 추가 */}
-            <picture>
-              <source
-                srcSet={fortuneImages[article.fortuneImg].src}
-                type="image/webp"
-              />
-              <img
-                src={fortuneImages[article.fortuneImg].fallback}
-                alt="Fortune"
-                className="absolute top-[-45px] left-3/4 transform -translate-x-1/2 w-[100px] h-[100px]"
-              />
-            </picture>
-            <div className="text-xl mb-1">To. {article.pocketOwner}</div>
-            <div className="whitespace-pre-wrap break-words mb-2 ">
-              {article.content}
-            </div>
-            <div className="text-base text-right text-[#ccc]">
-              From. {article.articleOwner}
-            </div>
-            {/* {article.comment && (
-              <div>
-                <hr className="border-t-2 border-[gray] mt-1 mb-2" />
-                <div className="text-xl mb-1">Re.</div>
-                <div className="whitespace-pre-wrap break-words">
-                  {article.comment}
-                </div>
+      {loading ? (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          Loding...
+        </div>
+      ) : (
+        <div className="w-full space-y-8 pb-16 mt-10">
+          {currentArticles?.map((article, index) => (
+            <div
+              key={index}
+              className="relative bg-[#593c2c] text-left border-2 border-[gray] shadow-md rounded-lg p-4"
+            >
+              {/* 이미지 추가 */}
+              <picture>
+                <source
+                  srcSet={
+                    fortuneImages[
+                      !articleSelector
+                        ? article.fortuneImg
+                        : article.fortuneSeq ?? article.fortuneImg // fallback 처리
+                    ]?.src || "/path/to/default-image.webp"
+                  }
+                  type="image/webp"
+                />
+                <img
+                  src={
+                    fortuneImages[
+                      !articleSelector
+                        ? article.fortuneImg
+                        : article.fortuneSeq ?? article.fortuneImg // fallback 처리
+                    ]?.fallback || "/path/to/default-image.png"
+                  }
+                  alt="Fortune"
+                  className="absolute top-[-45px] left-3/4 transform -translate-x-1/2 w-[100px] h-[100px]"
+                />
+              </picture>
+              <div className="text-lg mb-1">
+                To. {!articleSelector ? article.pocketOwner : ""}
               </div>
-            )} */}
-          </div>
-        ))}
-      </div>
+              <div className="text-xs whitespace-pre-wrap break-words mb-2 ">
+                {!articleSelector
+                  ? article.content
+                  : article.shareArticleContent}
+              </div>
+              <div className="text-sm text-right text-[#ccc]">
+                From.{" "}
+                {!articleSelector ? article.articleOwner : article.userNickname}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* 돌아가기 버튼 */}
       <button
