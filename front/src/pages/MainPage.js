@@ -94,18 +94,20 @@ const MainPage = () => {
   };
 
   const handleCopyURL = async () => {
+    const copyWrite = `${pocket?.userNickname} 님이 복주머니를 자랑했어요! 🎉\n지금 바로 구경해보세요.\n\n`
+
     try {
       const currentURL = window.location.href; // 현재 URL 가져오기
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
         // 클립보드 API가 지원되는 경우
-        await navigator.clipboard.writeText(currentURL);
+        await navigator.clipboard.writeText(copyWrite + currentURL);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       } else {
         // 클립보드 API가 지원되지 않는 경우 대체 방법
         const textArea = document.createElement("textarea");
-        textArea.value = currentURL;
+        textArea.value = copyWrite + currentURL;
         document.body.appendChild(textArea);
         textArea.select();
         document.execCommand("copy");
@@ -325,8 +327,9 @@ const MainPage = () => {
 
         {/* 복사 성공 알림 */}
         {copied && (
-          <div className="fixed bottom-16 bg-green-500 text-white py-2 px-4 rounded-lg shadow-md">
-            URL 복사 완료!
+          <div className="fixed bottom-16 bg-green-500 text-white text-center py-2 px-4 rounded-lg shadow-md">
+            URL 복사 완료! <br />
+            친구들에게 복주머니를 공유해보세요.
           </div>
         )}
 

@@ -52,23 +52,24 @@ class ShareArticleService {
 
             return result.data.data;
         } catch (error) {
+            throw error;
             console.error("Error in getByShareArticleAddress:", error);
         }
     }
 
-    
-  /**
-   * 사용자 공유 글 목록 가져오기
-   * @returns {Promise<Article[]>}
-   */
-  static async getShareMyList(): Promise<ShareArticle[] | undefined> {
-    try {
-      const response = await ApiClient.get("share");
-      return response.data.data;
-    } catch (error) {
-      console.error("Error in getSharedMyList:", error);
+
+    /**
+     * 사용자 공유 글 목록 가져오기
+     * @returns {Promise<ShareArticle[]>}
+     */
+    static async getShareMyList(): Promise<ShareArticle[] | undefined> {
+        try {
+            const response = await ApiClient.get("share");
+            return response.data.data;
+        } catch (error) {
+            console.error("Error in getSharedMyList:", error);
+        }
     }
-  }
 
 }
 

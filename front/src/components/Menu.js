@@ -5,7 +5,7 @@ import AuthStore from "../store/AuthStore";
 
 import FeedbackService from "../api/FeedbackService.ts";
 
-import PocketIcon from "../image/pocketIcon.svg";
+import { ReactComponent as PocketIcon } from "../image/pocketIcon.svg"
 
 import Util from "./Util";
 
@@ -100,9 +100,8 @@ const Menu = () => {
 
       {/* 메뉴 바 */}
       <div
-        className={`absolute top-0 right-0 h-full bg-[#333] transition-transform duration-300 ease-in-out py-4 px-6 z-20 ${
-          menuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`absolute top-0 right-0 h-full bg-[#333] transition-transform duration-300 ease-in-out py-4 px-6 z-20 ${menuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
         style={{ width: "260px" }}
       >
         {myAddress && (
@@ -124,12 +123,7 @@ const Menu = () => {
               }}
               className="flex hover:underline items-center gap-2"
             >
-              <img
-                src={PocketIcon}
-                alt="pocketIcon"
-                width="24"
-                className="mb-1"
-              ></img>
+              <PocketIcon width={24} height={24} fill="white" className="mb-1"/>
               <span>내 복주머니 보러가기</span>
             </button>
 
@@ -213,9 +207,8 @@ const Menu = () => {
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
-                    className={`${
-                      star <= rating ? "text-yellow-500" : "text-gray-300"
-                    }`}
+                    className={`${star <= rating ? "text-yellow-500" : "text-gray-300"
+                      }`}
                     onClick={() => setRating(star)}
                   >
                     ★

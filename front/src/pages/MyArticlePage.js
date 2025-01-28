@@ -16,6 +16,7 @@ const MyArticlePage = () => {
   const [shareArticles, setShareArticles] = useState([]);
   const [articleSelector, setArticleSelector] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
 
   const init = async () => {
     setLoading(true);
@@ -33,11 +34,38 @@ const MyArticlePage = () => {
     setLoading(true);
     try {
       const response = await ShareArticleService.getShareMyList();
-      setShareArticles(response);
+      setShareArticles(response.reverse());
     } catch (error) {
       console.error("Failed to fetch shared articles:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCopyURL = async (currentURL) => {
+    const domain = new URL(window.location.href).origin
+    const copyWrite = `${user?.userNickname} 님이 행운의 새해 인사를 보냈어요! 💌\n지금 바로 읽어보세요. \n\n${domain}/share/`
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        // 클립보드 API가 지원되는 경우
+        await navigator.clipboard.writeText(copyWrite + currentURL);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } else {
+        // 클립보드 API가 지원되지 않는 경우 대체 방법
+        const textArea = document.createElement("textarea");
+        textArea.value = copyWrite + currentURL;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    } catch (error) {
+      console.error("URL 복사 실패:", error);
+      alert("URL 복사에 실패했습니다. 브라우저 설정을 확인해주세요.");
     }
   };
 
@@ -92,6 +120,7 @@ const MyArticlePage = () => {
             <div
               key={index}
               className="relative bg-[#593c2c] text-left border-2 border-[gray] shadow-md rounded-lg p-4"
+              onClick={!articleSelector ? null : () => handleCopyURL(article.shareArticleAddress)}
             >
               {/* 이미지 추가 */}
               <picture>
@@ -117,8 +146,8 @@ const MyArticlePage = () => {
                   className="absolute top-[-45px] left-3/4 transform -translate-x-1/2 w-[100px] h-[100px]"
                 />
               </picture>
-              <div className="text-lg mb-1">
-                To. {!articleSelector ? article.pocketOwner : ""}
+              <div className={`text-base mb-1 ${!articleSelector ? "" : "text-blue-400"}`}>
+                {!articleSelector ? `To. ${article.pocketOwner}` : `${article.shareCount} 명이 저장했어요!`}
               </div>
               <div className="text-xs whitespace-pre-wrap break-words mb-2 ">
                 {!articleSelector
@@ -131,6 +160,13 @@ const MyArticlePage = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {copied && (
+        <div className="fixed bottom-16 bg-green-500 text-white text-center py-2 px-4 rounded-lg shadow-md">
+          URL 복사 완료! <br/>
+          친구들에게 새해 인사를 공유해보세요.
         </div>
       )}
 
