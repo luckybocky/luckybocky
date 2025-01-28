@@ -143,7 +143,7 @@ const MyArticlePage = () => {
                     ]?.fallback || "/path/to/default-image.png"
                   }
                   alt="Fortune"
-                  className="absolute top-[-45px] left-3/4 transform -translate-x-1/2 w-[100px] h-[100px]"
+                  className="absolute top-[-45px] left-3/4 transform -translate-x-1/2 w-[80px] h-[80px]"
                 />
               </picture>
               <div className={`text-base mb-1 ${!articleSelector ? "" : "text-blue-400"}`}>
