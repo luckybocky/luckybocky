@@ -121,6 +121,23 @@ const MainPage = () => {
     }
   };
 
+  const shareContent = () => {
+    const copyWrite = `${pocket?.userNickname} 님이 복주머니를 자랑했어요! 🎉\n지금 바로 구경해보세요.\n\n`
+    const currentURL = window.location.href; // 현재 URL 가져오기
+
+    if (navigator.share) {
+      navigator.share({
+        title: '공유하기 예제',
+        text: "",
+        url: copyWrite+currentURL,
+      })
+        .then(() => console.log('공유 성공!'))
+        .catch((error) => console.error('공유 실패:', error));
+    } else {
+      alert('공유 기능이 이 브라우저에서 지원되지 않습니다.');
+    }
+  }
+
   useEffect(() => {
     fetchPocket();
 
@@ -153,7 +170,7 @@ const MainPage = () => {
 
         <Menu />
         {/* 메인 화면 */}
-        <div className="absolute top-0 left-0 p-4">
+        <div className="absolute top-0 left-0 p-4" onClick={shareContent}>
           <h1 className="text-2xl xs:text-xl mb-1">
             <span className="text-[pink] ">{pocket?.userNickname}</span> 님의
             복주머니
