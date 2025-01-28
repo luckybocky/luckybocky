@@ -17,7 +17,7 @@ const CallBack = () => {
 
     const result = await AuthService.login(code);
 
-    if (result === 2) navigate(window.sessionStorage.getItem("pocketAddress")||"/");
+    if (result === 2) navigate(window.sessionStorage.getItem("share") || window.sessionStorage.getItem("pocketAddress") || "/");
     else if (result === 1) navigate("/join");
   };
 
@@ -27,7 +27,7 @@ const CallBack = () => {
 
   return (
     <div className="flex flex-col justify-center items-center p-6">
-       <h1 className="text-4xl mb-1">로그인 중<span className="dots"></span></h1>
+      <h1 className="text-4xl mb-1">로그인 중<span className="dots"></span></h1>
       <style>{`
         @keyframes dotAnimation {
           0% { content: ""; }

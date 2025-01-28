@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Suspense } from "react";
+import { useNavigate } from "react-router-dom";
 
 import ArticleService from "../api/ArticleService.ts";
 
@@ -12,15 +13,18 @@ const AiOutlineClose = Util.loadIcon("AiOutlineClose").ai;
 const AiOutlineLock = Util.loadIcon("AiOutlineLock").ai;
 
 const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
+  const navigate = useNavigate();
+
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [report, setReport] = useState("");
   const [reportType, setReportType] = useState(0);
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
   const [detail, setDetail] = useState({
     articleVisibility: false,
     articleSeq: 0,
     userKey: "",
     userNickname: "",
+    pocketAddress: "",
     articleContent: "",
     articleComment: "",
     fortuneName: "",
@@ -31,7 +35,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [reported, setReported] = useState(false); // 신고 알림 상태
   const [isLoaded, setIsLoaded] = useState(false); // 로드 상태
-  const [confirmCloseModal, setConfirmCloseModal] = useState(false);
+  // const [confirmCloseModal, setConfirmCloseModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const confirmDelete = async () => {
@@ -45,15 +49,10 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
   };
 
   const confirmComment = async () => {
-    if (isSubmitting) return;
-
-    setIsSubmitting(true);
-
-    await sendComment();
-    setMessage("");
-    fetchArticle();
+    //상대 복주머니로 가는 로직
+    navigate(`/${detail.pocketAddress}`)
     setCommentModalOpen(false);
-    setIsSubmitting(false);
+    onClose();
   };
 
   const fetchArticle = async () => {
@@ -62,20 +61,20 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
     setIsLoaded(true);
   };
 
-  const sendComment = async () => {
-    if (!message) {
-      alert("답장을 입력해주세요 :)");
-      return;
-    }
+  // const sendComment = async () => {
+  //   if (!message) {
+  //     alert("답장을 입력해주세요 :)");
+  //     return;
+  //   }
 
-    const payload = {
-      articleSeq,
-      comment: message,
-      url: `${window.location.origin}${window.location.pathname}`,
-    };
+  //   const payload = {
+  //     articleSeq,
+  //     comment: message,
+  //     url: `${window.location.origin}${window.location.pathname}`,
+  //   };
 
-    await ArticleService.saveComment(payload);
-  };
+  //   await ArticleService.saveComment(payload);
+  // };
 
   const sendReport = () => {
     if (reportType === 0) {
@@ -103,10 +102,10 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
     }
   };
 
-  const confirmClose = () => {
-    if (!message) onClose();
-    else setConfirmCloseModal(true);
-  };
+  // const confirmClose = () => {
+  //   if (!message) onClose();
+  //   else setConfirmCloseModal(true);
+  // };
 
   useEffect(() => {
     fetchArticle();
@@ -116,7 +115,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
     isLoaded && (
       <div
         className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10"
-        onClick={confirmClose}
+        onClick={onClose}
       >
         <div
           className="relative bg-white rounded-lg max-w-[350px] w-full shadow-lg p-4"
@@ -137,7 +136,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
           <div className="flex justify-end mb-1">
             <button
               className="text-gray-600 rounded-md"
-              onClick={confirmClose}
+              onClick={onClose}
             >
               <Suspense>
                 <AiOutlineClose size={24} />
@@ -147,19 +146,18 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
 
           <div className="relative">
             <div
-              className={`border rounded-md mb-2 p-1 ${
-                !detail.articleVisibility ? "filter blur-lg" : ""
-              }`}
+              className={`border rounded-md mb-2 p-1 ${!detail.articleVisibility ? "filter blur-lg" : ""
+                }`}
             >
               <div className="text-[#3c1e1e] text-xl mb-1">
                 {"From. " + detail?.userNickname}
               </div>
-              <div className="text-[#3c1e1e] h-[200px] whitespace-pre-wrap break-words overflow-y-auto">
+              <div className="text-[#3c1e1e] h-[300px] whitespace-pre-wrap break-words overflow-y-auto">
                 {detail?.articleContent}
               </div>
             </div>
 
-            <textarea
+            {/* <textarea
               className={`text-[#3c1e1e] w-full border rounded-md h-24 p-1 resize-none ${
                 !detail.articleVisibility ? "filter blur-lg" : ""
               }`}
@@ -172,23 +170,22 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
               }}
               placeholder={`${myAddress !== address ? "" : "나도 복 보내기"}`}
               disabled={detail?.articleComment || myAddress !== address}
-            />
+            /> */}
 
             {/* 자물쇠 아이콘 추가 */}
             {!detail.articleVisibility && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-60 rounded-md z-40">
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-800 bg-opacity-60 rounded-md">
                 <Suspense>
                   <AiOutlineLock size={160} />
                 </Suspense>
-                <div className="text-2xl">비밀글입니다.</div>
+                <div className="text-2xl">비밀 복주머니입니다.</div>
               </div>
             )}
           </div>
 
           <div
-            className={`flex justify-between ${
-              !detail.articleVisibility ? "invisible" : ""
-            }`}
+            className={`flex justify-between ${!detail.articleVisibility ? "invisible" : ""
+              }`}
           >
             <div className="flex gap-2">
               <button
@@ -237,15 +234,12 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
               )}
             </div>
 
-            {!detail?.articleComment && myAddress === address && (
+            {myAddress === address && (
               <button
-                className={`${
-                  message ? "bg-green-500" : "bg-gray-400"
-                } rounded-md py-1 px-4`}
+                className={"bg-green-600 rounded-md py-1 px-4"}
                 onClick={() => {
                   setCommentModalOpen(true);
                 }}
-                disabled={!message}
               >
                 <Suspense>
                   <AiOutlineMail size={24} />
@@ -257,7 +251,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
               <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40">
                 <div className="flex flex-col items-center bg-white rounded-lg shadow-lg w-80 p-6">
                   <h2 className="text-xl text-[#3c1e1e] mb-4">
-                    답장을 남기시겠어요?
+                    답장을 전달하러 가시겠어요?
                   </h2>
                   <div className="flex gap-4">
                     <button
@@ -267,10 +261,10 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
                       취소
                     </button>
                     <button
-                      className="bg-green-500 rounded-md py-2 px-4"
+                      className="bg-green-600 rounded-md py-2 px-4"
                       onClick={confirmComment}
                     >
-                      저장
+                      확인
                     </button>
                   </div>
                 </div>
@@ -322,7 +316,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
             </div>
           )}
 
-          {confirmCloseModal && (
+          {/* {confirmCloseModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
               <div className="flex flex-col items-center bg-white shadow-lg rounded-lg w-80 p-6">
                 <h2 className="text-xl text-[#3c1e1e] mb-4">
@@ -345,7 +339,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* 신고 성공 알림 */}

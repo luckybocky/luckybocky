@@ -5,7 +5,6 @@ export interface ArticlePayload {
   nickname: string;
   content: string;
   fortuneSeq: number;
-  visibility: boolean;
   url: string;
 }
 
@@ -13,7 +12,6 @@ export interface MyArticle {
   pocketOwner: string;
   articleOwner: string;
   content: string;
-  comment: string;
   fortuneName: string;
   fortuneImg: number;
   createdAt: string;
@@ -24,18 +22,18 @@ export interface ArticleDetail {
   articleSeq: number;
   userKey: string;
   userNickname: string;
+  pocketAddress: String;
   articleContent: string;
-  articleComment: string;
   fortuneName: string;
   fortuneImg: number;
   createdAt: string;
 }
 
-export interface CommentPayload {
-  articleSeq: number;
-  comment: string;
-  url: string;
-}
+// export interface CommentPayload {
+//   articleSeq: number;
+//   comment: string;
+//   url: string;
+// }
 
 export interface ReportPayload {
   articleSeq: number;
@@ -56,7 +54,7 @@ class ArticleService {
       console.error("Error in getMyList:", error);
     }
   }
-
+  
   /**
    * 글 작성
    * @param {ArticlePayload} payload - 글 작성 정보
@@ -99,18 +97,18 @@ class ArticleService {
     }
   }
 
-  /**
-   * 댓글 저장
-   * @param {CommentPayload} payload - 댓글 작성 정보
-   * @returns {Promise<void>}
-   */
-  static async saveComment(payload: CommentPayload): Promise<void> {
-    try {
-      await ApiClient.post("comment", payload);
-    } catch (error) {
-      console.error("Error in saving comment:", error);
-    }
-  }
+  // /**
+  //  * 댓글 저장
+  //  * @param {CommentPayload} payload - 댓글 작성 정보
+  //  * @returns {Promise<void>}
+  //  */
+  // static async saveComment(payload: CommentPayload): Promise<void> {
+  //   try {
+  //     await ApiClient.post("comment", payload);
+  //   } catch (error) {
+  //     console.error("Error in saving comment:", error);
+  //   }
+  // }
 
   /**
    * 신고 저장

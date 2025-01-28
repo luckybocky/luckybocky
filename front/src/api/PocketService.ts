@@ -11,6 +11,7 @@ export interface PocketDetail {
   pocketSeq: number;
   userNickname: string;
   articles: ArticleSummary[];
+  fortuneVisibility : boolean;
 }
 
 class PocketService {
