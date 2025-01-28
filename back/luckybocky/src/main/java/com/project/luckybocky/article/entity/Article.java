@@ -104,6 +104,7 @@ public class Article extends BaseEntity {
 		return MyArticleDto
 			.builder()
 			.pocketOwner(this.getPocket().getUser().getUserNickname())
+			.pocketAddress(this.getPocket().getPocketAddress())
 			.articleOwner(this.getUserNickname())
 			.content(this.getArticleContent())
 			.fortuneName(this.getFortune().getFortuneName())
