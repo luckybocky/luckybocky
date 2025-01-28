@@ -50,10 +50,9 @@ const ShareArticlePage = () => {
 
     const handleCopyURL = async () => {
         const copyWrite = `${detail?.userNickname} 님이 행운의 새해 인사를 보냈어요! 💌\n지금 바로 읽어보세요. \n\n`
-        
-        try {
-            const currentURL = window.location.href; // 현재 URL 가져오기
+        const currentURL = window.location.href; // 현재 URL 가져오기
 
+        try {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 // 클립보드 API가 지원되는 경우
                 await navigator.clipboard.writeText(copyWrite + currentURL);
@@ -74,6 +73,15 @@ const ShareArticlePage = () => {
             console.error("URL 복사 실패:", error);
             alert("URL 복사에 실패했습니다. 브라우저 설정을 확인해주세요.");
         }
+
+        if (navigator.share) {
+            navigator.share({
+                text: copyWrite + currentURL,
+            })
+                .catch((error) => console.error('공유 실패:', error));
+        } else {
+            alert('공유 기능이 이 브라우저에서 지원되지 않습니다.');
+        }
     };
 
     useEffect(() => {
@@ -82,12 +90,12 @@ const ShareArticlePage = () => {
         fetchShareArticle();
     }, []);
 
-    useEffect(()=>{
-     if(isLogin&&!isOwner){
-        setNotice(true);
-        setTimeout(() => setNotice(false), 2000);
-     }
-    },[isLoaded])
+    useEffect(() => {
+        if (isLogin && !isOwner) {
+            setNotice(true);
+            setTimeout(() => setNotice(false), 2000);
+        }
+    }, [isLoaded])
 
     return (
         isLoaded && (
@@ -166,7 +174,7 @@ const ShareArticlePage = () => {
                 {/* 복사 성공 알림 */}
                 {copied && (
                     <div className="fixed bottom-16 bg-green-500 text-white text-center py-2 px-4 rounded-lg shadow-md">
-                        URL 복사 완료!<br/>
+                        URL 복사 완료!<br />
                         친구들에게 새해 인사를 공유해보세요.
                     </div>
                 )}

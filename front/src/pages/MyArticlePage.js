@@ -67,6 +67,15 @@ const MyArticlePage = () => {
       console.error("URL 복사 실패:", error);
       alert("URL 복사에 실패했습니다. 브라우저 설정을 확인해주세요.");
     }
+
+    if (navigator.share) {
+      navigator.share({
+        text: copyWrite + currentURL,
+      })
+        .catch((error) => console.error('공유 실패:', error));
+    } else {
+      alert('공유 기능이 이 브라우저에서 지원되지 않습니다.');
+    }
   };
 
   useEffect(() => {
