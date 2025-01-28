@@ -15,6 +15,8 @@ public class PocketDto {
 	private int pocketSeq;
 	@Schema(description = "복주머니 주인 닉네임")
 	private String userNickname;
+	@Schema(description = "복주머니 공개여부")
+	private boolean fortuneVisibility;
 	@Schema(description = "복주머니에 달린 복")
 	private List<ArticleSummaryDto> articles;
 }

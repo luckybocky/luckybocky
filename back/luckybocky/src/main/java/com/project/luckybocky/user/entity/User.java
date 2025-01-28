@@ -9,6 +9,7 @@ import com.project.luckybocky.common.BaseEntity;
 import com.project.luckybocky.feedback.entity.Feedback;
 import com.project.luckybocky.pocket.entity.Pocket;
 import com.project.luckybocky.report.entity.Report;
+import com.project.luckybocky.sharearticle.entity.ShareArticle;
 import com.project.luckybocky.user.dto.UserInfoDto;
 import com.project.luckybocky.user.dto.UserLoginDto;
 
@@ -58,6 +59,10 @@ public class User extends BaseEntity {
 
 	@OneToMany(mappedBy = "user")
 	List<Article> articles = new ArrayList<>();
+
+	//이 공유페이지를 직접생성한 사람이라는뜻
+	@OneToMany(mappedBy = "user")
+	List<ShareArticle> shareArticles = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")   // cascade 설정 X
 	List<Pocket> pockets = new ArrayList<>();

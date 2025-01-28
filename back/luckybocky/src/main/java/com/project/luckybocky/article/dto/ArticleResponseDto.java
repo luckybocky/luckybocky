@@ -4,11 +4,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ArticleResponseDto {
 	@Schema(description = "게시글 공개여부")
@@ -21,11 +23,11 @@ public class ArticleResponseDto {
 	private String userKey;
 	@Schema(description = "게시글 작성자 닉네임")
 	private String userNickname;
+	@Schema(description = "게시글 작성자 복주머니 주소")
+	private String pocketAddress;
 
 	@Schema(description = "게시글 내용")
 	private String articleContent;
-	@Schema(description = "게시글 답글")
-	private String articleComment;
 	@Schema(description = "복 이름")
 	private String fortuneName;
 	@Schema(description = "복 번호")
