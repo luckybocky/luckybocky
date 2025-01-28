@@ -128,8 +128,7 @@ const MainPage = () => {
     if (navigator.share) {
       navigator.share({
         title: '공유하기 예제',
-        text: "",
-        url: copyWrite+currentURL,
+        text: copyWrite+currentURL,
       })
         .then(() => console.log('공유 성공!'))
         .catch((error) => console.error('공유 실패:', error));
