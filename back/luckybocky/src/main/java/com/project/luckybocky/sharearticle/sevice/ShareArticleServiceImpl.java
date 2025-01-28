@@ -16,6 +16,7 @@ import com.project.luckybocky.fortune.entity.Fortune;
 import com.project.luckybocky.fortune.exception.FortuneNotFoundException;
 import com.project.luckybocky.fortune.repository.FortuneRepository;
 import com.project.luckybocky.pocket.entity.Pocket;
+import com.project.luckybocky.pocket.exception.PocketNotFoundException;
 import com.project.luckybocky.pocket.repository.PocketRepository;
 import com.project.luckybocky.sharearticle.dto.ShareArticleDto;
 import com.project.luckybocky.sharearticle.dto.WriteShareArticleDto;
@@ -57,7 +58,6 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 		UUID uuid = UUID.randomUUID();
 		String address = uuid.toString();
 
-
 		ShareArticle shareArticle = new ShareArticle(user, fortune, writeShareArticleDto.getContent(), address);
 
 		//빌더로 하면 리스트 초기화가 작동하지않음
@@ -85,14 +85,13 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 
 		User user = userOptional.get();
 
-
 		Optional<ShareArticle> shareArticleOptional = shareArticleRepository.findByAddress(shareArticleAddress);
 		if (shareArticleOptional.isEmpty())
 			throw new ShareArticleException();
 
 		ShareArticle shareArticle = shareArticleOptional.get();
 
-		if (isMyShareArticle(userKey, shareArticle) || isExistsShareArticle(userKey, shareArticle)){
+		if (isMyShareArticle(userKey, shareArticle) || isExistsShareArticle(user, shareArticle)) {
 			log.info("이미 저장되거나 본인의 공유게시글입니다.");
 			return shareArticle.toShareArticleDto();
 		}
@@ -103,8 +102,17 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 
 		Pocket targetPocket = pockets.get(0);
 
-		Article article = new Article(user, user.getUserNickname(), shareArticle.getShareArticleContent(),
-				shareArticle.getFortune(), targetPocket, shareArticle);
+		// Article article = new Article(user, user.getUserNickname(), shareArticle.getShareArticleContent(),
+		// 		shareArticle.getFortune(), targetPocket, shareArticle);
+
+		Article article = Article.builder()
+			.user(shareArticle.getUser())
+			.userNickname(shareArticle.getUser().getUserNickname())
+			.articleContent(shareArticle.getShareArticleContent())
+			.fortune(shareArticle.getFortune())
+			.pocket(targetPocket)
+			.shareArticle(shareArticle)
+			.build();
 
 		targetPocket.addArticle(article);
 
@@ -132,23 +140,24 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 	}
 
 	@Override
-	public boolean isExistsShareArticle(String userKey, ShareArticle shareArticle) {
-
-		Optional<User> userOptional = userSettingRepository.findByKey(userKey);
-
-		if (userOptional.isEmpty()) {
-			throw new UserNotFoundException();
-		}
-
+	public boolean isExistsShareArticle(User user, ShareArticle shareArticle) {
 		int shareArticleSeq = shareArticle.getShareArticleSeq();
-		List<Article> articleByUserKey = myArticleRepository.findArticleByUserKey(userKey);
 
-		for (Article article : articleByUserKey) {
+		Optional<Pocket> pocket = pocketRepository.findPocketByUser(user);
+
+		if (pocket.isEmpty())
+			throw new PocketNotFoundException();
+
+		List<Article> articles = pocket.get().getArticles();
+
+		for (Article article : articles) {
 			ShareArticle findShareArticle = article.getShareArticle();
+
 			if (findShareArticle == null)
 				continue;
-			if (findShareArticle.getShareArticleSeq() == shareArticleSeq)
+			if (findShareArticle.getShareArticleSeq() == shareArticleSeq) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -167,7 +176,7 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 
 		List<ShareArticle> shareArticles = user.getShareArticles();
 
-		for(ShareArticle shareArticle : shareArticles){
+		for (ShareArticle shareArticle : shareArticles) {
 			result.add(shareArticle.toShareArticleDto());
 		}
 
