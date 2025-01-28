@@ -137,12 +137,12 @@ const ShareArticlePage = () => {
                             <div className="flex items-center justify-center">
                                 <Suspense>
                                     {isOwner ? (
-                                        <IoShareOutline size={28} className="mr-2" />
+                                        <IoShareOutline size={28} className="mr-2 text-white" />
                                     ) : (
-                                        <BsPencil size={22} className="mr-3" />
+                                        <BsPencil size={22} className="mr-3 text-white" />
                                     )}
                                 </Suspense>
-                                <span className={`${isOwner ? "pt-2" : "pt-1"}`}>
+                                <span className={`${isOwner ? "pt-2" : "pt-1"} text-white`}>
                                     {isOwner ? "새해 인사 공유하기" : "답장 남기러 가기"}
                                 </span>
                             </div>
@@ -155,7 +155,7 @@ const ShareArticlePage = () => {
                         >
                             <div className="flex items-center justify-center">
                                 <PocketIcon width={26} height={26} fill="#0d1a26" className="mb-1 mr-1.5" />
-                                <span className={"pt-1"}>
+                                <span className="pt-1">
                                     {isOwner ? "내 복주머니로 돌아가기" : "내 복주머니 보러 가기"}
                                 </span>
                             </div>
