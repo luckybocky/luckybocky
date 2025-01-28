@@ -120,7 +120,7 @@ const MyArticlePage = () => {
             <div
               key={index}
               className="relative bg-[#593c2c] text-left border-2 border-[gray] shadow-md rounded-lg p-4"
-              onClick={!articleSelector ? null : () => handleCopyURL(article.shareArticleAddress)}
+              onClick={!articleSelector ? () => { navigate(`/${article.pocketAddress}`) } : () => handleCopyURL(article.shareArticleAddress)}
             >
               {/* 이미지 추가 */}
               <picture>
@@ -165,7 +165,7 @@ const MyArticlePage = () => {
 
       {copied && (
         <div className="fixed bottom-16 bg-green-500 text-white text-center py-2 px-4 rounded-lg shadow-md">
-          URL 복사 완료! <br/>
+          URL 복사 완료! <br />
           친구들에게 새해 인사를 공유해보세요.
         </div>
       )}
