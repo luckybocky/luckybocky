@@ -10,6 +10,7 @@ export interface ArticlePayload {
 
 export interface MyArticle {
   pocketOwner: string;
+  pocketAddress: string;
   articleOwner: string;
   content: string;
   fortuneName: string;

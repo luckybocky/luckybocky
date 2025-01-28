@@ -113,12 +113,12 @@ const WritePage = () => {
         마음을 담은 메세지를 남겨주세요</h1>
 
       {/* 가로 스크롤 이미지 목록 */}
-      <div className="flex space-x-4 overflow-x-auto mb-4 w-full ">
+      <div className="flex space-x-4 overflow-x-auto mb-4 w-full max-w-[450px]">
         {fortuneImages.map((image, index) => (
           <div
             key={index}
             onClick={() => handleImageSelect(index)}
-            className={`cursor-pointer ${index === currentDecoration ? "border-2 border-gray-500 rounded-lg" : ""}`}
+            className={`cursor-pointer ${index === currentDecoration ? "border-2 border-gray-500 border-dashed rounded-lg" : "border-2 border-black border-opacity-0"}`}
           >
             <picture>
               <source

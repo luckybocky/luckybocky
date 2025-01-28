@@ -95,10 +95,9 @@ const MainPage = () => {
 
   const handleCopyURL = async () => {
     const copyWrite = `${pocket?.userNickname} 님이 복주머니를 자랑했어요! 🎉\n지금 바로 구경해보세요.\n\n`
+    const currentURL = window.location.href; // 현재 URL 가져오기
 
     try {
-      const currentURL = window.location.href; // 현재 URL 가져오기
-
       if (navigator.clipboard && navigator.clipboard.writeText) {
         // 클립보드 API가 지원되는 경우
         await navigator.clipboard.writeText(copyWrite + currentURL);
@@ -118,6 +117,15 @@ const MainPage = () => {
     } catch (error) {
       console.error("URL 복사 실패:", error);
       alert("URL 복사에 실패했습니다. 브라우저 설정을 확인해주세요.");
+    }
+
+    if (navigator.share) {
+      navigator.share({
+        text: copyWrite + currentURL,
+      })
+        .catch((error) => console.error('공유 실패:', error));
+    } else {
+      alert('공유 기능이 이 브라우저에서 지원되지 않습니다.');
     }
   };
 

@@ -67,6 +67,15 @@ const MyArticlePage = () => {
       console.error("URL 복사 실패:", error);
       alert("URL 복사에 실패했습니다. 브라우저 설정을 확인해주세요.");
     }
+
+    if (navigator.share) {
+      navigator.share({
+        text: copyWrite + currentURL,
+      })
+        .catch((error) => console.error('공유 실패:', error));
+    } else {
+      alert('공유 기능이 이 브라우저에서 지원되지 않습니다.');
+    }
   };
 
   useEffect(() => {
@@ -120,7 +129,7 @@ const MyArticlePage = () => {
             <div
               key={index}
               className="relative bg-[#593c2c] text-left border-2 border-[gray] shadow-md rounded-lg p-4"
-              onClick={!articleSelector ? null : () => handleCopyURL(article.shareArticleAddress)}
+              onClick={!articleSelector ? () => { navigate(`/${article.pocketAddress}`) } : () => handleCopyURL(article.shareArticleAddress)}
             >
               {/* 이미지 추가 */}
               <picture>
@@ -165,7 +174,7 @@ const MyArticlePage = () => {
 
       {copied && (
         <div className="fixed bottom-16 bg-green-500 text-white text-center py-2 px-4 rounded-lg shadow-md">
-          URL 복사 완료! <br/>
+          URL 복사 완료! <br />
           친구들에게 새해 인사를 공유해보세요.
         </div>
       )}
