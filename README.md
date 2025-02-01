@@ -29,4 +29,21 @@
 
 ## 아키텍처
 
-## 주요 기능
+## 기능
+### 로그인 페이지
+### 나의 복 페이지
+### 복 남기기 페이지
+### 내가 남긴 복 페이지
+### QnA 페이지
+
+## :family: 팀 소개
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://github.com/changhi97"><img src="https://avatars.githubusercontent.com/u/77597957?v=4" width="100px;" alt=""/><br /><sub><b>김창희</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/seong-wan"><img src="https://avatars.githubusercontent.com/u/139252411?v=4" width="100px;" alt=""/><br /><sub><b>이성완</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/jaewonwi"><img src="https://avatars.githubusercontent.com/u/80496853?v=4" width="100px;" alt=""/><br /><sub><b>위재원</b></sub></a><br /></td>
+      <td align="center"><a href="https://github.com/jo-dv"><img src="https://avatars.githubusercontent.com/u/63555689?v=4" width="100px;" alt=""/><br /><sub><b>조우재</b></sub></a><br /></td>
+    </tr>
+  </tbody>
+</table>
