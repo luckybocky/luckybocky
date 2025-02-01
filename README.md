@@ -1,10 +1,10 @@
-## 진행 배경
+## 🧧 진행 배경
 새해를 맞아 지인들과 나누는 안부를 보다 의미있게 간직하고 싶은 마음에서 출발했습니다.
 
-## 진행 기간
+## 📅 진행 기간
 **2024.12.16~2025.01.24(6weeks)**
 
-## 기술 스택
+## ⚙ 기술 스택
 ### FE
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
@@ -25,12 +25,12 @@
 ![Jenkins](https://img.shields.io/badge/jenkins-%232C5263.svg?style=for-the-badge&logo=jenkins&logoColor=white)
 ![Grafana](https://img.shields.io/badge/grafana-%23F46800.svg?style=for-the-badge&logo=grafana&logoColor=white)
 
-## ERD
+## 💾 ERD
 <img src="img/luckybocky_erd.png" width=50%>
 
-## 아키텍처
+## 📏 아키텍처
 
-## 기능
+## 🖥 기능
 ### 로그인 페이지
 <img src="img/luckybocky_login.png" width=20%>
 
