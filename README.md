@@ -26,15 +26,37 @@
 ![Grafana](https://img.shields.io/badge/grafana-%23F46800.svg?style=for-the-badge&logo=grafana&logoColor=white)
 
 ## ERD
+<img src="img/luckybocky_erd.png" width=50%>
 
 ## 아키텍처
 
 ## 기능
 ### 로그인 페이지
+<img src="img/luckybocky_login.png" width=20%>
+
 ### 나의 복 페이지
+<div>
+  <img src="img/luckybocky_pocket1.png" width=20%>
+  <img src="img/luckybocky_pocket2.png" width=20%>
+</div>
+
 ### 복 남기기 페이지
+<div>
+  <img src="img/luckybocky_write1.png" width=20%>
+  <img src="img/luckybocky_write2.png" width=20%>
+</div>
+
 ### 내가 남긴 복 페이지
+<div>
+  <img src="img/luckybocky_mypocket1.png" width=20%>
+  <img src="img/luckybocky_mypocket2.png" width=20%>
+</div>
+
 ### QnA 페이지
+<div>
+  <img src="img/luckybocky_qna1.png" width=20%>
+  <img src="img/luckybocky_qna2.png" width=20%>
+</div>
 
 ## :family: 팀 소개
 <table>
