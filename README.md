@@ -29,6 +29,7 @@
 <img src="img/luckybocky_erd.png" width=50%>
 
 ## 📏 아키텍처
+<img src="img/luckybocky_architecture.png" width=60%>
 
 ## 🖥 기능
 ### 로그인 페이지
