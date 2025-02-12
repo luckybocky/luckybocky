@@ -1,4 +1,4 @@
-package com.project.luckybocky.common;
+package com.project.luckybocky.common.config;
 
 import static org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode.*;
 
