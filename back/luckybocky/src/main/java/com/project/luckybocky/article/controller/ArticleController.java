@@ -1,5 +1,6 @@
 package com.project.luckybocky.article.controller;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.luckybocky.article.dto.ArticleResponseDto;
+import com.project.luckybocky.article.dto.MyArticlesDto;
 import com.project.luckybocky.article.dto.WriteArticleDto;
 import com.project.luckybocky.article.exception.ArticleNotFoundException;
 import com.project.luckybocky.article.service.ArticleService;
+import com.project.luckybocky.article.service.MyArticleService;
 import com.project.luckybocky.common.DataResponseDto;
 import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.fortune.exception.FortuneNotFoundException;
@@ -38,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ArticleController {
 	private final ArticleService articleService;
 	private final UserService userService;
+	private final MyArticleService myArticleService;
 
 	@Operation(
 		summary = "복 상세 조회",
@@ -104,4 +108,23 @@ public class ArticleController {
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 		}
 	}
+
+	@Description("내가 보낸 복 보기")
+	@Operation(
+		summary = "내가 보낸 복 보기",
+		description = "다른 사용자의 복주머니에 넣은 복을 조회한다"
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "1. 사용자 조회 성공"),
+		@ApiResponse(responseCode = "401", description = "1. 사용자를 찾을 수 없음",
+			content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
+	})
+	@GetMapping("/user")
+	public ResponseEntity<DataResponseDto<MyArticlesDto>> myArticle(HttpSession session) {
+		String userKey = (String) session.getAttribute("user" );
+		log.info("내가 보낸 복을 조회 합니다. {}", userKey);
+		MyArticlesDto myArticles = myArticleService.findMyArticles(userKey);
+		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", myArticles));
+	}
+
 }

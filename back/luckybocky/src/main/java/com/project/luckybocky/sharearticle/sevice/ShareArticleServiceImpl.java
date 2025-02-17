@@ -122,7 +122,6 @@ public class ShareArticleServiceImpl implements ShareArticleService {
 		log.info("공유게시글 저장완료 : {}", userKey);
 
 		return shareArticle.toShareArticleDto();
-
 	}
 
 	@Override
