@@ -1,19 +1,17 @@
 package com.project.luckybocky.user.service;
 
-import com.project.luckybocky.user.dto.UserInfoDto;
-import com.project.luckybocky.user.dto.UserLoginDto;
-import com.project.luckybocky.user.entity.User;
-import com.project.luckybocky.user.exception.UserNotFoundException;
-import com.project.luckybocky.user.repository.UserSettingRepository;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
+import com.project.luckybocky.user.dto.UserLoginDto;
+import com.project.luckybocky.user.entity.User;
+import com.project.luckybocky.user.exception.UserNotFoundException;
+import com.project.luckybocky.user.repository.UserRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Transactional
 @Service
@@ -21,12 +19,12 @@ import java.util.Optional;
 @Slf4j
 public class UserSettingServiceImpl implements UserSettingService {
 
-	private final UserSettingRepository userSettingRepository;
+	private final UserRepository userRepository;
 
 	@Override
 	public void updateUserSetting(String userKey, String userNickname, boolean alarmStatus, boolean fortuneVisibility) {
 
-		Optional<User> userOptional = userSettingRepository.findByKey(userKey);
+		Optional<User> userOptional = userRepository.findByUserKey(userKey);
 
 		if (userOptional.isEmpty()) {
 			throw new UserNotFoundException();
@@ -38,7 +36,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
 	@Override
 	public UserLoginDto getUserLogin(String userKey) {
-		Optional<User> userOptional = userSettingRepository.findByKey(userKey);
+		Optional<User> userOptional = userRepository.findByUserKey(userKey);
 
 		//로그인이 되어있지 않는경우
 		if (userOptional.isEmpty()) {
@@ -55,7 +53,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
 	@Override
 	public void updateFireBaseKey(String userKey, String firebaseKey) {
-		Optional<User> userOptional = userSettingRepository.findByKey(userKey);
+		Optional<User> userOptional = userRepository.findByUserKey(userKey);
 
 		if (userOptional.isEmpty()) {
 			log.info("사용자를 찾을 수 없어, 파이어베이스 키를 업데이트 할 수 없습니다.");
@@ -67,13 +65,9 @@ public class UserSettingServiceImpl implements UserSettingService {
 		user.setFirebaseKey(firebaseKey);
 	}
 
-	@Override
-	public User join(User user) {
-		return userSettingRepository.save(user);
-	}
 
 	@Override
 	public Optional<User> findUserFirebaseKey(String userKey) {
-		return userSettingRepository.findByKey(userKey);
+		return userRepository.findByUserKey(userKey);
 	}
 }

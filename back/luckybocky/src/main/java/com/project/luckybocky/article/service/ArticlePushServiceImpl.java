@@ -1,11 +1,13 @@
 package com.project.luckybocky.article.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.luckybocky.article.entity.Article;
 import com.project.luckybocky.article.exception.ArticleNotFoundException;
-import com.project.luckybocky.article.repository.MyArticleRepository;
+import com.project.luckybocky.article.repository.ArticleRepository;
 import com.project.luckybocky.user.entity.User;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 
@@ -17,24 +19,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class ArticlePushServiceImpl implements ArticlePushService {
-	private final MyArticleRepository myArticleRepository;
+	private final ArticleRepository articleRepository;
 
 	@Override
 	public User findArticleOwner(int articleSeq) {
-		Article article = myArticleRepository.findByArticleSeq(articleSeq);
+		Article article = articleRepository.findByArticleSeq(articleSeq).orElseThrow(
+			() -> {
+				log.info("{}의 복을 찾을 수 없습니다.", articleSeq);
+				return new ArticleNotFoundException();
+			}
+		);
 
-		if (article == null){
-			log.info("{}의 복을 찾을 수 없습니다.",articleSeq);
-			throw new ArticleNotFoundException();
-		}
-
-
-		if(article.getUser() == null){
-			log.info("{}의 복 주인을 찾을 수 없습니다.",articleSeq);
-			throw new UserNotFoundException();
-		}
-
-
-		return article.getUser();
+		return Optional.ofNullable(article.getUser())
+			.orElseThrow(()
+				-> {
+				log.info("{}의 복 주인을 찾을 수 없습니다.", articleSeq);
+				return new UserNotFoundException();
+			});
 	}
 }

@@ -13,4 +13,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     Optional<Article> findByArticleSeq(int articleSeq);
 
     List<Article> findAllByPocket(Pocket pocket);
+
+    List<Article> findByUserUserKey(String userKey);
+
 }

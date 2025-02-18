@@ -13,5 +13,4 @@ public interface UserSettingService {
     Optional<User> findUserFirebaseKey(String userKey);
 
     void updateFireBaseKey(String userKey, String firebaseKey);
-    User join(User user);
 }
