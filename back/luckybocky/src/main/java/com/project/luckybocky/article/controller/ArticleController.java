@@ -20,7 +20,6 @@ import com.project.luckybocky.article.service.MyArticleService;
 import com.project.luckybocky.common.DataResponseDto;
 import com.project.luckybocky.common.ResponseDto;
 import com.project.luckybocky.fortune.exception.FortuneNotFoundException;
-import com.project.luckybocky.user.exception.ForbiddenUserException;
 import com.project.luckybocky.user.exception.UserNotFoundException;
 import com.project.luckybocky.user.service.UserService;
 
@@ -55,9 +54,10 @@ public class ArticleController {
 	@GetMapping
 	public ResponseEntity<DataResponseDto<ArticleResponseDto>> getArticleDetails(HttpSession session,
 		@RequestParam int articleSeq) {
+		// ** userSeq로 바꾸고싶은데 auth 파트 안바꾼 상태로 건드리면 안 돌아갈 것 같아서 일단 둠
 		String userKey = (String)session.getAttribute("user");
 		ArticleResponseDto dto = articleService.getArticleDetails(userKey, articleSeq);
-		log.info("복 상세조회 - 번호: {}, 작성자: {}, 내용: {}, 복 이름: {}", dto.getArticleSeq(), dto.getUserNickname(),
+		log.debug("복 상세조회 - 번호: {}, 작성자: {}, 내용: {}, 복 이름: {}", dto.getArticleSeq(), dto.getUserNickname(),
 			dto.getArticleContent(), dto.getFortuneName());
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", dto));
 	}
@@ -77,7 +77,6 @@ public class ArticleController {
 		@RequestBody WriteArticleDto writeArticleDto) {
 		String userKey = (String)session.getAttribute("user");
 		articleService.createArticle(userKey, writeArticleDto);
-
 		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 	}
 
@@ -98,15 +97,8 @@ public class ArticleController {
 	@DeleteMapping
 	public ResponseEntity<ResponseDto> deleteArticle(HttpSession session, @RequestParam int articleSeq) {
 		String userKey = (String)session.getAttribute("user");
-
-		// 현재 로그인한 사용자가 해당 게시글의 주인(복을 받은 사용자)이 아닐 경우
-		if (articleService.getOwnerByArticle(articleSeq) != userService.getUserSeq(userKey)) {
-			throw new ForbiddenUserException();
-		} else {
-			articleService.deleteArticle(articleSeq);
-			log.info("복 삭제 - 번호: {}", articleSeq);
-			return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
-		}
+		articleService.deleteArticle(userKey, articleSeq);
+		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 	}
 
 	@Description("내가 보낸 복 보기")
@@ -121,7 +113,7 @@ public class ArticleController {
 	})
 	@GetMapping("/user")
 	public ResponseEntity<DataResponseDto<MyArticlesDto>> myArticle(HttpSession session) {
-		String userKey = (String) session.getAttribute("user" );
+		String userKey = (String)session.getAttribute("user");
 		log.info("내가 보낸 복을 조회 합니다. {}", userKey);
 		MyArticlesDto myArticles = myArticleService.findMyArticles(userKey);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", myArticles));
