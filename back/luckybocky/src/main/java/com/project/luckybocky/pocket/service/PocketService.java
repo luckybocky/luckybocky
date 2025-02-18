@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.project.luckybocky.pocket.dto.PocketDto;
 import com.project.luckybocky.pocket.dto.PocketInfoDto;
 import com.project.luckybocky.pocket.entity.Pocket;
 import com.project.luckybocky.pocket.exception.PocketNotFoundException;
@@ -22,24 +23,24 @@ public class PocketService {
 	private final UserRepository userRepository;
 	private final PocketRepository pocketRepository;
 
-    public String getPocketAddress(String userKey){
-        User user = userRepository.findByUserKey(userKey)
-                .orElseThrow(() -> new UserNotFoundException());
-        Pocket pocket = pocketRepository.findPocketByUser(user)
-                .orElseThrow(() -> new PocketNotFoundException());
+	public String getPocketAddress(String userKey) {
+		User user = userRepository.findByUserKey(userKey)
+			.orElseThrow(() -> new UserNotFoundException());
+		Pocket pocket = pocketRepository.findPocketByUser(user)
+			.orElseThrow(() -> new PocketNotFoundException());
 
 		return pocket.getPocketAddress();
 	}
 
-	public PocketInfoDto getPocketInfo(String address) {
-		Pocket pocket = pocketRepository.findPocketByPocketAddress(address)
+	public PocketDto getPocket(String url) {
+		Pocket pocket = pocketRepository.findPocketByPocketAddress(url)
 			.orElseThrow(() -> new PocketNotFoundException());
-		return pocket.pocketInfo();
+		return pocket.pocket();
 	}
 
-    public String createPocket(String userKey) {
-        User user = userRepository.findByUserKey(userKey)
-                .orElseThrow(() -> new UserNotFoundException());
+	public String createPocket(String userKey) {
+		User user = userRepository.findByUserKey(userKey)
+			.orElseThrow(() -> new UserNotFoundException());
 
 		//uuid로 복주머니 링크 생성 후 저장 & 반환
 		UUID uuid = UUID.randomUUID();
@@ -52,11 +53,11 @@ public class PocketService {
 		return address;
 	}
 
-    public PocketInfoDto getPocketInfoByUser(String userKey){
-        User user = userRepository.findByUserKey(userKey)
-                .orElseThrow(() -> new UserNotFoundException());
-        Pocket pocket = pocketRepository.findFirstByUserOrderByCreatedAtDesc(user)
-                .orElseThrow(() -> new PocketNotFoundException());
+	public PocketInfoDto getPocketInfoByUser(String userKey) {
+		User user = userRepository.findByUserKey(userKey)
+			.orElseThrow(() -> new UserNotFoundException());
+		Pocket pocket = pocketRepository.findFirstByUserOrderByCreatedAtDesc(user)
+			.orElseThrow(() -> new PocketNotFoundException());
 		return pocket.pocketInfo();
-    }
+	}
 }

@@ -5,11 +5,13 @@ import java.util.List;
 import com.project.luckybocky.article.dto.ArticleSummaryDto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 public class PocketDto {
 	@Schema(description = "복주머니 번호")
 	private int pocketSeq;
