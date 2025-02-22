@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import com.project.luckybocky.article.dto.ArticleResponseDto;
 import com.project.luckybocky.article.dto.ArticleSummaryDto;
@@ -38,7 +37,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @SQLDelete(sql = "UPDATE article SET is_deleted = true WHERE article_seq = ?")
-@Where(clause = "is_deleted = false")
 public class Article extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
