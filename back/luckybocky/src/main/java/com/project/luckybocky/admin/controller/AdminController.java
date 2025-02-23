@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "관리자 화면", description = "데이터 처리 API")
-@RequestMapping(value = "api/v1/backoffice", produces = "application/json; charset=UTF8")
+@RequestMapping(value = "api/v1/admin", produces = "application/json; charset=UTF8")
 public class AdminController {
 	private final AdminService adminService;
 
@@ -71,10 +71,10 @@ public class AdminController {
 	public ResponseEntity<DataResponseDto<UserAdminListResDto>> getUsers(
 		@RequestParam(value = "page", defaultValue = "0") @Schema(description = "표시할 페이지", type = "int") int page,
 		@RequestParam(value = "size", defaultValue = "5") @Schema(description = "페이지당 데이터 수", type = "int") int size,
-		@RequestParam(value = "start-date", required = false) @Schema(description = "시작 날짜(YYYY-MM-DD)") String startDate,
-		@RequestParam(value = "end-date", required = false) @Schema(description = "종료 날짜(YYYY-MM-DD)") String endDate,
+		@RequestParam(value = "startDate", required = false) @Schema(description = "시작 날짜(YYYY-MM-DD)") String startDate,
+		@RequestParam(value = "endDate", required = false) @Schema(description = "종료 날짜(YYYY-MM-DD)") String endDate,
 		@RequestParam(value = "desc", required = false) @Schema(description = "생성일 기준 내림차순 여부(지정하지 않으면 오름차순(false))", type = "boolean") boolean desc,
-		@RequestParam(value = "user-nickname", required = false) @Schema(description = "닉네임 여부(지정하지 않으면 모두 포함)", type = "Boolean") Boolean userNickname
+		@RequestParam(value = "userNickname", required = false) @Schema(description = "닉네임 여부(지정하지 않으면 모두 포함)", type = "Boolean") Boolean userNickname
 	) {
 		Pageable pageable = createPageable(page, size, desc);
 
@@ -99,8 +99,8 @@ public class AdminController {
 	public ResponseEntity<DataResponseDto<FeedbackAdminListResDto>> getFeedbacks(
 		@RequestParam(value = "page", defaultValue = "0") @Schema(description = "표시할 페이지", type = "int") int page,
 		@RequestParam(value = "size", defaultValue = "5") @Schema(description = "페이지당 데이터 수", type = "int") int size,
-		@RequestParam(value = "start-date", required = false) @Schema(description = "시작 날짜(YYYY-MM-DD)") String startDate,
-		@RequestParam(value = "end-date", required = false) @Schema(description = "종료 날짜(YYYY-MM-DD)") String endDate,
+		@RequestParam(value = "startDate", required = false) @Schema(description = "시작 날짜(YYYY-MM-DD)") String startDate,
+		@RequestParam(value = "endDate", required = false) @Schema(description = "종료 날짜(YYYY-MM-DD)") String endDate,
 		@RequestParam(value = "desc", required = false) @Schema(description = "생성일 기준 내림차순 여부(지정하지 않으면 오름차순(false))", type = "boolean") boolean desc
 	) {
 		Pageable pageable = createPageable(page, size, desc);
@@ -126,8 +126,8 @@ public class AdminController {
 	public ResponseEntity<DataResponseDto<ReportAdminListResDto>> getReports(
 		@RequestParam(value = "page", defaultValue = "0") @Schema(description = "표시할 페이지", type = "int") int page,
 		@RequestParam(value = "size", defaultValue = "5") @Schema(description = "페이지당 데이터 수", type = "int") int size,
-		@RequestParam(value = "start-date", required = false) @Schema(description = "시작 날짜(YYYY-MM-DD)") String startDate,
-		@RequestParam(value = "end-date", required = false) @Schema(description = "종료 날짜(YYYY-MM-DD)") String endDate,
+		@RequestParam(value = "startDate", required = false) @Schema(description = "시작 날짜(YYYY-MM-DD)") String startDate,
+		@RequestParam(value = "endDate", required = false) @Schema(description = "종료 날짜(YYYY-MM-DD)") String endDate,
 		@RequestParam(value = "desc", required = false) @Schema(description = "생성일 기준 내림차순 여부(지정하지 않으면 오름차순(false))", type = "boolean") boolean desc
 	) {
 		Pageable pageable = createPageable(page, size, desc);
@@ -153,8 +153,8 @@ public class AdminController {
 	public ResponseEntity<DataResponseDto<QnaAdminListResDto>> getQnas(
 		@RequestParam(value = "page", defaultValue = "0") @Schema(description = "표시할 페이지", type = "int") int page,
 		@RequestParam(value = "size", defaultValue = "5") @Schema(description = "페이지당 데이터 수", type = "int") int size,
-		@RequestParam(value = "start-date", required = false) @Schema(description = "시작 날짜(YYYY-MM-DD)") String startDate,
-		@RequestParam(value = "end-date", required = false) @Schema(description = "종료 날짜(YYYY-MM-DD)") String endDate,
+		@RequestParam(value = "startDate", required = false) @Schema(description = "시작 날짜(YYYY-MM-DD)") String startDate,
+		@RequestParam(value = "endDate", required = false) @Schema(description = "종료 날짜(YYYY-MM-DD)") String endDate,
 		@RequestParam(value = "deleted", required = false) @Schema(description = "삭제 여부(지정하지 않으면 모두 포함 )", type = "Boolean") Boolean deleted,
 		@RequestParam(value = "desc", required = false) @Schema(description = "생성일 기준 내림차순 여부(지정하지 않으면 오름차순(false))", type = "boolean") boolean desc,
 		@RequestParam(value = "answer", required = false) @Schema(description = "답변 여부(지정하지 않으면 모두 포함)", type = "Boolean") Boolean answer
@@ -203,8 +203,8 @@ public class AdminController {
 	public ResponseEntity<DataResponseDto<ArticleAdminListResDto>> getArticles(
 		@RequestParam(value = "page", defaultValue = "0") @Schema(description = "표시할 페이지", type = "int") int page,
 		@RequestParam(value = "size", defaultValue = "5") @Schema(description = "페이지당 데이터 수", type = "int") int size,
-		@RequestParam(value = "start-date", required = false) @Schema(description = "시작 날짜(YYYY-MM-DD)") String startDate,
-		@RequestParam(value = "end-date", required = false) @Schema(description = "종료 날짜(YYYY-MM-DD)") String endDate,
+		@RequestParam(value = "startDate", required = false) @Schema(description = "시작 날짜(YYYY-MM-DD)") String startDate,
+		@RequestParam(value = "endDate", required = false) @Schema(description = "종료 날짜(YYYY-MM-DD)") String endDate,
 		@RequestParam(value = "deleted", required = false) @Schema(description = "삭제 여부(지정하지 않으면 모두 포함)", type = "Boolean") Boolean deleted,
 		@RequestParam(value = "desc", required = false) @Schema(description = "생성일 기준 내림차순 여부(지정하지 않으면 오름차순(false))", type = "boolean") boolean desc
 	) {
