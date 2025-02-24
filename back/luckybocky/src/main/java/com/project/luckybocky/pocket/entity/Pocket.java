@@ -57,10 +57,14 @@ public class Pocket extends BaseEntity {
 			.userNickname(this.user.getUserNickname())
 			.fortuneVisibility(this.getUser().isFortuneVisibility())
 			.articles(this.articles.stream()
+				.filter(
+					article -> !article.isDeleted()
+				)
 				.map(Article::summaryArticle)
 				.collect(Collectors.toList()))
 			.build();
 	}
+	// Article의 @Where(clause = "is_deleted = false")로 인해 admin 시스템 조회시 조건 충돌 발생하여 위와 같이 변경(우재)
 
 	//    public void updateAddress(String pocketAddress){
 	//        this.pocketAddress = pocketAddress;

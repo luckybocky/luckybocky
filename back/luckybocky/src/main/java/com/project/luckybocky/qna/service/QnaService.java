@@ -47,17 +47,17 @@ public class QnaService {
 		}
 	}
 
-	public void saveAnswer(QnaDto qnaDto) {
-		Qna qna = qnaRepository.findById(qnaDto.getQnaSeq()).orElseThrow(QnaNotFoundException::new);
-
-		try {
-			qna.setAnswer(qnaDto.getAnswer());
-			log.info("{}번 질문에 대한 답변 등록에 성공했습니다.", qnaDto.getQnaSeq());
-		} catch (Exception e) {
-			log.error("{}번 질문에 대한 답변 등록에 실패했습니다.", qnaDto.getQnaSeq());
-			throw new QnaSaveException(e.getMessage());
-		}
-	}
+	// public void saveAnswer(QnaDto qnaDto) {
+	// 	Qna qna = qnaRepository.findById(qnaDto.getQnaSeq()).orElseThrow(QnaNotFoundException::new);
+	//
+	// 	try {
+	// 		qna.setAnswer(qnaDto.getAnswer());
+	// 		log.info("{}번 질문에 대한 답변 등록에 성공했습니다.", qnaDto.getQnaSeq());
+	// 	} catch (Exception e) {
+	// 		log.error("{}번 질문에 대한 답변 등록에 실패했습니다.", qnaDto.getQnaSeq());
+	// 		throw new QnaSaveException(e.getMessage());
+	// 	}
+	// }
 
 	public QnaListResDto getQuestions(Pageable pageable, HttpSession session) {
 		Page<Qna> qnaList = qnaRepository.findAllByisDeletedIsFalse(pageable);
