@@ -1,4 +1,4 @@
-import ApiClient from "./ApiClient";
+import ApiClient from "./ApiClient.ts";
 import AuthStore from "../store/AuthStore";
 import PocketService from "./PocketService.ts";
 import FirebaseService from "./FirebaseService.ts";

@@ -1,4 +1,4 @@
-import ApiClient from "./ApiClient";
+import ApiClient from "./ApiClient.ts";
 
 export interface ArticlePayload {
   pocketSeq: number;
@@ -55,7 +55,7 @@ class ArticleService {
       console.error("Error in getMyList:", error);
     }
   }
-  
+
   /**
    * 글 작성
    * @param {ArticlePayload} payload - 글 작성 정보

@@ -1,4 +1,4 @@
-import ApiClient from "./ApiClient";
+import ApiClient from "./ApiClient.ts";
 
 export interface ArticleSummary {
   articleSeq: number;
@@ -11,7 +11,7 @@ export interface PocketDetail {
   pocketSeq: number;
   userNickname: string;
   articles: ArticleSummary[];
-  fortuneVisibility : boolean;
+  fortuneVisibility: boolean;
 }
 
 class PocketService {

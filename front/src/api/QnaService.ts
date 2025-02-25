@@ -1,4 +1,4 @@
-import ApiClient from "./ApiClient";
+import ApiClient from "./ApiClient.ts";
 
 export interface QuestionPayload {
   qnaSeq?: number;
@@ -106,7 +106,7 @@ class QnaService {
 
   /**
    * 특정 질문 수정
-   * @param {QuestionPayload} payload: 
+   * @param {QuestionPayload} payload:
    * @returns {Promise<void>}
    */
   static async updateQuestion(payload: QuestionPayload): Promise<void> {
@@ -121,7 +121,7 @@ class QnaService {
     }
   }
 
-    /**
+  /**
    * 특정 질문 삭제
    * @param qnaSeq
    * @returns {Promise<void>}
