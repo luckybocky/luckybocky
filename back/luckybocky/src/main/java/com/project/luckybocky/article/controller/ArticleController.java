@@ -57,8 +57,6 @@ public class ArticleController {
 		// ** userSeq로 바꾸고싶은데 auth 파트 안바꾼 상태로 건드리면 안 돌아갈 것 같아서 일단 둠
 		String userKey = (String)session.getAttribute("user");
 		ArticleResponseDto dto = articleService.getArticleDetails(userKey, articleSeq);
-		log.debug("복 상세조회 - 번호: {}, 작성자: {}, 내용: {}, 복 이름: {}", dto.getArticleSeq(), dto.getUserNickname(),
-			dto.getArticleContent(), dto.getFortuneName());
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", dto));
 	}
 
@@ -114,7 +112,6 @@ public class ArticleController {
 	@GetMapping("/user")
 	public ResponseEntity<DataResponseDto<MyArticlesDto>> myArticle(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
-		log.info("내가 보낸 복을 조회 합니다. {}", userKey);
 		MyArticlesDto myArticles = myArticleService.findMyArticles(userKey);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", myArticles));
 	}

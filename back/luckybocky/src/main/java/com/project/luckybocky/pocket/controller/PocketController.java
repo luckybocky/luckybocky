@@ -46,9 +46,7 @@ public class PocketController {
 	})
 	@GetMapping("/{url}")
 	public ResponseEntity<DataResponseDto<PocketDto>> getPocket(HttpSession session, @PathVariable String url) {
-		PocketDto pocketDto = pocketService.getPocket(url);
-		log.debug("복주머니 주소로 복주머니 조회 - url:{}, 복주머니 번호:{}, 복주머니 주인:{}", url, pocketDto.getPocketSeq(),
-			pocketDto.getUserNickname());
+		PocketDto pocketDto = pocketService.getPocketByAddress(url);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", pocketDto));
 	}
 
@@ -67,7 +65,6 @@ public class PocketController {
 	public ResponseEntity<DataResponseDto> getPocketAddress(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
 		String url = pocketService.getPocketAddress(userKey);
-		log.debug("복주머니 주소 조회 - 사용자:{}, url:{}", userKey, url);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("success", url));
 	}
 
@@ -85,7 +82,6 @@ public class PocketController {
 	public ResponseEntity<DataResponseDto> createPocket(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
 		String url = pocketService.createPocket(userKey);
-		log.debug("복주머니 생성 - 사용자:{}, url:{}", userKey, url);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("success", url));
 	}
 }
