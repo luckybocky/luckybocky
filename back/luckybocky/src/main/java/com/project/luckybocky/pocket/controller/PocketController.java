@@ -45,7 +45,7 @@ public class PocketController {
 			content = @Content(schema = @Schema(implementation = PocketNotFoundException.class)))
 	})
 	@GetMapping("/{url}")
-	public ResponseEntity<DataResponseDto<PocketDto>> getPocket(HttpSession session, @PathVariable String url) {
+	public ResponseEntity<DataResponseDto<PocketDto>> getPocket(@PathVariable String url) {
 		PocketDto pocketDto = pocketService.getPocketByAddress(url);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", pocketDto));
 	}
@@ -64,6 +64,7 @@ public class PocketController {
 	@GetMapping("/address")
 	public ResponseEntity<DataResponseDto> getPocketAddress(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
+		// int userSeq = session.getAttribute("userSeq");
 		String url = pocketService.getPocketAddress(userKey);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("success", url));
 	}
@@ -81,6 +82,7 @@ public class PocketController {
 	@PostMapping
 	public ResponseEntity<DataResponseDto> createPocket(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
+		// int userSeq = session.getAttribute("userSeq");
 		String url = pocketService.createPocket(userKey);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("success", url));
 	}

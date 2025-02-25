@@ -56,6 +56,7 @@ public class ArticleController {
 		@RequestParam int articleSeq) {
 		// ** userSeq로 바꾸고싶은데 auth 파트 안바꾼 상태로 건드리면 안 돌아갈 것 같아서 일단 둠
 		String userKey = (String)session.getAttribute("user");
+		// int userSeq = session.getAttribute("userSeq");
 		ArticleResponseDto dto = articleService.getArticleDetails(userKey, articleSeq);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", dto));
 	}
@@ -74,6 +75,7 @@ public class ArticleController {
 	public ResponseEntity<ResponseDto> writeArticle(HttpSession session,
 		@RequestBody WriteArticleDto writeArticleDto) {
 		String userKey = (String)session.getAttribute("user");
+		// int userSeq = session.getAttribute("userSeq");
 		articleService.createArticle(userKey, writeArticleDto);
 		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 	}
@@ -95,6 +97,7 @@ public class ArticleController {
 	@DeleteMapping
 	public ResponseEntity<ResponseDto> deleteArticle(HttpSession session, @RequestParam int articleSeq) {
 		String userKey = (String)session.getAttribute("user");
+		// int userSeq = session.getAttribute("userSeq");
 		articleService.deleteArticle(userKey, articleSeq);
 		return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success"));
 	}
@@ -112,6 +115,7 @@ public class ArticleController {
 	@GetMapping("/user")
 	public ResponseEntity<DataResponseDto<MyArticlesDto>> myArticle(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
+		// int userSeq = session.getAttribute("userSeq");
 		MyArticlesDto myArticles = myArticleService.findMyArticles(userKey);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", myArticles));
 	}

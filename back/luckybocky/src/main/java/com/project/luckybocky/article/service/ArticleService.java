@@ -56,6 +56,7 @@ public class ArticleService {
 
 		// 게시글 공개 여부 설정
 		// 복주머니 주인이 아니고, 비공개 복주머니일 경우 -> 게시글 전체 비공개 설정
+		// if (useSeq == null || userSeq != article.getPocket().getUser().getUserSeq()){
 		if (userKey == null || !userKey.equals(article.getPocket().getUser().getUserKey())) {
 			if (!article.getPocket().getUser().isFortuneVisibility()) {
 				response.setArticleVisibility(false);
@@ -72,7 +73,7 @@ public class ArticleService {
 
 	public void createArticle(String userKey, WriteArticleDto writeArticleDto) {
 		Optional<User> user = userRepository.findByUserKey(userKey);
-		// User user = userRepository.findByUserKey(userKey).orElseThrow(() -> new UserNotFoundException());
+		// User user = userRepository.findByUserSeq(userSeq).orElseThrow(() -> new UserNotFoundException());
 
 		Fortune fortune = fortuneRepository.findByFortuneSeq(writeArticleDto.getFortuneSeq())
 			.orElseThrow(() -> new FortuneNotFoundException());
@@ -81,7 +82,7 @@ public class ArticleService {
 			.orElseThrow(() -> new PocketNotFoundException());
 
 		Article article = Article.builder()
-			.user(user.orElse(null))
+			.user(user.orElse(null))                    // ** 기능 변경되면서 비회원 게시글 작성 못하게 됨 -> user 가져올 때 예외처리
 			.userNickname(writeArticleDto.getNickname())
 			.articleContent(writeArticleDto.getContent())
 			.fortune(fortune)

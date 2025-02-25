@@ -26,6 +26,7 @@ public class PocketService {
 	private final PocketRepository pocketRepository;
 
 	public String getPocketAddress(String userKey) {
+		// User user = userRepository.findByUserSeq(userSeq).orElseThrow(() -> new UserNotFoundException());
 		User user = userRepository.findByUserKey(userKey)
 			.orElseThrow(() -> new UserNotFoundException());
 		Pocket pocket = pocketRepository.findPocketByUser(user)
@@ -43,6 +44,7 @@ public class PocketService {
 	public String createPocket(String userKey) {
 		User user = userRepository.findByUserKey(userKey)
 			.orElseThrow(() -> new UserNotFoundException());
+		// User user = userRepository.findByUserSeq(userSeq).orElseThrow(() -> new UserNotFoundException());
 
 		//uuid로 복주머니 링크 생성 후 저장 & 반환
 		UUID uuid = UUID.randomUUID();
