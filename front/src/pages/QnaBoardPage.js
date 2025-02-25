@@ -1,10 +1,11 @@
-import React, {useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 
 import AuthStore from "../store/AuthStore";
 
 import QnaService from "../api/QnaService.ts";
 
+import Alarm from "../components/Alarm.js";
 import Menu from "../components/Menu";
 import Util from "../components/Util.js";
 
@@ -23,7 +24,9 @@ const QnaBoardPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [cansSubmit, setCanSubmit] = useState(false);
-  const [flag, setFlag] = useState(JSON.parse(sessionStorage.getItem("flag"))||false);
+  const [flag, setFlag] = useState(
+    JSON.parse(sessionStorage.getItem("flag")) || false
+  );
 
   const itemsPerPage = 5;
   const startPage = Math.floor((currentPage - 1) / 3) * 3 + 1;
@@ -51,7 +54,6 @@ const QnaBoardPage = () => {
   const checkFlag = () => {
     if (!user?.userNickname) {
       setSecretAlarm(true);
-      setTimeout(() => setSecretAlarm(false), 2000);
       return;
     }
     setCurrentPage(1);
@@ -89,7 +91,6 @@ const QnaBoardPage = () => {
       });
     } else {
       setAccessAlarm(true);
-      setTimeout(() => setAccessAlarm(false), 2000);
     }
   };
 
@@ -107,7 +108,7 @@ const QnaBoardPage = () => {
       } else if (flag === true) {
         response = await QnaService.getMyQuestions(params);
       }
-  
+
       setQuestions(response.content);
       setTotalPages(response.page.totalPages);
     } catch (error) {
@@ -284,7 +285,6 @@ const QnaBoardPage = () => {
                 onChange={() => {
                   if (!user?.userNickname) {
                     setSecretAlarm(true);
-                    setTimeout(() => setSecretAlarm(false), 2000);
                     return;
                   }
                   setSecretStatus(!secretStatus);
@@ -317,17 +317,19 @@ const QnaBoardPage = () => {
         </div>
       )}
       {/*비회원 블로킹 알림 */}
-      {secretAlarm && (
-        <div className="fixed bottom-16 bg-red-500 text-white py-2 px-4 rounded-lg shadow-md z-30">
-          로그인 후 이용 가능합니다!
-        </div>
-      )}
+      <Alarm
+        message={"로그인 후 이용 가능합니다!"}
+        visible={secretAlarm}
+        onClose={() => setSecretAlarm(false)}
+        backgroundColor={"bg-red-500"}
+      />
       {/*QnA 접근 블로킹 알림 */}
-      {accessAlarm && (
-        <div className="fixed bottom-16 bg-red-500 text-white py-2 px-4 rounded-lg shadow-md z-30">
-          비공개 글입니다!
-        </div>
-      )}
+      <Alarm
+        message={"비공개 글입니다!"}
+        visible={accessAlarm}
+        onClose={() => setAccessAlarm(false)}
+        backgroundColor={"bg-red-500"}
+      />
     </div>
   );
 };

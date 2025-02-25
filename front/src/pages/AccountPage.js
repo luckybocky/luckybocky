@@ -6,13 +6,12 @@ import AuthStore from "../store/AuthStore";
 import AuthService from "../api/AuthService.ts";
 import FirebaseService from "../api/FirebaseService.ts";
 
-import Footer from "../components/Footer";
+import Alarm from "../components/Alarm.js";
 import Util from "../components/Util.js";
 
 const IoHomeOutline = Util.loadIcon("IoHomeOutline").io5;
 const IoShareOutline = Util.loadIcon("IoShareOutline").io5;
 const AiOutlinePlusSquare = Util.loadIcon("AiOutlinePlusSquare").ai;
-const AiOutlineArrowRight = Util.loadIcon("AiOutlineArrowRight").ai;
 const IoBulbOutline = Util.loadIcon("IoBulbOutline").io5;
 
 const AccountPage = () => {
@@ -84,7 +83,6 @@ const AccountPage = () => {
     });
 
     setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
   };
 
   const logoutButton = () => {
@@ -160,10 +158,11 @@ const AccountPage = () => {
               setChangeMode((prev) => !prev);
             }
           }}
-          className={`${nickname?.length >= 2 && nickname?.length <= 6
+          className={`${
+            nickname?.length >= 2 && nickname?.length <= 6
               ? "bg-blue-500 hover:bg-blue-600"
               : "bg-gray-400 cursor-not-allowed"
-            } text-white py-2 rounded-lg w-[80px] p-2`}
+          } text-white py-2 rounded-lg w-[80px] p-2`}
           disabled={nickname?.length < 2 || nickname?.length > 6}
         >
           {changeMode ? "저장" : "변경"}
@@ -227,18 +226,30 @@ const AccountPage = () => {
 
       {/* 아이폰 알림 설정 방법 안내 */}
       <div className="flex text-[#909090] items-center flex-wrap w-full pt-4">
-        <div className="text-base text-[#91C2ED]">설정에 따라 알림이 차단될 수 있습니다.</div>
+        <div className="text-base text-[#91C2ED]">
+          설정에 따라 알림이 차단될 수 있습니다.
+        </div>
         <div className="text-sm text-[#A0A0A0] flex flex-col w-full pt-4 space-y-2">
           <div className="flex items-center">
-            <Suspense><IoBulbOutline className="mr-2" /></Suspense>
+            <Suspense>
+              <IoBulbOutline className="mr-2" />
+            </Suspense>
             <span className="font-semibold">아이폰 알림 설정 방법:</span>
           </div>
           <ul className="list-decimal pl-5 space-y-1">
             <li className="flex items-center">
-              Safari 하단 <Suspense><IoShareOutline className="mx-1" /></Suspense> 공유 버튼 클릭
+              Safari 하단{" "}
+              <Suspense>
+                <IoShareOutline className="mx-1" />
+              </Suspense>{" "}
+              공유 버튼 클릭
             </li>
             <li className="flex items-center">
-              홈 화면에 추가 <Suspense><AiOutlinePlusSquare className="mx-1" /></Suspense> 버튼 선택
+              홈 화면에 추가{" "}
+              <Suspense>
+                <AiOutlinePlusSquare className="mx-1" />
+              </Suspense>{" "}
+              버튼 선택
             </li>
             <li className="flex items-center">
               앱 → 계정 설정 → 알림/팝업 허용
@@ -247,7 +258,6 @@ const AccountPage = () => {
         </div>
       </div>
 
-
       <hr className="border-t-2 border-gray-600 my-10" />
 
       <div>
@@ -255,11 +265,12 @@ const AccountPage = () => {
       </div>
 
       {/* 변경 성공 알림 */}
-      {saved && (
-        <div className="fixed bottom-16 bg-green-500 py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
-          변경 완료!
-        </div>
-      )}
+      <Alarm
+        message="변경 완료!"
+        visible={saved}
+        onClose={() => setSaved(false)}
+        backgroundColor={"bg-green-500"}
+      />
 
       {logoutModalOpen && (
         <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">

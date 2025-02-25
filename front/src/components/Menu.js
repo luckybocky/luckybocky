@@ -5,8 +5,9 @@ import AuthStore from "../store/AuthStore";
 
 import FeedbackService from "../api/FeedbackService.ts";
 
-import { ReactComponent as PocketIcon } from "../image/pocketIcon.svg"
+import { ReactComponent as PocketIcon } from "../image/pocketIcon.svg";
 
+import Alarm from "./Alarm.js";
 import Util from "./Util";
 
 const IoMenuSharp = Util.loadIcon("SlMenu").sl;
@@ -72,7 +73,6 @@ const Menu = () => {
     setIsSubmitting(false);
 
     setFeedbackAlarm(true);
-    setTimeout(() => setFeedbackAlarm(false), 2000);
   };
 
   return (
@@ -100,8 +100,9 @@ const Menu = () => {
 
       {/* 메뉴 바 */}
       <div
-        className={`absolute top-0 right-0 h-full bg-[#333] transition-transform duration-300 ease-in-out py-4 px-6 z-20 ${menuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+        className={`absolute top-0 right-0 h-full bg-[#333] transition-transform duration-300 ease-in-out py-4 px-6 z-20 ${
+          menuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
         style={{ width: "260px" }}
       >
         {myAddress && (
@@ -123,7 +124,12 @@ const Menu = () => {
               }}
               className="flex hover:underline items-center gap-2"
             >
-              <PocketIcon width={24} height={24} fill="white" className="mb-1"/>
+              <PocketIcon
+                width={24}
+                height={24}
+                fill="white"
+                className="mb-1"
+              />
               <span>내 복주머니 보러가기</span>
             </button>
 
@@ -207,8 +213,9 @@ const Menu = () => {
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
-                    className={`${star <= rating ? "text-yellow-500" : "text-gray-300"
-                      }`}
+                    className={`${
+                      star <= rating ? "text-yellow-500" : "text-gray-300"
+                    }`}
                     onClick={() => setRating(star)}
                   >
                     ★
@@ -260,11 +267,12 @@ const Menu = () => {
       )}
 
       {/*피드백 성공 알림 */}
-      {feedbackAlarm && (
-        <div className="fixed bottom-16 bg-green-500 rounded-lg shadow-md py-2 px-4 z-30 transform -translate-x-1/2">
-          피드백 전달 완료!
-        </div>
-      )}
+      <Alarm
+        message="피드백 전달 완료!"
+        visible={feedbackAlarm}
+        onClose={() => setFeedbackAlarm(false)}
+        backgroundColor={"bg-green-500"}
+      />
     </div>
   );
 };

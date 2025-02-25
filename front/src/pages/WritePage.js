@@ -72,7 +72,7 @@ const WritePage = () => {
 
     const result = await ShareArticleService.save(payload);
 
-    navigate(`/share/${result.shareArticleAddress}`)
+    navigate(`/share/${result.shareArticleAddress}`);
   };
 
   // const changeVisibility = () => {
@@ -104,13 +104,15 @@ const WritePage = () => {
   };
 
   useEffect(() => {
-    setMessage(fortuneImages[currentDecoration].comment)
+    setMessage(fortuneImages[currentDecoration].comment);
   }, [currentDecoration]);
 
   return (
     <div className="flex flex-col justify-center items-center w-full max-w-[600px] bg-[#f5f5f5] text-[#3c1e1e] py-6 px-4">
-      <h1 className="text-xl text-center mb-10">상대방에게 전하고 싶은 복과 <br />
-        마음을 담은 메세지를 남겨주세요</h1>
+      <h1 className="text-xl text-center mb-10">
+        상대방에게 전하고 싶은 복과 <br />
+        마음을 담은 메세지를 남겨주세요
+      </h1>
 
       {/* 가로 스크롤 이미지 목록 */}
       <div className="flex space-x-4 overflow-x-auto mb-4 w-full max-w-[450px]">
@@ -118,13 +120,14 @@ const WritePage = () => {
           <div
             key={index}
             onClick={() => handleImageSelect(index)}
-            className={`cursor-pointer ${index === currentDecoration ? "border-2 border-gray-500 border-dashed rounded-lg" : "border-2 border-black border-opacity-0"}`}
+            className={`cursor-pointer ${
+              index === currentDecoration
+                ? "border-2 border-gray-500 border-dashed rounded-lg"
+                : "border-2 border-black border-opacity-0"
+            }`}
           >
             <picture>
-              <source
-                srcSet={image.src}
-                type="image/webp"
-              />
+              <source srcSet={image.src} type="image/webp" />
               <img
                 src={image.fallback}
                 alt={image.name}
@@ -146,7 +149,9 @@ const WritePage = () => {
         </button> */}
 
         <picture className="flex flex-col items-center">
-          <span className="text-sm">{fortuneImages[currentDecoration].name}</span>
+          <span className="text-sm">
+            {fortuneImages[currentDecoration].name}
+          </span>
           <source
             srcSet={fortuneImages[currentDecoration].src}
             type="image/webp"
@@ -225,7 +230,9 @@ const WritePage = () => {
         </label> */}
         <button
           onClick={() => setConfirmClearModal(true)} // 전체 지우기 버튼 클릭 시
-          className={`${message ? "bg-red-500" : "bg-gray-400"} flex text-white rounded-lg py-2 px-4`}
+          className={`${
+            message ? "bg-red-500" : "bg-gray-400"
+          } flex text-white rounded-lg py-2 px-4`}
           disabled={!message}
         >
           {/* `${
@@ -243,11 +250,14 @@ const WritePage = () => {
           </button>
 
           <button
-            onClick={() => { setSaveModalOpen(true) }}
-            className={`${message
-              ? "bg-blue-500 hover:bg-blue-600"
-              : "bg-gray-400 cursor-not-allowed"
-              } text-white rounded-lg py-2 px-6`}
+            onClick={() => {
+              setSaveModalOpen(true);
+            }}
+            className={`${
+              message
+                ? "bg-blue-500 hover:bg-blue-600"
+                : "bg-gray-400 cursor-not-allowed"
+            } text-white rounded-lg py-2 px-6`}
             disabled={!message}
           >
             {share ? "전달" : "저장"}
@@ -262,7 +272,10 @@ const WritePage = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-xl mb-4 text-center">
-              {share ? "이대로 복을 전달하시겠어요?" : "이대로 복을 남기시겠어요?"}</h2>
+              {share
+                ? "이대로 복을 전달하시겠어요?"
+                : "이대로 복을 남기시겠어요?"}
+            </h2>
             <div className="flex justify-center gap-4">
               <button
                 className="bg-gray-300 text-black rounded-md py-2 px-4"
@@ -305,35 +318,6 @@ const WritePage = () => {
           </div>
         </div>
       )}
-
-      {/* {visibilityModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="flex flex-col items-center bg-white shadow-lg rounded-lg w-80 p-6">
-            <h2 className="text-xl text-[#3c1e1e] text-center mb-4">
-              비로그인 시 이후에 <br />글을 확인할 수 없습니다.
-            </h2>
-            <p className="text-gray-700 mb-6">비밀글로 설정하시겠어요?</p>
-            <div className="flex gap-4">
-              <button
-                className="bg-gray-300 text-black rounded-md py-2 px-4"
-                onClick={() => setVisibilityModalOpen(false)}
-              >
-                취소
-              </button>
-              <button
-                className="bg-red-500 text-white rounded-md py-2 px-4"
-                onClick={() => {
-                  setVisibility(false);
-                  setVisibilityModalOpen(false);
-                }}
-              >
-                확인
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
-
     </div>
   );
 };
