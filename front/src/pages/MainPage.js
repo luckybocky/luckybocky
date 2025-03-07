@@ -58,6 +58,7 @@ const MainPage = () => {
   );
 
   const fetchPocket = async () => {
+    setCurrentPage(1);
     window.sessionStorage.setItem("pocketAddress", window.location.pathname);
     try {
       const data = await PocketService.getByAddress(address);
