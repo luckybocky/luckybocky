@@ -38,10 +38,10 @@ public class ArticleService {
 	private final PushService pushService;
 	private final UserService userService;
 
-	private final ArticleRepository articleRepository;
 	private final PocketRepository pocketRepository;
 	private final UserRepository userRepository;
 	private final FortuneRepository fortuneRepository;
+	private final ArticleRepository articleRepository;
 
 	public ArticleResponseDto getArticleDetails(String userKey, int articleSeq) {
 		Article article = articleRepository.findByArticleSeq(articleSeq)
@@ -56,6 +56,7 @@ public class ArticleService {
 
 		// 게시글 공개 여부 설정
 		// 복주머니 주인이 아니고, 비공개 복주머니일 경우 -> 게시글 전체 비공개 설정
+		// if (useSeq == null || userSeq != article.getPocket().getUser().getUserSeq()){
 		if (userKey == null || !userKey.equals(article.getPocket().getUser().getUserKey())) {
 			if (!article.getPocket().getUser().isFortuneVisibility()) {
 				response.setArticleVisibility(false);
@@ -72,6 +73,7 @@ public class ArticleService {
 
 	public void createArticle(String userKey, WriteArticleDto writeArticleDto) {
 		Optional<User> user = userRepository.findByUserKey(userKey);
+		// User user = userRepository.findByUserSeq(userSeq).orElseThrow(() -> new UserNotFoundException());
 
 		Fortune fortune = fortuneRepository.findByFortuneSeq(writeArticleDto.getFortuneSeq())
 			.orElseThrow(() -> new FortuneNotFoundException());
@@ -80,7 +82,7 @@ public class ArticleService {
 			.orElseThrow(() -> new PocketNotFoundException());
 
 		Article article = Article.builder()
-			.user(user.orElse(null))
+			.user(user.orElse(null))                    // ** 기능 변경되면서 비회원 게시글 작성 못하게 됨 -> user 가져올 때 예외처리
 			.userNickname(writeArticleDto.getNickname())
 			.articleContent(writeArticleDto.getContent())
 			.fortune(fortune)
@@ -88,6 +90,8 @@ public class ArticleService {
 			.build();
 
 		articleRepository.save(article);
+
+		log.info("유저 {}, 게시글 {}", user.orElse(null).getUserSeq(), article.getArticleSeq());
 
 		//push 알림추가(이후 비동기로 진행하면 더 좋을 듯)
 		PushMessage pushMessage = PushMessage.ARTICLE;
@@ -104,14 +108,15 @@ public class ArticleService {
 
 	public void deleteArticle(String userKey, int articleSeq) {
 		// 현재 로그인한 사용자가 해당 게시글의 주인(복을 받은 사용자)이 아닐 경우
-		if (getOwnerByArticle(articleSeq) != userService.getUserSeq(userKey)) {
+		int userSeq = userService.getUserSeq(userKey);
+		if (getOwnerByArticle(articleSeq) != userSeq) {
 			throw new ForbiddenUserException();
 		}
 
 		Article findArticle = articleRepository.findByArticleSeq(articleSeq)
 			.orElseThrow(() -> new ArticleNotFoundException());
 
-		log.info("복 삭제 - 번호: {}", articleSeq);
+		log.info("유저 {}, 게시글 {}", userSeq, articleSeq);
 		articleRepository.delete(findArticle);
 	}
 
@@ -130,4 +135,5 @@ public class ArticleService {
 			.map(Article::summaryArticle)
 			.collect(Collectors.toList());
 	}
+
 }
