@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.luckybocky.common.DataResponseDto;
 import com.project.luckybocky.common.ResponseDto;
-import com.project.luckybocky.qna.dto.QnaDto;
 import com.project.luckybocky.qna.dto.QnaListResDto;
 import com.project.luckybocky.qna.dto.QnaUserReqDto;
 import com.project.luckybocky.qna.exception.QnaNotFoundException;
@@ -62,24 +61,24 @@ public class QnaController {
 			.body(new ResponseDto("질문 등록 성공"));
 	}
 
-	@RateLimiter(name = "saveRateLimiter")
-	@Operation(
-		summary = "답변 등록",
-		description = "질문에 대한 답변을 등록한다."
-	)
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "답변 등록 성공"),
-		@ApiResponse(responseCode = "503", description = "서버 문제로 인해 답변 등록 실패",
-			content = @Content(schema = @Schema(implementation = QnaSaveException.class))),
-	})
-	@PutMapping("/answer")
-	public ResponseEntity<ResponseDto> saveAnswer(@RequestBody QnaDto answer) {
-		qnaService.saveAnswer(answer);
-
-		return ResponseEntity
-			.status(HttpStatus.OK)
-			.body(new ResponseDto("답변 등록 성공"));
-	}
+	// @RateLimiter(name = "saveRateLimiter")
+	// @Operation(
+	// 	summary = "답변 등록",
+	// 	description = "질문에 대한 답변을 등록한다."
+	// )
+	// @ApiResponses(value = {
+	// 	@ApiResponse(responseCode = "200", description = "답변 등록 성공"),
+	// 	@ApiResponse(responseCode = "503", description = "서버 문제로 인해 답변 등록 실패",
+	// 		content = @Content(schema = @Schema(implementation = QnaSaveException.class))),
+	// })
+	// @PutMapping("/answer")
+	// public ResponseEntity<ResponseDto> saveAnswer(@RequestBody QnaDto answer) {
+	// 	qnaService.saveAnswer(answer);
+	//
+	// 	return ResponseEntity
+	// 		.status(HttpStatus.OK)
+	// 		.body(new ResponseDto("답변 등록 성공"));
+	// }
 
 	@Operation(
 		summary = "QnA 목록 조회",

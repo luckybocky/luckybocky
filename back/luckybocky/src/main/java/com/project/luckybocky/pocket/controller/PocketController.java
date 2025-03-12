@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.luckybocky.article.service.ArticleService;
 import com.project.luckybocky.common.DataResponseDto;
 import com.project.luckybocky.pocket.dto.PocketDto;
-import com.project.luckybocky.pocket.dto.PocketInfoDto;
 import com.project.luckybocky.pocket.exception.PocketNotFoundException;
 import com.project.luckybocky.pocket.service.PocketService;
 import com.project.luckybocky.user.exception.UserNotFoundException;
@@ -34,21 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PocketController {
 	private final PocketService pocketService;
-	private final ArticleService articleService;
-
-	//    @Description("나의 복주머니 조회")
-	//    @GetMapping
-	//    public ResponseEntity<DataResponseDto<PocketDto>> getAllArticlesInPocket(HttpSession session){
-	//        String userKey = (String) session.getAttribute("user");
-	//        PocketInfoDto pocketInfoDto = pocketService.getPocketInfoByUser(userKey);
-	//
-	//        PocketDto pocketDto = new PocketDto();
-	//        pocketDto.setPocketSeq(pocketInfoDto.getPocketSeq());
-	//        pocketDto.setUserNickname(pocketInfoDto.getUserNickname());
-	//        pocketDto.setArticles(articleService.getArticlesByUser(userKey));
-	//
-	//        return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success: getting pocket by user", pocketDto));
-	//    }
 
 	@Operation(
 		summary = "복주머니 주소로 복주머니 조회",
@@ -62,16 +45,8 @@ public class PocketController {
 			content = @Content(schema = @Schema(implementation = PocketNotFoundException.class)))
 	})
 	@GetMapping("/{url}")
-	public ResponseEntity<DataResponseDto<PocketDto>> getPocket(HttpSession session, @PathVariable String url) {
-		PocketDto pocketDto = new PocketDto();
-		PocketInfoDto findPocket = pocketService.getPocketInfo(url);
-		pocketDto.setPocketSeq(findPocket.getPocketSeq());
-		pocketDto.setUserNickname(findPocket.getUserNickname());
-		pocketDto.setFortuneVisibility(findPocket.isFortuneVisibility());
-		pocketDto.setArticles(articleService.getAllArticles(findPocket.getPocketSeq()));
-
-		log.info("주소(url)로 복주머니 조회 - 주소: {}, 번호: {}, 복주머니 주인: {}", url, pocketDto.getPocketSeq(),
-			pocketDto.getUserNickname());
+	public ResponseEntity<DataResponseDto<PocketDto>> getPocket(@PathVariable String url) {
+		PocketDto pocketDto = pocketService.getPocketByAddress(url);
 		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto<>("success", pocketDto));
 	}
 
@@ -89,9 +64,9 @@ public class PocketController {
 	@GetMapping("/address")
 	public ResponseEntity<DataResponseDto> getPocketAddress(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
-		String address = pocketService.getPocketAddress(userKey);
-		log.info("복주머니 주소(url) 조회 - 주소: {}", address);
-		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("success", address));
+		// int userSeq = session.getAttribute("userSeq");
+		String url = pocketService.getPocketAddress(userKey);
+		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("success", url));
 	}
 
 	@Operation(
@@ -107,8 +82,8 @@ public class PocketController {
 	@PostMapping
 	public ResponseEntity<DataResponseDto> createPocket(HttpSession session) {
 		String userKey = (String)session.getAttribute("user");
-		String address = pocketService.createPocket(userKey);
-		log.info("복주머니 생성 - 주소: {}", address);
-		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("success", address));
+		// int userSeq = session.getAttribute("userSeq");
+		String url = pocketService.createPocket(userKey);
+		return ResponseEntity.status(HttpStatus.OK).body(new DataResponseDto("success", url));
 	}
 }

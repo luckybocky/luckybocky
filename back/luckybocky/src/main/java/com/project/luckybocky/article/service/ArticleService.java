@@ -23,7 +23,9 @@ import com.project.luckybocky.push.dto.PushDto;
 import com.project.luckybocky.push.enums.PushMessage;
 import com.project.luckybocky.push.service.PushService;
 import com.project.luckybocky.user.entity.User;
+import com.project.luckybocky.user.exception.ForbiddenUserException;
 import com.project.luckybocky.user.repository.UserRepository;
+import com.project.luckybocky.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,11 +36,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ArticleService {
 	private final PushService pushService;
+	private final UserService userService;
 
-	private final ArticleRepository articleRepository;
 	private final PocketRepository pocketRepository;
 	private final UserRepository userRepository;
 	private final FortuneRepository fortuneRepository;
+	private final ArticleRepository articleRepository;
 
 	public ArticleResponseDto getArticleDetails(String userKey, int articleSeq) {
 		Article article = articleRepository.findByArticleSeq(articleSeq)
@@ -53,6 +56,7 @@ public class ArticleService {
 
 		// 게시글 공개 여부 설정
 		// 복주머니 주인이 아니고, 비공개 복주머니일 경우 -> 게시글 전체 비공개 설정
+		// if (useSeq == null || userSeq != article.getPocket().getUser().getUserSeq()){
 		if (userKey == null || !userKey.equals(article.getPocket().getUser().getUserKey())) {
 			if (!article.getPocket().getUser().isFortuneVisibility()) {
 				response.setArticleVisibility(false);
@@ -67,20 +71,9 @@ public class ArticleService {
 		return response;
 	}
 
-	// 사용자가 보유한 복주머니 가져오기
-	//    public List<ArticleResponseDto> getAllArticlesByDate(int userSeq, int year){
-	//        LocalDate startDate = LocalDate.of(year, 7, 1);
-	//        Pocket findPocket = pocketRepository.findPocketByUserAndDate(userSeq, startDate, LocalDate.now())
-	//                .orElseThrow(() -> new NullPointerException("복주머니를 찾지 못했습니다."));
-	//        List<`ArticleResponseDto`> result = findPocket.getArticles().stream()
-	//                .map(a -> new ArticleResponseDto(a))
-	//                .collect(Collectors.toList());
-	//
-	//        return result;
-	//    }
-
 	public void createArticle(String userKey, WriteArticleDto writeArticleDto) {
 		Optional<User> user = userRepository.findByUserKey(userKey);
+		// User user = userRepository.findByUserSeq(userSeq).orElseThrow(() -> new UserNotFoundException());
 
 		Fortune fortune = fortuneRepository.findByFortuneSeq(writeArticleDto.getFortuneSeq())
 			.orElseThrow(() -> new FortuneNotFoundException());
@@ -89,7 +82,7 @@ public class ArticleService {
 			.orElseThrow(() -> new PocketNotFoundException());
 
 		Article article = Article.builder()
-			.user(user.orElse(null))
+			.user(user.orElse(null))                    // ** 기능 변경되면서 비회원 게시글 작성 못하게 됨 -> user 가져올 때 예외처리
 			.userNickname(writeArticleDto.getNickname())
 			.articleContent(writeArticleDto.getContent())
 			.fortune(fortune)
@@ -97,6 +90,8 @@ public class ArticleService {
 			.build();
 
 		articleRepository.save(article);
+
+		log.info("유저 {}, 게시글 {}", user.orElse(null).getUserSeq(), article.getArticleSeq());
 
 		//push 알림추가(이후 비동기로 진행하면 더 좋을 듯)
 		PushMessage pushMessage = PushMessage.ARTICLE;
@@ -111,35 +106,17 @@ public class ArticleService {
 		pushService.sendPush(pushDto);
 	}
 
-	// 리복 달기
-	// public ArticleResponseDto updateComment(CommentDto commentDto) {
-	// 	int findArticle = commentDto.getArticleSeq();
-	// 	Article article = articleRepository.findByArticleSeq(findArticle)
-	// 		.orElseThrow(() -> new ArticleNotFoundException());
-	// 	if (article.getArticleComment() != null) {
-	// 		throw new CommentConflictException();
-	// 	}
-	// 	article.updateComment(commentDto.getComment());
-	// 	articleRepository.save(article);
-	//
-	// 	//push 알림추가(이후 비동기로 진행하면 더 좋을 듯)
-	// 	PushMessage pushMessage = PushMessage.COMMENT;
-	//
-	// 	PushDto pushDto = PushDto.builder()
-	// 		.toUser(article.getUser())
-	// 		.address(article.getPocket().getPocketAddress())
-	// 		.title(pushMessage.getTitle())
-	// 		.content(article.getPocket().getUser().getUserNickname() + pushMessage.getBody())
-	// 		.build();
-	//
-	// 	pushService.sendPush(pushDto);
-	//
-	// 	return article.toArticleResponseDto();
-	// }
+	public void deleteArticle(String userKey, int articleSeq) {
+		// 현재 로그인한 사용자가 해당 게시글의 주인(복을 받은 사용자)이 아닐 경우
+		int userSeq = userService.getUserSeq(userKey);
+		if (getOwnerByArticle(articleSeq) != userSeq) {
+			throw new ForbiddenUserException();
+		}
 
-	public void deleteArticle(int articleSeq) {
 		Article findArticle = articleRepository.findByArticleSeq(articleSeq)
 			.orElseThrow(() -> new ArticleNotFoundException());
+
+		log.info("유저 {}, 게시글 {}", userSeq, articleSeq);
 		articleRepository.delete(findArticle);
 	}
 
@@ -158,4 +135,5 @@ public class ArticleService {
 			.map(Article::summaryArticle)
 			.collect(Collectors.toList());
 	}
+
 }

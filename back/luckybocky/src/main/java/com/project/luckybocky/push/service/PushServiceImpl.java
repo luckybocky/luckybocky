@@ -40,45 +40,6 @@ public class PushServiceImpl implements PushService {
 		}
 	}
 
-	// public void sendArticlePush(PushDto pushDto) throws FirebaseMessagingException {
-	// 	int articleSeq = pushDto.getContentSeq();
-	// 	String url = pushDto.getUrl();
-	// 	String fromUser = pushDto.getFromUser();
-	//
-	// 	//복에 리복이 들어왔기 때문에, 리복 관련 메시지
-	// 	PushMessage pushMessage = PushMessage.COMMENT;
-	//
-	// 	//복에 리복이 달렸을때, 복 주인에게 푸시를 보내야한다.
-	// 	User toUser = articlePushService.findArticleOwner(articleSeq);
-	// 	String title = pushMessage.getTitle();
-	// 	String body = fromUser + pushMessage.getBody();
-	// 	String icon = frontUri + "/pocket.webp";
-	//
-	// 	if (!canPush(toUser, pushDto)) {
-	// 		return;
-	// 	}
-	//
-	// 	Notification notification = getNotification(body, title);
-	//
-	// 	Message message = getMessage(notification, toUser.getFirebaseKey(), url);
-	//
-	// 	String response = FirebaseMessaging.getInstance().send(message);
-	// }
-
-	// private Message getMessage(Notification notification, String firebaseKey, String url) {
-	// 	return Message.builder()
-	// 		.setNotification(notification)
-	// 		.putData("url", url)
-	// 		.setToken(firebaseKey)
-	// 		.build();
-	// }
-
-	// private Notification getNotification(String title, String body) {
-	// 	return Notification.builder()
-	// 		.setTitle(title)
-	// 		.setBody(body)
-	// 		.build();
-	// }
 
 	public boolean canPush(User user) {
 		// if (user.getUserKey() == null) {

@@ -35,8 +35,7 @@ import lombok.Setter;
 public class User extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	//12-23 창희 JoinColumn시 칼럼매핑을 하지못해서 명시적으로 추가
-	@Column(name = "user_seq")
+	@Column(name = "user_seq") //JoinColumn시 칼럼매핑을 하지못해서 명시적으로 추가
 	private Integer userSeq;
 
 	@Column(unique = true)
@@ -76,7 +75,7 @@ public class User extends BaseEntity {
 
 	@OneToMany(mappedBy = "offender")
 	private List<Report> offenders; // 내가 신고당한 목록
-	//12-23 창희 피드백, 신고 칼럼 추가 end
+
 
 	@Override
 	public String toString() {
@@ -96,7 +95,7 @@ public class User extends BaseEntity {
 		setFortuneVisibility(fortuneVisibility);
 	}
 
-	//=====창희 dto 함수 start
+
 
 	public UserInfoDto getUserInfo() {
 
@@ -120,6 +119,5 @@ public class User extends BaseEntity {
 		return new UserLoginDto(null, false);
 	}
 
-	//=====창희 dto 함수 end
 
 }

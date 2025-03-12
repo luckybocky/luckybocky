@@ -2,9 +2,11 @@ package com.project.luckybocky.pocket.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.project.luckybocky.article.entity.Article;
 import com.project.luckybocky.common.BaseEntity;
+import com.project.luckybocky.pocket.dto.PocketDto;
 import com.project.luckybocky.pocket.dto.PocketInfoDto;
 import com.project.luckybocky.user.entity.User;
 
@@ -48,7 +50,22 @@ public class Pocket extends BaseEntity {
 		return new PocketInfoDto(this.pocketSeq, this.pocketAddress, this.getUser().getUserSeq(),
 			this.getUser().getUserKey(), this.getUser().getUserNickname(), this.getUser().isFortuneVisibility());
 	}
-    
+
+	public PocketDto pocket() {
+		return PocketDto.builder()
+			.pocketSeq(this.pocketSeq)
+			.userNickname(this.user.getUserNickname())
+			.fortuneVisibility(this.getUser().isFortuneVisibility())
+			.articles(this.articles.stream()
+				.filter(
+					article -> !article.isDeleted()
+				)
+				.map(Article::summaryArticle)
+				.collect(Collectors.toList()))
+			.build();
+	}
+	// Article의 @Where(clause = "is_deleted = false")로 인해 admin 시스템 조회시 조건 충돌 발생하여 위와 같이 변경(우재)
+
 	//    public void updateAddress(String pocketAddress){
 	//        this.pocketAddress = pocketAddress;
 	//    }
