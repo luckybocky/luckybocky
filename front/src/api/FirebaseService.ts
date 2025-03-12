@@ -1,5 +1,5 @@
 import { messaging, getToken, onMessage } from "../components/firebase-config";
-import ApiClient from "./ApiClient";
+import ApiClient from "./ApiClient.ts";
 
 class FirebaseService {
   /**
@@ -14,7 +14,7 @@ class FirebaseService {
         const token = await getToken(messaging, {
           vapidKey: process.env.REACT_APP_FIREBASE_VAPID_KEY,
         });
-        
+
         await this.sendToken(token);
 
         return true; // 토큰 반환

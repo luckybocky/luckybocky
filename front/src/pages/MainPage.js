@@ -10,9 +10,10 @@ import bgImageP from "../image/bgImage.png";
 import bgImageW from "../image/bgImage.webp";
 import mainImageP from "../image/pocket.png";
 import mainImageW from "../image/pocket.webp";
-import pocketIconImageP from "../image/pocketIcon.png"
-import pocketIconImageW from "../image/pocketIcon.webp"
+import pocketIconImageP from "../image/pocketIcon.png";
+import pocketIconImageW from "../image/pocketIcon.webp";
 
+import Alarm from "../components/Alarm.js";
 import fortuneImages from "../components/FortuneImages";
 import Menu from "../components/Menu";
 import Article from "../components/Article";
@@ -26,7 +27,6 @@ const BsFillSendFill = Util.loadIcon("BsFillSendFill").bs;
 
 const MainPage = () => {
   const navigate = useNavigate();
-  // const location = useLocation();
 
   const myAddress = AuthStore((state) => state.user.address);
 
@@ -37,9 +37,7 @@ const MainPage = () => {
   const [decorations, setDecorations] = useState([]);
   const [isOwner, setIsOwner] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false); // 로드 상태
-  const [notice, setNotice] = useState(false);
 
-  // const afterWrite = location.state?.afterWrite;
   const { address } = useParams();
   const positions = [
     { id: 1, position: "top-[25%] left-[8%]" }, // 상단 왼쪽
@@ -60,6 +58,7 @@ const MainPage = () => {
   );
 
   const fetchPocket = async () => {
+    setCurrentPage(1);
     window.sessionStorage.setItem("pocketAddress", window.location.pathname);
     try {
       const data = await PocketService.getByAddress(address);
@@ -94,7 +93,7 @@ const MainPage = () => {
   };
 
   const handleCopyURL = async () => {
-    const copyWrite = `${pocket?.userNickname} 님이 복주머니를 자랑했어요! 🎉\n지금 바로 구경해보세요.\n\n`
+    const copyWrite = `${pocket?.userNickname} 님이 복주머니를 자랑했어요! 🎉\n지금 바로 구경해보세요.\n\n`;
     const currentURL = window.location.href; // 현재 URL 가져오기
 
     try {
@@ -102,7 +101,6 @@ const MainPage = () => {
         // 클립보드 API가 지원되는 경우
         await navigator.clipboard.writeText(copyWrite + currentURL);
         setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
       } else {
         // 클립보드 API가 지원되지 않는 경우 대체 방법
         const textArea = document.createElement("textarea");
@@ -112,7 +110,6 @@ const MainPage = () => {
         document.execCommand("copy");
         document.body.removeChild(textArea);
         setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
       }
     } catch (error) {
       console.error("URL 복사 실패:", error);
@@ -120,12 +117,13 @@ const MainPage = () => {
     }
 
     if (navigator.share) {
-      navigator.share({
-        text: copyWrite + currentURL,
-      })
-        .catch((error) => console.error('공유 실패:', error));
+      navigator
+        .share({
+          text: copyWrite + currentURL,
+        })
+        .catch((error) => console.error("공유 실패:", error));
     } else {
-      alert('공유 기능이 이 브라우저에서 지원되지 않습니다.');
+      alert("공유 기능이 이 브라우저에서 지원되지 않습니다.");
     }
   };
 
@@ -138,13 +136,6 @@ const MainPage = () => {
       window.sessionStorage.removeItem("share");
     }
   }, [address]);
-
-  // useEffect(() => {
-  //   if (afterWrite) {
-  //     setNotice(true);
-  //     setTimeout(() => setNotice(false), 3000);
-  //   }
-  // }, [])
 
   return (
     isLoaded && (
@@ -173,12 +164,18 @@ const MainPage = () => {
               alt="복주머니 아이콘 이미지"
               className="w-5 h-5 xs:w-4 xs:h-4 mr-1"
             />
-            <span className="text-base xs:text-sm">{decorations.length}개의 복이 왔어요!</span>
+            <span className="text-base xs:text-sm">
+              {decorations.length}개의 복이 왔어요!
+            </span>
           </picture>
 
-          {!isOwner && !pocket?.fortuneVisibility && <div className="flex text-base xs:text-sm mt-2">
-            <p className="text-gray-600 ">🔒 이 복주머니는 주인만 볼 수 있어요!</p>
-          </div>}
+          {!isOwner && !pocket?.fortuneVisibility && (
+            <div className="flex text-base xs:text-sm mt-2">
+              <p className="text-gray-600 ">
+                🔒 이 복주머니는 주인만 볼 수 있어요!
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="relative">
@@ -237,10 +234,12 @@ const MainPage = () => {
         </div>
 
         {/* 비로그인 상태 */}
-        {myAddress === "" &&
+        {myAddress === "" && (
           <div className="flex justify-center items-center gap-2 w-full">
-            <button className="bg-[#F4BB44] w-full max-w-[350px] rounded-lg py-4 px-5"
-              onClick={() => navigate("/")}>
+            <button
+              className="bg-[#F4BB44] w-full max-w-[350px] rounded-lg py-4 px-5"
+              onClick={() => navigate("/")}
+            >
               <div className="flex items-center justify-center">
                 <Suspense>
                   <IoLogInOutline size={28} className="mr-1.5" />
@@ -250,72 +249,54 @@ const MainPage = () => {
                 </span>
               </div>
             </button>
-
-            {/* <button
-              onClick={() =>
-                navigate("/select-deco", {
-                  state: {
-                    address,
-                    pocketSeq: pocket.pocketSeq,
-                  },
-                })
-              }
-              className={"bg-[#156082] py-4 px-5 rounded-lg"}
-            >
-              <div className="flex items-center justify-center">
-                <Suspense>
-                  <BsPencil size={22} className="mr-3" />
-                </Suspense>
-                <span className={"pt-1 w-[95px]"}>
-                  복 전달하기
-                </span>
-              </div>
-            </button> */}
           </div>
-        }
-
+        )}
 
         {/* 로그인 상태 */}
-        {myAddress !== "" &&
+        {myAddress !== "" && (
           <div className="flex flex-col justify-center items-center gap-2 w-full">
-            {isOwner &&
+            {isOwner && (
               <button
                 onClick={() =>
                   navigate("/write", {
                     state: {
                       pocketAddress: address,
                       pocketSeq: pocket.pocketSeq,
-                      share: true
+                      share: true,
                     },
-                  })}
-
-                className={"bg-[#156082] py-4 w-full max-w-[350px] px-5 rounded-lg"}
+                  })
+                }
+                className={
+                  "bg-[#156082] py-4 w-full max-w-[350px] px-5 rounded-lg"
+                }
               >
                 <div className="flex items-center justify-center">
                   <Suspense>
                     <BsFillSendFill size={22} className="mr-3" />
                   </Suspense>
-                  <span className={"pt-1"}>
-                    새해 인사 전달하기
-                  </span>
+                  <span className={"pt-1"}>새해 인사 전달하기</span>
                 </div>
-              </button>}
+              </button>
+            )}
 
             <button
               onClick={
                 isOwner
                   ? handleCopyURL
                   : () =>
-                    navigate("/write", {
-                      state: {
-                        pocketAddress: address,
-                        pocketSeq: pocket.pocketSeq,
-                        share: false,
-                      },
-                    })
+                      navigate("/write", {
+                        state: {
+                          pocketAddress: address,
+                          pocketSeq: pocket.pocketSeq,
+                          share: false,
+                        },
+                      })
               }
-              className={`${isOwner ? "bg-white text-[#0d1a26] pt-3 pb-4" : "bg-green-600 py-4"
-                } w-full max-w-[350px] px-5 rounded-lg`}
+              className={`${
+                isOwner
+                  ? "bg-white text-[#0d1a26] pt-3 pb-4"
+                  : "bg-green-600 py-4"
+              } w-full max-w-[350px] px-5 rounded-lg`}
             >
               <div className="flex items-center justify-center">
                 <Suspense>
@@ -326,20 +307,22 @@ const MainPage = () => {
                   )}
                 </Suspense>
                 <span className={`${isOwner ? "pt-2" : "pt-1"}`}>
-                  {isOwner ? "내 복주머니 자랑하기" : "복주머니에 새해 인사 남기기"}
+                  {isOwner
+                    ? "내 복주머니 자랑하기"
+                    : "복주머니에 새해 인사 남기기"}
                 </span>
               </div>
             </button>
           </div>
-        }
+        )}
 
         {/* 복사 성공 알림 */}
-        {copied && (
-          <div className="fixed bottom-16 bg-green-500 text-white text-center py-2 px-4 rounded-lg shadow-md">
-            URL 복사 완료! <br />
-            친구들에게 복주머니를 공유해보세요.
-          </div>
-        )}
+        <Alarm
+          message={"URL 복사 완료! \n친구들에게 복주머니를 공유해보세요."}
+          visible={copied}
+          onClose={() => setCopied(false)}
+          backgroundColor={"bg-green-500"}
+        />
 
         {/* 모달 */}
         {selectArticle && (
@@ -351,13 +334,6 @@ const MainPage = () => {
             address={address}
           />
         )}
-
-        {/* 비회원 글쓰기 후 알림 */}
-        {/* {notice && (
-          <div className="fixed bottom-50 bg-green-500 bg-opacity-70 py-2 px-4 rounded-lg shadow-md left-1/2 transform -translate-x-1/2">
-            <p className="whitespace-nowrap">로그인 후 나의 복주머니도 공유해보세요!</p>
-          </div>
-        )} */}
 
         <Footer />
       </div>

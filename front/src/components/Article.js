@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import ArticleService from "../api/ArticleService.ts";
 
+import Alarm from "./Alarm.js";
 import fortuneImages from "./FortuneImages";
 import Util from "./Util";
 
@@ -18,7 +19,6 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [report, setReport] = useState("");
   const [reportType, setReportType] = useState(0);
-  // const [message, setMessage] = useState("");
   const [detail, setDetail] = useState({
     articleVisibility: false,
     articleSeq: 0,
@@ -35,7 +35,6 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [reported, setReported] = useState(false); // 신고 알림 상태
   const [isLoaded, setIsLoaded] = useState(false); // 로드 상태
-  // const [confirmCloseModal, setConfirmCloseModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const confirmDelete = async () => {
@@ -50,7 +49,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
 
   const confirmComment = async () => {
     //상대 복주머니로 가는 로직
-    navigate(`/${detail.pocketAddress}`)
+    navigate(`/${detail.pocketAddress}`);
     setCommentModalOpen(false);
     onClose();
   };
@@ -60,21 +59,6 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
     setDetail(result);
     setIsLoaded(true);
   };
-
-  // const sendComment = async () => {
-  //   if (!message) {
-  //     alert("답장을 입력해주세요 :)");
-  //     return;
-  //   }
-
-  //   const payload = {
-  //     articleSeq,
-  //     comment: message,
-  //     url: `${window.location.origin}${window.location.pathname}`,
-  //   };
-
-  //   await ArticleService.saveComment(payload);
-  // };
 
   const sendReport = () => {
     if (reportType === 0) {
@@ -94,18 +78,12 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
 
       ArticleService.saveReport(payload);
       setReported(true);
-      setTimeout(() => setReported(false), 2000);
       setReport("");
       setReportType(0);
       setReportModalOpen(false);
       setIsSubmitting(false);
     }
   };
-
-  // const confirmClose = () => {
-  //   if (!message) onClose();
-  //   else setConfirmCloseModal(true);
-  // };
 
   useEffect(() => {
     fetchArticle();
@@ -134,10 +112,7 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
           </picture>
 
           <div className="flex justify-end mb-1">
-            <button
-              className="text-gray-600 rounded-md"
-              onClick={onClose}
-            >
+            <button className="text-gray-600 rounded-md" onClick={onClose}>
               <Suspense>
                 <AiOutlineClose size={24} />
               </Suspense>
@@ -146,8 +121,9 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
 
           <div className="relative">
             <div
-              className={`border rounded-md mb-2 p-1 ${!detail.articleVisibility ? "filter blur-lg" : ""
-                }`}
+              className={`border rounded-md mb-2 p-1 ${
+                !detail.articleVisibility ? "filter blur-lg" : ""
+              }`}
             >
               <div className="text-[#3c1e1e] text-xl mb-1">
                 {"From. " + detail?.userNickname}
@@ -156,21 +132,6 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
                 {detail?.articleContent}
               </div>
             </div>
-
-            {/* <textarea
-              className={`text-[#3c1e1e] w-full border rounded-md h-24 p-1 resize-none ${
-                !detail.articleVisibility ? "filter blur-lg" : ""
-              }`}
-              value={detail?.articleComment ? detail?.articleComment : message}
-              onChange={(e) => {
-                const input = e.target.value;
-                if (input.length <= 300) {
-                  setMessage(e.target.value); // 300자 이하일 때만 상태 업데이트
-                }
-              }}
-              placeholder={`${myAddress !== address ? "" : "나도 복 보내기"}`}
-              disabled={detail?.articleComment || myAddress !== address}
-            /> */}
 
             {/* 자물쇠 아이콘 추가 */}
             {!detail.articleVisibility && (
@@ -184,8 +145,9 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
           </div>
 
           <div
-            className={`flex justify-between ${!detail.articleVisibility ? "invisible" : ""
-              }`}
+            className={`flex justify-between ${
+              !detail.articleVisibility ? "invisible" : ""
+            }`}
           >
             <div className="flex gap-2">
               <button
@@ -315,39 +277,15 @@ const Article = ({ onClose, articleSeq, onDelete, myAddress, address }) => {
               </div>
             </div>
           )}
-
-          {/* {confirmCloseModal && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="flex flex-col items-center bg-white shadow-lg rounded-lg w-80 p-6">
-                <h2 className="text-xl text-[#3c1e1e] mb-4">
-                  작성한 내용이 사라집니다.
-                </h2>
-                <p className="text-gray-700 mb-6">정말 닫으시겠어요?</p>
-                <div className="flex gap-4">
-                  <button
-                    className="bg-gray-300 text-black rounded-md py-2 px-4"
-                    onClick={() => setConfirmCloseModal(false)}
-                  >
-                    취소
-                  </button>
-                  <button
-                    className="bg-red-500 text-white rounded-md py-2 px-4"
-                    onClick={onClose}
-                  >
-                    닫기
-                  </button>
-                </div>
-              </div>
-            </div>
-          )} */}
         </div>
 
         {/* 신고 성공 알림 */}
-        {reported && (
-          <div className="fixed bottom-16 bg-green-500 rounded-lg shadow-md py-2 px-4">
-            신고 완료!
-          </div>
-        )}
+        <Alarm
+          message="신고 완료!"
+          visible={reported}
+          onClose={() => setReported(false)}
+          backgroundColor={"bg-green-500"}
+        />
       </div>
     )
   );
