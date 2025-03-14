@@ -39,7 +39,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 		Optional<User> userOptional = userRepository.findByUserKey(userKey);
 
 		//로그인이 되어있지 않는경우
-		if (userOptional.isEmpty()) {
+		if (userKey == null || userOptional.isEmpty()) {
 			log.info("비회원 입니다. 정보를 조회할 수 없습니다.");
 			return User.getNonMemberInfo();
 		}
@@ -64,7 +64,6 @@ public class UserSettingServiceImpl implements UserSettingService {
 		User user = userOptional.get();
 		user.setFirebaseKey(firebaseKey);
 	}
-
 
 	@Override
 	public Optional<User> findUserFirebaseKey(String userKey) {
